@@ -23,7 +23,7 @@ class Vector: Comparable {
 
   /// ``Vector`` whose direction is the same as that of this one, but with a module of 1.
   public private(set) lazy var unitary =
-    x == 0 || y == 0 ? nil : Vector(x: x / module, y: y / module)
+    self === Self.zero ? nil : module == 1 ? self : .init(x: x / module, y: y / module)
 
   private init(x: Float, y: Float) {
     self.x = x

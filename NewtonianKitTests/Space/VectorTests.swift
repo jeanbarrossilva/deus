@@ -26,6 +26,11 @@ struct VectorTests {
     #expect(Vector.at(x: 0, y: 0).unitary == nil)
   }
 
+  @Test func unitaryVectorOfUnitaryVectorIsItself() throws {
+    let unitaryVector = Vector.at(x: 1, y: 0)
+    #expect(unitaryVector.unitary === unitaryVector)
+  }
+
   @Test func calculatesUnitaryVectorOfNonZeroVector() throws {
     #expect(Vector.at(x: 3, y: 4).unitary == Vector.at(x: 0.6, y: 0.8))
   }

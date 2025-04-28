@@ -149,7 +149,6 @@
 					};
 					49FD318B2DBFCAF3003CEAF9 = {
 						CreatedOnToolsVersion = 16.3;
-						TestTargetID = 49FD31212DBFC9E2003CEAF9;
 					};
 				};
 			};
@@ -418,7 +417,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Deus.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Deus";
 			};
 			name = Debug;
 		};
@@ -434,7 +432,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Deus.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Deus";
 			};
 			name = Release;
 		};

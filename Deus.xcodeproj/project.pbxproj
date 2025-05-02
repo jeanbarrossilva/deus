@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		49FD318D2DBFCAF3003CEAF9 /* NewtonianKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49FD31842DBFCAF3003CEAF9 /* NewtonianKit.framework */; };
+		491E1F612DC2C4AB001982DF /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 491E1F602DC2C4AB001982DF /* DequeModule */; };
+		491E1F632DC2C4AB001982DF /* Future in Frameworks */ = {isa = PBXBuildFile; productRef = 491E1F622DC2C4AB001982DF /* Future */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -21,8 +22,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		49FD31842DBFCAF3003CEAF9 /* NewtonianKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NewtonianKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		49FD318C2DBFCAF3003CEAF9 /* NewtonianKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewtonianKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4963A6392DC231FE007AABCF /* NewtonianKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NewtonianKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4963A63A2DC231FE007AABCF /* NewtonianKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewtonianKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -50,29 +51,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49FD318D2DBFCAF3003CEAF9 /* NewtonianKit.framework in Frameworks */,
+				491E1F612DC2C4AB001982DF /* DequeModule in Frameworks */,
+				491E1F632DC2C4AB001982DF /* Future in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		491E1F5A2DC2C001001982DF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		49FD31192DBFC9E2003CEAF9 = {
 			isa = PBXGroup;
 			children = (
 				49FD31852DBFCAF3003CEAF9 /* NewtonianKit */,
 				49FD31922DBFCAF3003CEAF9 /* NewtonianKitTests */,
-				49FD31232DBFC9E2003CEAF9 /* Products */,
+				4963A6392DC231FE007AABCF /* NewtonianKit.framework */,
+				4963A63A2DC231FE007AABCF /* NewtonianKitTests.xctest */,
+				491E1F5A2DC2C001001982DF /* Frameworks */,
 			);
-			sourceTree = "<group>";
-		};
-		49FD31232DBFC9E2003CEAF9 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				49FD31842DBFCAF3003CEAF9 /* NewtonianKit.framework */,
-				49FD318C2DBFCAF3003CEAF9 /* NewtonianKitTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -108,7 +110,7 @@
 			packageProductDependencies = (
 			);
 			productName = NewtonianKit;
-			productReference = 49FD31842DBFCAF3003CEAF9 /* NewtonianKit.framework */;
+			productReference = 4963A6392DC231FE007AABCF /* NewtonianKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		49FD318B2DBFCAF3003CEAF9 /* NewtonianKitTests */ = {
@@ -129,9 +131,11 @@
 			);
 			name = NewtonianKitTests;
 			packageProductDependencies = (
+				491E1F602DC2C4AB001982DF /* DequeModule */,
+				491E1F622DC2C4AB001982DF /* Future */,
 			);
 			productName = NewtonianKitTests;
-			productReference = 49FD318C2DBFCAF3003CEAF9 /* NewtonianKitTests.xctest */;
+			productReference = 4963A63A2DC231FE007AABCF /* NewtonianKitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -161,8 +165,11 @@
 			);
 			mainGroup = 49FD31192DBFC9E2003CEAF9;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				491E1F5F2DC2C49E001982DF /* XCLocalSwiftPackageReference "../../../Downloads/swift-collections" */,
+			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 49FD31232DBFC9E2003CEAF9 /* Products */;
+			productRefGroup = 49FD31192DBFC9E2003CEAF9;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -466,6 +473,26 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		491E1F5F2DC2C49E001982DF /* XCLocalSwiftPackageReference "../../../Downloads/swift-collections" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../../Downloads/swift-collections";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		491E1F602DC2C4AB001982DF /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 491E1F5F2DC2C49E001982DF /* XCLocalSwiftPackageReference "../../../Downloads/swift-collections" */;
+			productName = DequeModule;
+		};
+		491E1F622DC2C4AB001982DF /* Future */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 491E1F5F2DC2C49E001982DF /* XCLocalSwiftPackageReference "../../../Downloads/swift-collections" */;
+			productName = Future;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 49FD311A2DBFC9E2003CEAF9 /* Project object */;
 }

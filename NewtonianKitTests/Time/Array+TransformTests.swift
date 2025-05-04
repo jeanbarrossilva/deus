@@ -5,16 +5,15 @@
 //  Created by Jean Barros Silva on 02/05/25.
 //
 
+import Foundation
 import Testing
-
-@testable import NewtonianKit
 
 struct ArrayTransformTests {
   @Test func transformsBasedOnEachElement() async throws {
-    let unmappedElements = [CountingOnTickListener](count: 2) { _ in CountingOnTickListener() }
+    let unmappedElements = [NSObject](count: 2) { _ in NSObject() }
     let mappedElements = await unmappedElements.map { listener in listener }
-    for (index, onTickListener) in mappedElements.enumerated() {
-      #expect(onTickListener === unmappedElements[index])
+    for (index, mappedElement) in mappedElements.enumerated() {
+      #expect(mappedElement === unmappedElements[index])
     }
   }
 

@@ -160,7 +160,6 @@ actor Clock {
   private func listenToTicks() async {
     await subticker.schedule { [self] elapsedTime in
       guard elapsedTime.containsWholeTick else { return }
-      print(onTickListeners)
       for listener in onTickListeners { await listener.onTick() }
     }
   }

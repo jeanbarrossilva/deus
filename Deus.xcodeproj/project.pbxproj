@@ -8,6 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		492DE90B2DC4F4A800558448 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 492DE90A2DC4F4A800558448 /* DequeModule */; };
+		49313EA02DC793D300353DCA /* Vector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313E992DC793D300353DCA /* Vector.swift */; };
+		49313EA12DC793D300353DCA /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313E9B2DC793D300353DCA /* Clock.swift */; };
+		49313EA22DC793D300353DCA /* Subticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313E9C2DC793D300353DCA /* Subticker.swift */; };
+		49313EA32DC793D300353DCA /* NewtonianKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313E9E2DC793D300353DCA /* NewtonianKit.swift */; };
+		49313EB42DC793DA00353DCA /* VectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EA42DC793DA00353DCA /* VectorTests.swift */; };
+		49313EB52DC793DA00353DCA /* Array+Initializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EA62DC793DA00353DCA /* Array+Initializer.swift */; };
+		49313EB62DC793DA00353DCA /* Array+InitializerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EA72DC793DA00353DCA /* Array+InitializerTests.swift */; };
+		49313EB72DC793DA00353DCA /* Array+Slice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EA82DC793DA00353DCA /* Array+Slice.swift */; };
+		49313EB82DC793DA00353DCA /* Array+SliceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EA92DC793DA00353DCA /* Array+SliceTests.swift */; };
+		49313EB92DC793DA00353DCA /* Array+Transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EAA2DC793DA00353DCA /* Array+Transform.swift */; };
+		49313EBA2DC793DA00353DCA /* Array+TransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EAB2DC793DA00353DCA /* Array+TransformTests.swift */; };
+		49313EBB2DC793DA00353DCA /* ClockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EAC2DC793DA00353DCA /* ClockTests.swift */; };
+		49313EBC2DC793DA00353DCA /* CountingOnTickListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EAD2DC793DA00353DCA /* CountingOnTickListener.swift */; };
+		49313EBD2DC793DA00353DCA /* CountingOnTickListenerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EAE2DC793DA00353DCA /* CountingOnTickListenerTests.swift */; };
+		49313EBE2DC793DA00353DCA /* SubtickingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EAF2DC793DA00353DCA /* SubtickingTests.swift */; };
+		49313EBF2DC793DA00353DCA /* VirtualSubticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EB02DC793DA00353DCA /* VirtualSubticker.swift */; };
+		49313EC02DC793DA00353DCA /* VirtualSubtickerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49313EB12DC793DA00353DCA /* VirtualSubtickerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -21,22 +38,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		49313E992DC793D300353DCA /* Vector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vector.swift; sourceTree = "<group>"; };
+		49313E9B2DC793D300353DCA /* Clock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clock.swift; sourceTree = "<group>"; };
+		49313E9C2DC793D300353DCA /* Subticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subticker.swift; sourceTree = "<group>"; };
+		49313E9E2DC793D300353DCA /* NewtonianKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewtonianKit.swift; sourceTree = "<group>"; };
+		49313EA42DC793DA00353DCA /* VectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorTests.swift; sourceTree = "<group>"; };
+		49313EA62DC793DA00353DCA /* Array+Initializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Initializer.swift"; sourceTree = "<group>"; };
+		49313EA72DC793DA00353DCA /* Array+InitializerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+InitializerTests.swift"; sourceTree = "<group>"; };
+		49313EA82DC793DA00353DCA /* Array+Slice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Slice.swift"; sourceTree = "<group>"; };
+		49313EA92DC793DA00353DCA /* Array+SliceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+SliceTests.swift"; sourceTree = "<group>"; };
+		49313EAA2DC793DA00353DCA /* Array+Transform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Transform.swift"; sourceTree = "<group>"; };
+		49313EAB2DC793DA00353DCA /* Array+TransformTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+TransformTests.swift"; sourceTree = "<group>"; };
+		49313EAC2DC793DA00353DCA /* ClockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockTests.swift; sourceTree = "<group>"; };
+		49313EAD2DC793DA00353DCA /* CountingOnTickListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountingOnTickListener.swift; sourceTree = "<group>"; };
+		49313EAE2DC793DA00353DCA /* CountingOnTickListenerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountingOnTickListenerTests.swift; sourceTree = "<group>"; };
+		49313EAF2DC793DA00353DCA /* SubtickingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtickingTests.swift; sourceTree = "<group>"; };
+		49313EB02DC793DA00353DCA /* VirtualSubticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualSubticker.swift; sourceTree = "<group>"; };
+		49313EB12DC793DA00353DCA /* VirtualSubtickerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualSubtickerTests.swift; sourceTree = "<group>"; };
 		4963A6392DC231FE007AABCF /* NewtonianKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NewtonianKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4963A63A2DC231FE007AABCF /* NewtonianKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewtonianKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		49FD31852DBFCAF3003CEAF9 /* NewtonianKit */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NewtonianKit;
-			sourceTree = "<group>";
-		};
-		49FD31922DBFCAF3003CEAF9 /* NewtonianKitTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NewtonianKitTests;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		49FD31812DBFCAF3003CEAF9 /* Frameworks */ = {
@@ -57,11 +78,74 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		49313E9A2DC793D300353DCA /* Space */ = {
+			isa = PBXGroup;
+			children = (
+				49313E992DC793D300353DCA /* Vector.swift */,
+			);
+			path = Space;
+			sourceTree = "<group>";
+		};
+		49313E9D2DC793D300353DCA /* Time */ = {
+			isa = PBXGroup;
+			children = (
+				49313E9B2DC793D300353DCA /* Clock.swift */,
+				49313E9C2DC793D300353DCA /* Subticker.swift */,
+			);
+			path = Time;
+			sourceTree = "<group>";
+		};
+		49313E9F2DC793D300353DCA /* NewtonianKit */ = {
+			isa = PBXGroup;
+			children = (
+				49313E9A2DC793D300353DCA /* Space */,
+				49313E9D2DC793D300353DCA /* Time */,
+				49313E9E2DC793D300353DCA /* NewtonianKit.swift */,
+			);
+			path = NewtonianKit;
+			sourceTree = "<group>";
+		};
+		49313EA52DC793DA00353DCA /* Space */ = {
+			isa = PBXGroup;
+			children = (
+				49313EA42DC793DA00353DCA /* VectorTests.swift */,
+			);
+			path = Space;
+			sourceTree = "<group>";
+		};
+		49313EB22DC793DA00353DCA /* Time */ = {
+			isa = PBXGroup;
+			children = (
+				49313EA62DC793DA00353DCA /* Array+Initializer.swift */,
+				49313EA72DC793DA00353DCA /* Array+InitializerTests.swift */,
+				49313EA82DC793DA00353DCA /* Array+Slice.swift */,
+				49313EA92DC793DA00353DCA /* Array+SliceTests.swift */,
+				49313EAA2DC793DA00353DCA /* Array+Transform.swift */,
+				49313EAB2DC793DA00353DCA /* Array+TransformTests.swift */,
+				49313EAC2DC793DA00353DCA /* ClockTests.swift */,
+				49313EAD2DC793DA00353DCA /* CountingOnTickListener.swift */,
+				49313EAE2DC793DA00353DCA /* CountingOnTickListenerTests.swift */,
+				49313EAF2DC793DA00353DCA /* SubtickingTests.swift */,
+				49313EB02DC793DA00353DCA /* VirtualSubticker.swift */,
+				49313EB12DC793DA00353DCA /* VirtualSubtickerTests.swift */,
+			);
+			path = Time;
+			sourceTree = "<group>";
+		};
+		49313EB32DC793DA00353DCA /* NewtonianKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				49313EA52DC793DA00353DCA /* Space */,
+				49313EB22DC793DA00353DCA /* Time */,
+			);
+			path = NewtonianKitTests;
+			sourceTree = "<group>";
+		};
 		49FD31192DBFC9E2003CEAF9 = {
 			isa = PBXGroup;
 			children = (
-				49FD31852DBFCAF3003CEAF9 /* NewtonianKit */,
-				49FD31922DBFCAF3003CEAF9 /* NewtonianKitTests */,
+				49313E9F2DC793D300353DCA /* NewtonianKit */,
+				49313EB32DC793DA00353DCA /* NewtonianKitTests */,
 				4963A6392DC231FE007AABCF /* NewtonianKit.framework */,
 				4963A63A2DC231FE007AABCF /* NewtonianKitTests.xctest */,
 			);
@@ -93,9 +177,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				49FD31852DBFCAF3003CEAF9 /* NewtonianKit */,
-			);
 			name = NewtonianKit;
 			packageProductDependencies = (
 			);
@@ -115,9 +196,6 @@
 			);
 			dependencies = (
 				49FD318F2DBFCAF3003CEAF9 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				49FD31922DBFCAF3003CEAF9 /* NewtonianKitTests */,
 			);
 			name = NewtonianKitTests;
 			packageProductDependencies = (
@@ -190,6 +268,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49313EA02DC793D300353DCA /* Vector.swift in Sources */,
+				49313EA12DC793D300353DCA /* Clock.swift in Sources */,
+				49313EA22DC793D300353DCA /* Subticker.swift in Sources */,
+				49313EA32DC793D300353DCA /* NewtonianKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,6 +279,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49313EB42DC793DA00353DCA /* VectorTests.swift in Sources */,
+				49313EB52DC793DA00353DCA /* Array+Initializer.swift in Sources */,
+				49313EB62DC793DA00353DCA /* Array+InitializerTests.swift in Sources */,
+				49313EB72DC793DA00353DCA /* Array+Slice.swift in Sources */,
+				49313EB82DC793DA00353DCA /* Array+SliceTests.swift in Sources */,
+				49313EB92DC793DA00353DCA /* Array+Transform.swift in Sources */,
+				49313EBA2DC793DA00353DCA /* Array+TransformTests.swift in Sources */,
+				49313EBB2DC793DA00353DCA /* ClockTests.swift in Sources */,
+				49313EBC2DC793DA00353DCA /* CountingOnTickListener.swift in Sources */,
+				49313EBD2DC793DA00353DCA /* CountingOnTickListenerTests.swift in Sources */,
+				49313EBE2DC793DA00353DCA /* SubtickingTests.swift in Sources */,
+				49313EBF2DC793DA00353DCA /* VirtualSubticker.swift in Sources */,
+				49313EC02DC793DA00353DCA /* VirtualSubtickerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

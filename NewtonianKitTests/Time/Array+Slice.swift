@@ -13,15 +13,11 @@ extension Array {
   /// - Returns: Another ``Array`` with `indices.count` elements of this one, or this one itself in
   ///   case the specified ``indices`` equal to those of this ``Array``.
   func sliced(_ bounds: Range<Index>) -> [Element] {
-    if bounds.isEmpty {
-      return []
-    } else if bounds.count == 1 {
-      return [self[bounds.lowerBound]]
-    } else if bounds == self.indices {
-      return self
-    } else {
-      let sequencedBounds = bounds.map { bound in bound }
-      return .init(count: sequencedBounds.count) { index in self[sequencedBounds[index]] }
-    }
+    guard bounds != self.indices else { return self }
+    guard !bounds.isEmpty else { return [] }
+    guard bounds.count > 1 else { return [self[bounds.lowerBound]] }
+    var bounds = bounds.map { bound in bound }
+    while bounds.endIndex > endIndex { let _ = bounds.popLast() }
+    return .init(count: bounds.count) { index in self[bounds[index]] }
   }
 }

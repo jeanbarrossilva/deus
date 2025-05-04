@@ -16,7 +16,7 @@ extension Array {
       count <= 0
       ? .init()
       : .init(
-        unsafeUninitializedCapacity: Swift.max(count, 1),
+        unsafeUninitializedCapacity: count,
         initializingWith: { buffer, initializedCount in
           for index in 0..<count {
             buffer.baseAddress?.advanced(by: index).initialize(to: initializer(index))

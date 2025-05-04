@@ -5,6 +5,7 @@
 //  Created by Jean Barros Silva on 28/04/25.
 //
 
+internal import Collections
 import Foundation
 
 /// ``OnTickListener`` by which an instance of a conforming struct or class — the ``base`` — should
@@ -40,6 +41,80 @@ private final class AnyOnTickListener: OnTickListener, Identifiable, Hashable {
   }
 }
 
+/// Amount of time relative to the subticks of a ``Clock``.
+enum Subticking: AdditiveArithmetic, Strideable {
+  /// Amount of microseconds represented by this unit. In the case of subticks, their `count` is
+  /// returned by the getter of this property as they are; as for ticks, given that theirs are in
+  /// milliseconds, it is multiplied by 1,000.
+  ///
+  /// - SeeAlso: ``.subticks(_:)``
+  /// - SeeAlso: ``.ticks(_:)``
+  private var inMicroseconds: Int {
+    switch self {
+    case .subticks(let count):
+      count
+    case .ticks(let count):
+      count * 1_000
+    }
+  }
+
+  static let zero = Self.subticks(0)
+
+  /// Whether this amount of time is zero or contains a whole tick.
+  ///
+  /// - SeeAlso: ``zero``
+  /// - SeeAlso: ``.ticks(_:)``
+  var containsWholeTick: Bool {
+    switch self {
+    case .subticks(let count):
+      count % 1_000 == 0
+    case .ticks(_):
+      true
+    }
+  }
+
+  /// Duration in microseconds in which each microsecond equals to one subtick.
+  ///
+  /// - Parameter count: Amount of subticks — microseconds.
+  case subticks(_ count: Int)
+
+  /// Duration in milliseconds in which each millisecond equals to one tick, and each tick is one
+  /// thousand subticks.
+  ///
+  /// - Parameter count: Amount of ticks — milliseconds.
+  case ticks(_ count: Int)
+
+  static func + (lhs: Self, rhs: Self) -> Self {
+    if lhs == .zero {
+      rhs
+    } else if rhs == .zero {
+      lhs
+    } else {
+      .subticks(lhs.inMicroseconds + rhs.inMicroseconds)
+    }
+  }
+
+  static func += (lhs: inout Self, rhs: Self) {
+    lhs = lhs + rhs
+  }
+
+  static func - (lhs: Self, rhs: Self) -> Self {
+    if rhs == .zero { lhs } else { .subticks(lhs.inMicroseconds - rhs.inMicroseconds) }
+  }
+
+  static func -= (lhs: inout Self, rhs: Self) {
+    lhs = lhs - rhs
+  }
+
+  func distance(to other: Self) -> Int {
+    inMicroseconds.distance(to: other.inMicroseconds)
+  }
+
+  func advanced(by n: Int) -> Self {
+    n == -inMicroseconds ? .zero : n == 0 ? self : .subticks(inMicroseconds + n)
+  }
+}
+
 /// Listener of ticks of a ``Clock``.
 protocol OnTickListener: AnyObject {
   /// Callback called whenever the ``Clock`` ticks.
@@ -57,42 +132,34 @@ protocol OnTickListener: AnyObject {
 /// adding a listener, which will be notified at each millisecond until this clock is either paused
 /// or stopped.
 actor Clock {
-  /// Current state of this ``Clock``, changed by calls to ``start()``, ``pause()`` and ``stop()``.
-  private var state = State.evergreen
-
-  /// ``Subticker`` by which the subticks are scheduled.
-  private var subticker: Subticker
-
   /// ``Reference`` to ``AnyOnTickListener``s to be notified of ticks of this ``Clock``.
   private var onTickListeners = Set<AnyOnTickListener>()
 
-  /// One of the four possible states of a ``Clock``.
-  private enum State: Comparable {
-    /// The ``Clock`` has never been started.
-    ///
-    /// - SeeAlso: ``Clock.start()``
-    case evergreen
+  /// Total amount of time elapsed between resumptions and pauses.
+  ///
+  /// - SeeAlso: ``start()``
+  /// - SeeAlso: ``pause()``
+  private(set) var elapsedTime = Subticking.zero
 
-    /// The ``Clock`` has been started and is ticking.
-    ///
-    /// - SeeAlso: ``Clock.start()``
-    case started
+  /// Last time a subtick was performed upon an advancement of time. Stored for determining whether
+  /// such this ``Clock`` should perform a subtick immediately when advancing its time or only on
+  /// the next advancement.
+  ///
+  /// - SeeAlso: ``advanceTime(by:)``
+  private var lastSubtickTime: Subticking? = nil
 
-    /// The ``Clock`` is no longer ticking, but can be resumed by being started again.
-    ///
-    /// - SeeAlso: ``Clock.pause()``
-    /// - SeeAlso: ``Clock.start()``
-    case paused
+  /// Amounts by which the time has been requested to be advanced while this ``Clock`` was
+  /// interrupted.
+  ///
+  /// - SeeAlso: ``advanceTime(by:)``
+  /// - SeeAlso: ``isInterrupted``
+  private var pendingAdvancements = Deque<Subticking>()
 
-    /// The ``Clock`` is no longer ticking and cannot be resumed because its time has been reset.
-    ///
-    /// - SeeAlso: ``Clock.stop()``
-    case stopped
-  }
-
-  init(subticker: Subticker) {
-    self.subticker = subticker
-  }
+  /// Whether the subticking has been interrupted, due to this ``Clock`` having been paused/stopped.
+  ///
+  /// - SeeAlso: ``pause()``
+  /// - SeeAlso: ``stop()``
+  private var isInterrupted = true
 
   /// Initiates the passage of time. From the moment this function is called, this ``Clock`` starts
   /// ticking on a per-millisecond basis and, upon each of its ticks, the added listeners are
@@ -105,10 +172,10 @@ actor Clock {
   /// - SeeAlso: ``Clock.pause()``
   /// - SeeAlso: ``Clock.stop()``
   func start() async {
-    guard state != .started else { return }
-    await listenToTicks()
-    await subticker.resume()
-    state = .started
+    isInterrupted = false
+    while let pendingAdvancement = pendingAdvancements.popFirst() {
+      await _advanceTime(by: pendingAdvancement)
+    }
   }
 
   /// Listens to each tick of this ``Clock``.
@@ -132,14 +199,26 @@ actor Clock {
     onTickListeners.remove(listener)
   }
 
+  /// Requests the time to be advanced in case this ``Clock`` is not paused/stopped; otherwise, such
+  /// advancement is performed after it is resumed. When advanced, this ``Clock`` will tick
+  /// `advancement.inMicroseconds` / 1,000 times.
+  ///
+  /// - Parameter advancement: Amount of time by which this ``Clock`` is to be advanced.
+  func advanceTime(by advancement: Subticking) async {
+    guard advancement != .zero else { return }
+    guard !isInterrupted else {
+      pendingAdvancements.append(advancement)
+      return
+    }
+    await _advanceTime(by: advancement)
+  }
+
   /// Pauses the passage of time.
   ///
   /// Calling ``start()`` after having called this function resumes the passage of time from where
   /// it was paused.
   func pause() async {
-    guard state < .paused else { return }
-    await subticker.pause()
-    state = .paused
+    isInterrupted = true
   }
 
   /// Stops the passage of time, resetting this ``Clock``.
@@ -148,19 +227,28 @@ actor Clock {
   /// beginning.
   func stop() async {
     onTickListeners.removeAll()
-    guard state != .stopped else { return }
-    await subticker.stop()
-    state = .stopped
+    guard !isInterrupted else { return }
+    isInterrupted = true
+    pendingAdvancements.removeAll()
+    lastSubtickTime = nil
+    elapsedTime = .zero
   }
 
-  /// Schedules the action of listening to each subtick performed by the ``scheduler`` and notifying
-  /// the added ``OnTickListener``s of its ticks.
+  /// Advances the virtual time, regardless of whether this ``Clock`` is interrupted. This function
+  /// is intended for scenarios in which the advancement is guaranteed to be allowed (i.e.,
+  /// ``isInterrupted`` is `false`).
   ///
-  /// - SeeAlso: ``onTickListeners``
-  private func listenToTicks() async {
-    await subticker.schedule { [self] elapsedTime in
-      guard elapsedTime.containsWholeTick else { return }
+  /// - SeeAlso: ``advanceTime(by:)``
+  private func _advanceTime(by advancement: Subticking) async {
+    let advancementTime = elapsedTime
+    for meantime in stride(from: advancementTime, through: advancementTime + advancement, by: 1) {
+      elapsedTime = meantime
+      guard
+        elapsedTime.containsWholeTick
+          && (meantime == advancementTime || lastSubtickTime != advancementTime)
+      else { continue }
       for listener in onTickListeners { await listener.onTick() }
     }
+    lastSubtickTime = elapsedTime
   }
 }

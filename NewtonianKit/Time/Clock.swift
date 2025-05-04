@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Future
 
 /// ``OnTickListener`` by which an instance of a conforming struct or class — the ``base`` — should
 /// be wrapped in order to be added and listen to the ticks of a ``Clock``. A randomly generated ID
@@ -15,25 +14,24 @@ import Future
 ///
 /// - SeeAlso: ``Clock.add(onTickListener:)``
 /// - SeeAlso: ``Clock.removeOnTickListener(identifiedAs:)``
-private struct AnyOnTickListener: ~Copyable, OnTickListener {
-  /// Randomly generated ID.
+private final class AnyOnTickListener: OnTickListener, Identifiable, Hashable {
   let id: UUID
 
   /// Type-erased, wrapped ``OnTickListener``. It is safe to cast its type to that with which this
   /// struct was instantiated: it is guaranteed that it will always be of type ``O`` (although the
   /// instance itself might have been mutated by calls to ``onTick()``).
-  private(set) var base: any OnTickListener
+  private(set) var base: any AnyObject & OnTickListener
 
-  init<O: OnTickListener>(withID id: UUID, from base: consuming O) {
-    self.id = id
-    self.base = consume base
+  init<O: AnyObject & OnTickListener>(_ base: O) {
+    self.id = (base as? any Identifiable)?.id as? UUID ?? UUID()
+    self.base = base
   }
 
-  static func == (lhs: borrowing AnyOnTickListener, rhs: borrowing AnyOnTickListener) -> Bool {
+  static func == (lhs: AnyOnTickListener, rhs: AnyOnTickListener) -> Bool {
     lhs.id == rhs.id
   }
 
-  mutating func onTick() async {
+  func onTick() async {
     await base.onTick()
   }
 
@@ -43,38 +41,11 @@ private struct AnyOnTickListener: ~Copyable, OnTickListener {
 }
 
 /// Listener of ticks of a ``Clock``.
-protocol OnTickListener: ~Copyable {
+protocol OnTickListener: AnyObject {
   /// Callback called whenever the ``Clock`` ticks.
   ///
   /// - SeeAlso: ``Clock.start()``
-  mutating func onTick() async
-}
-
-extension DynamicArray where Element: ~Copyable & OnTickListener {
-  /// Iterates through this ``DynamicArray`` by borrowing its elements and executing the ``body``
-  /// on each of them.
-  ///
-  /// - Parameter body: Closure into which a borrowed element is passed. Returns whether the
-  ///   borrowing should stop at the given element.
-  /// - SeeAlso: ``borrowElement(at:by:)``
-  @discardableResult
-  func borrowElements<R>(until body: (_ index: Int, borrowing Element) -> (R, Bool)) -> [R] {
-    var results = [R?](repeating: nil, count: count)
-    var resultCount = 0
-    for index in startIndex...endIndex {
-      let (result, isSatisfied) = borrowElement(at: index, by: { element in body(index, element) })
-      results.insert(result, at: index)
-      resultCount += 1
-      guard isSatisfied else { break }
-    }
-    results.removeSubrange(resultCount...results.endIndex)
-    return results as! [R]
-  }
-
-  /// Removes all added elements from this ``DynamicArray``.
-  mutating func removeAll() {
-    for index in startIndex...endIndex { remove(at: index) }
-  }
+  func onTick() async
 }
 
 /// ``Error`` thrown when no ``OnTickListener`` satisfies the critieria for removal from a
@@ -82,7 +53,7 @@ extension DynamicArray where Element: ~Copyable & OnTickListener {
 ///  the specified one.
 ///
 /// - SeeAlso: ``Clock.add(onTickListener:)``
-/// - SeeAlso: ``Clock.removeOnTickListener(withID:ofType:)``
+/// - SeeAlso: ``Clock.removeOnTickListener(identifiedAs:)``
 struct UnknownTickListenerError: Error {
   /// Type of the unknown ``OnTickListener``.
   let type: OnTickListener.Type?
@@ -111,8 +82,8 @@ actor Clock {
   /// ``Subticker`` by which the subticks are scheduled.
   private var subticker: Subticker
 
-  /// ``AnyOnTickListener``s to be notified of ticks of this ``Clock``.
-  private var onTickListeners = DynamicArray<AnyOnTickListener>()
+  /// ``Reference`` to ``AnyOnTickListener``s to be notified of ticks of this ``Clock``.
+  private var onTickListeners = Set<AnyOnTickListener>()
 
   /// One of the four possible states of a ``Clock``.
   private enum State: Comparable {
@@ -154,7 +125,7 @@ actor Clock {
   /// - SeeAlso: ``Clock.stop()``
   func start() async {
     guard state != .started else { return }
-    await invalidateTickNotification()
+    await listenToTicks()
     await subticker.resume()
     state = .started
   }
@@ -163,25 +134,21 @@ actor Clock {
   ///
   /// - Parameter onTickListener: ``AnyOnTickListener`` to be added.
   /// - Returns: ID of the ``onTickListener`` with which it can be later removed.
-  /// - SeeAlso: ``removeOnTickListener(withID:ofType:)``
-  func add<O: OnTickListener>(onTickListener: consuming O) -> UUID {
-    let id = UUID()
-    add(onTickListener: onTickListener, withID: id)
-    return id
+  /// - SeeAlso: ``removeOnTickListener(identifiedAs:)``
+  func add(onTickListener: any AnyObject & OnTickListener) -> UUID {
+    let onTickListener = AnyOnTickListener(onTickListener)
+    onTickListeners.insert(onTickListener)
+    return onTickListener.id
   }
 
   /// Removes a listener of ticks of this ``Clock``.
   ///
-  /// - Parameters:
-  ///   - id: ID of the ``OnTickListener`` to be removed.
-  ///   - type: Exact type of the ``OnTickListener`` to be removed.
-  /// - Throws: When an ``OnTickListener`` identified as ``id`` and of type ``type`` is not found.
-  @discardableResult
-  func removeOnTickListener<O: OnTickListener>(withID id: UUID, ofType type: O.Type) throws -> O {
-    guard let removedOnTickListener = try removeOnTickListener(withID: id) as? O else {
-      throw UnknownTickListenerError(type: type, id: id)
+  /// - Parameter id: ID of the ``OnTickListener`` to be removed.
+  func removeOnTickListener(identifiedAs id: UUID) {
+    guard let listener = onTickListeners.first(where: { listener in listener.id == id }) else {
+      return
     }
-    return removedOnTickListener
+    onTickListeners.remove(listener)
   }
 
   /// Pauses the passage of time.
@@ -206,62 +173,14 @@ actor Clock {
   }
 
   /// Schedules the action of listening to each subtick performed by the ``scheduler`` and notifying
-  /// the added ``OnTickListener``s of its ticks. Should be called whenever a listener is either
-  /// added or removed, since an action might not have been scheduled at this point or, in case it
-  /// was, it may be leaving newly added listeners unnotified or notifying removed ones.
+  /// the added ``OnTickListener``s of its ticks.
   ///
   /// - SeeAlso: ``onTickListeners``
-  /// - SeeAlso: ``add(onTickListener:)``
-  /// - SeeAlso: ``removeOnTickListener(withID:ofType:)``
-  private func invalidateTickNotification() async {
-    let subticker = subticker
-    await subticker.schedule {
-      if await subticker.elapsedTime.containsWholeTick {
-        for var (listenerID, listener) in self.onTickListeners.borrowElements(
-          until: {
-            _,
-            listener in
-            ((listener.id, try! self.removeOnTickListener(withID: listener.id)), false)
-          })
-        {
-          await listener.onTick()
-          self.add(onTickListener: listener, withID: listenerID)
-        }
-      }
+  private func listenToTicks() async {
+    await subticker.schedule { [self] elapsedTime in
+      guard elapsedTime.containsWholeTick else { return }
+      print(onTickListeners)
+      for listener in onTickListeners { await listener.onTick() }
     }
-  }
-
-  /// Adds a listener of ticks of this ``Clock``.
-  ///
-  /// - Parameters:
-  ///   - onTickListener: ``AnyOnTickListener`` to be added.
-  ///   - id: ID with which it can be later removed.
-  /// - SeeAlso: ``removeOnTickListener(withID:ofType:)``
-  private func add(onTickListener: consuming any OnTickListener, withID id: UUID) {
-    onTickListeners.append(AnyOnTickListener(withID: id, from: onTickListener))
-  }
-
-  /// Removes a listener of ticks of this ``Clock``. Differs from the public overload in that it
-  /// does not require the removed ``OnTickListener`` (that is, in case it is found) to be of a
-  /// specific type.
-  ///
-  /// - Parameter id: ID of the ``OnTickListener`` to be removed.
-  /// - SeeAlso: ``removeOnTickListener(withID:ofType:)``
-  /// - Throws: When an ``OnTickListener`` identified as ``id`` is not found.
-  private func removeOnTickListener(
-    withID id: UUID
-  ) throws(UnknownTickListenerError) -> any OnTickListener {
-    var removedOnTickListener: (any OnTickListener)?
-    onTickListeners.borrowElements(until: { index, onTickListener in
-      guard onTickListener.id == id else {
-        return ((), false)
-      }
-      removedOnTickListener = (onTickListeners.remove(at: index).base)
-      return ((), true)
-    })
-    guard let removedOnTickListener = removedOnTickListener else {
-      throw UnknownTickListenerError(type: nil, id: id)
-    }
-    return removedOnTickListener
   }
 }

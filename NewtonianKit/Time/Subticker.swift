@@ -96,7 +96,7 @@ protocol Subticker: Actor {
   /// - SeeAlso: ``resume``
   /// - SeeAlso: ``pause()``
   /// - SeeAlso: ``stop()``
-  func schedule(action: @escaping () async -> Void)
+  func schedule(action: @escaping (_ elapsedTime: Subticking) async -> Void)
 
   /// Either executes the scheduled action until either paused or stopped at each subtick or resumes
   /// it.

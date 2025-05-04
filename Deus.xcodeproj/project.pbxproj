@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		491E1F612DC2C4AB001982DF /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 491E1F602DC2C4AB001982DF /* DequeModule */; };
-		491E1F632DC2C4AB001982DF /* Future in Frameworks */ = {isa = PBXBuildFile; productRef = 491E1F622DC2C4AB001982DF /* Future */; };
+		492DE90B2DC4F4A800558448 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 492DE90A2DC4F4A800558448 /* DequeModule */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,21 +50,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				491E1F612DC2C4AB001982DF /* DequeModule in Frameworks */,
-				491E1F632DC2C4AB001982DF /* Future in Frameworks */,
+				492DE90B2DC4F4A800558448 /* DequeModule in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		491E1F5A2DC2C001001982DF /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		49FD31192DBFC9E2003CEAF9 = {
 			isa = PBXGroup;
 			children = (
@@ -73,7 +64,6 @@
 				49FD31922DBFCAF3003CEAF9 /* NewtonianKitTests */,
 				4963A6392DC231FE007AABCF /* NewtonianKit.framework */,
 				4963A63A2DC231FE007AABCF /* NewtonianKitTests.xctest */,
-				491E1F5A2DC2C001001982DF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -131,8 +121,7 @@
 			);
 			name = NewtonianKitTests;
 			packageProductDependencies = (
-				491E1F602DC2C4AB001982DF /* DequeModule */,
-				491E1F622DC2C4AB001982DF /* Future */,
+				492DE90A2DC4F4A800558448 /* DequeModule */,
 			);
 			productName = NewtonianKitTests;
 			productReference = 4963A63A2DC231FE007AABCF /* NewtonianKitTests.xctest */;
@@ -166,7 +155,7 @@
 			mainGroup = 49FD31192DBFC9E2003CEAF9;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				491E1F5F2DC2C49E001982DF /* XCLocalSwiftPackageReference "../../../Downloads/swift-collections" */,
+				492DE9092DC4F4A800558448 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 49FD31192DBFC9E2003CEAF9;
@@ -474,23 +463,22 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		491E1F5F2DC2C49E001982DF /* XCLocalSwiftPackageReference "../../../Downloads/swift-collections" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../../../Downloads/swift-collections";
+/* Begin XCRemoteSwiftPackageReference section */
+		492DE9092DC4F4A800558448 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.1.4;
+			};
 		};
-/* End XCLocalSwiftPackageReference section */
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		491E1F602DC2C4AB001982DF /* DequeModule */ = {
+		492DE90A2DC4F4A800558448 /* DequeModule */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 491E1F5F2DC2C49E001982DF /* XCLocalSwiftPackageReference "../../../Downloads/swift-collections" */;
+			package = 492DE9092DC4F4A800558448 /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = DequeModule;
-		};
-		491E1F622DC2C4AB001982DF /* Future */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 491E1F5F2DC2C49E001982DF /* XCLocalSwiftPackageReference "../../../Downloads/swift-collections" */;
-			productName = Future;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

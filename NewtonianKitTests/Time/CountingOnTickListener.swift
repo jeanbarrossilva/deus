@@ -5,16 +5,18 @@
 //  Created by Jean Barros Silva on 29/04/25.
 //
 
+import Foundation
+
 @testable import NewtonianKit
 
 /// ``Clock.OnTickListener`` which counts the amount of times it has been notified of ticks.
 ///
 /// - SeeAlso: ``count``
-struct CountingOnTickListener: OnTickListener {
+final class CountingOnTickListener: OnTickListener {
   /// Amount of times ticks have been notified to this ``CountingOnTicklistener``.
-  var count = 0
+  private(set) var count = 0
 
-  mutating func onTick() async {
+  func onTick() async {
     count += 1
   }
 }

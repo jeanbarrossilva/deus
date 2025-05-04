@@ -15,7 +15,7 @@ struct CountingOnTickListenerTests {
   }
 
   @Test func counts() async throws {
-    var onTickListener = CountingOnTickListener()
+    let onTickListener = CountingOnTickListener()
     for _ in 0..<64 { await onTickListener.onTick() }
     #expect(onTickListener.count == 64)
   }

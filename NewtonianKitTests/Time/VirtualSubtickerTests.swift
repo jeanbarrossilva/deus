@@ -18,14 +18,13 @@ struct VirtualSubtickerTests {
 
   @Test func elapsedTimeIncreasesPerSubtick() async throws {
     await subticker.advance(by: .subticks(2))
-    print(await subticker.elapsedTime)
     #expect(await subticker.elapsedTime == .subticks(2))
     await subticker.stop()
   }
 
   @Test func scheduledActionIsExecutedPerSubtick() async throws {
     var actionExecutionCount = 0
-    await subticker.schedule { actionExecutionCount += 1 }
+    await subticker.schedule { _ in actionExecutionCount += 1 }
     await subticker.advance(by: .subticks(2))
     #expect(actionExecutionCount == 3)
     await subticker.stop()
@@ -40,7 +39,7 @@ struct VirtualSubtickerTests {
 
   @Test func doesNotExecuteScheduledActionWhenPaused() async throws {
     var actionExecutionCount = 0
-    await subticker.schedule { actionExecutionCount += 1 }
+    await subticker.schedule { _ in actionExecutionCount += 1 }
     await subticker.pause()
     await subticker.advance(by: .subticks(2))
     #expect(actionExecutionCount == 0)
@@ -57,7 +56,7 @@ struct VirtualSubtickerTests {
 
   @Test func doesNotExecuteScheduledActionWhenStopped() async throws {
     var actionExecutionCount = 0
-    await subticker.schedule { actionExecutionCount += 1 }
+    await subticker.schedule { _ in actionExecutionCount += 1 }
     await subticker.stop()
     await subticker.advance(by: .subticks(2))
     #expect(actionExecutionCount == 0)

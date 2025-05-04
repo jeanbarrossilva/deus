@@ -16,7 +16,7 @@ actor VirtualSubticker: Subticker {
   /// The operation scheduled to be executed periodically.
   ///
   /// - SeeAlso: ``schedule(action:)``
-  private var action: (() async -> Void)? = nil
+  private var action: ((Subticking) async -> Void)? = nil
 
   /// Last time the ``action`` was executed upon an advancement of the virtual time. Stored for
   /// determining whether such ``action`` should be executed immediately when advancing such virtual
@@ -42,7 +42,7 @@ actor VirtualSubticker: Subticker {
 
   var elapsedTime: Subticking = .zero
 
-  func schedule(action: @escaping () async -> Void) {
+  func schedule(action: @escaping (_ elapsedTime: Subticking) async -> Void) {
     self.action = action
   }
 
@@ -91,7 +91,7 @@ actor VirtualSubticker: Subticker {
       guard meantime == advancementTime || lastActionExecutionTime != advancementTime else {
         break
       }
-      await action?()
+      await action?(elapsedTime)
     }
     lastActionExecutionTime = elapsedTime
   }

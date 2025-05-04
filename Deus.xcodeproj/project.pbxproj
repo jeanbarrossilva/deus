@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		492DE90B2DC4F4A800558448 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 492DE90A2DC4F4A800558448 /* DequeModule */; };
+		49313EEC2DC7BE6800353DCA /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 49313EEB2DC7BE6800353DCA /* Collections */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49313EEC2DC7BE6800353DCA /* Collections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,7 +51,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				492DE90B2DC4F4A800558448 /* DequeModule in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,6 +98,7 @@
 			);
 			name = NewtonianKit;
 			packageProductDependencies = (
+				49313EEB2DC7BE6800353DCA /* Collections */,
 			);
 			productName = NewtonianKit;
 			productReference = 4963A6392DC231FE007AABCF /* NewtonianKit.framework */;
@@ -121,7 +122,6 @@
 			);
 			name = NewtonianKitTests;
 			packageProductDependencies = (
-				492DE90A2DC4F4A800558448 /* DequeModule */,
 			);
 			productName = NewtonianKitTests;
 			productReference = 4963A63A2DC231FE007AABCF /* NewtonianKitTests.xctest */;
@@ -155,7 +155,7 @@
 			mainGroup = 49FD31192DBFC9E2003CEAF9;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				492DE9092DC4F4A800558448 /* XCRemoteSwiftPackageReference "swift-collections" */,
+				49313EEA2DC7BE6800353DCA /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 49FD31192DBFC9E2003CEAF9;
@@ -464,7 +464,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		492DE9092DC4F4A800558448 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+		49313EEA2DC7BE6800353DCA /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
 			requirement = {
@@ -475,10 +475,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		492DE90A2DC4F4A800558448 /* DequeModule */ = {
+		49313EEB2DC7BE6800353DCA /* Collections */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 492DE9092DC4F4A800558448 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = DequeModule;
+			package = 49313EEA2DC7BE6800353DCA /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -56,11 +56,14 @@ struct ClockTests {
     #expect(await subticker.elapsedTime == .ticks(2))
   }
 
-  @Test mutating func removesOnTickListenersUponStop() async throws {
-    let listeners = [CountingOnTickListener](count: 2) { _ in CountingOnTickListener() }
-    for listener in listeners { let _ = await clock.add(onTickListener: listener) }
+  @Test(arguments: [
+    [CountingOnTickListener()],
+    [CountingOnTickListener](count: 2) { _ in CountingOnTickListener() },
+  ])
+  mutating func removesUponStop(onTickListeners: [CountingOnTickListener]) async throws {
+    for listener in onTickListeners { let _ = await clock.add(onTickListener: listener) }
     await clock.stop()
     await subticker.advance(by: .ticks(2))
-    for listener in listeners { #expect(listener.count == 0) }
+    for listener in onTickListeners { #expect(listener.count == 0) }
   }
 }

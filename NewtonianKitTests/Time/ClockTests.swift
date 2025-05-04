@@ -49,9 +49,11 @@ struct ClockTests {
   }
 
   @Test mutating func stopsSubtickerUponStop() async throws {
+    await subticker.advance(by: .ticks(2))
     await clock.stop()
     await subticker.advance(by: .ticks(2))
-    #expect(await subticker.elapsedTime == .zero)
+    await subticker.resume()
+    #expect(await subticker.elapsedTime == .ticks(2))
   }
 
   @Test mutating func removesOnTickListenersUponStop() async throws {

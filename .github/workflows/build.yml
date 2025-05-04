@@ -1,0 +1,15 @@
+name: Build
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mxcl/xcodebuild@v3
+        with:
+          platform: macOS
+          warnings-as-errors: true

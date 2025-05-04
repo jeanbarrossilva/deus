@@ -48,25 +48,6 @@ protocol OnTickListener: AnyObject {
   func onTick() async
 }
 
-/// ``Error`` thrown when no ``OnTickListener`` satisfies the critieria for removal from a
-///  ``Clock``, either because none with the given ID was found or was, but its type does not match
-///  the specified one.
-///
-/// - SeeAlso: ``Clock.add(onTickListener:)``
-/// - SeeAlso: ``Clock.removeOnTickListener(identifiedAs:)``
-struct UnknownTickListenerError: Error {
-  /// Type of the unknown ``OnTickListener``.
-  let type: OnTickListener.Type?
-
-  /// ID of the unknown ``OnTickListener``.
-  let id: UUID
-
-  fileprivate init(type: OnTickListener.Type?, id: UUID) {
-    self.type = type
-    self.id = id
-  }
-}
-
 /// Coordinates the passage of time in a simulated universe, allowing for the movement of bodies and
 /// other time-based changes to their properties (such as temperature, size, direction, velocity,
 /// route, etc.).

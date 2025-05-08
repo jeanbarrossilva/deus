@@ -22,18 +22,19 @@ struct ClockTests {
     await clock.stop()
   }
 
-  @Test func doesNotAdvanceTimeWhenPaused() async throws {
+  @Test func ignoresTimeAdvancementsWhenStartedAfterPaused() async throws {
     await clock.pause()
     await clock.advanceTime(by: .subticks(2))
+    await clock.start()
     #expect(await clock.elapsedTime == .zero)
     await clock.stop()
   }
 
-  @Test func performsPendingTimeAdvancementsWhenResumed() async throws {
-    await clock.pause()
+  @Test func ignoresTimeAdvancementsWhenStartedAfterStopped() async throws {
+    await clock.stop()
     await clock.advanceTime(by: .subticks(2))
     await clock.start()
-    #expect(await clock.elapsedTime == .subticks(2))
+    #expect(await clock.elapsedTime == .zero)
     await clock.stop()
   }
 
@@ -60,20 +61,20 @@ struct ClockTests {
     await clock.stop()
   }
 
-  @Test mutating func pausesSubtickerUponPause() async throws {
-    await clock.pause()
+  @Test mutating func pauses() async throws {
     await clock.advanceTime(by: .ticks(2))
-    #expect(await clock.elapsedTime == .zero)
+    await clock.pause()
     await clock.start()
-    #expect(await clock.elapsedTime == .ticks(2))
+    await clock.advanceTime(by: .ticks(2))
+    #expect(await clock.elapsedTime == .ticks(4))
   }
 
-  @Test mutating func stopsSubtickerUponStop() async throws {
+  @Test mutating func stops() async throws {
     await clock.advanceTime(by: .ticks(2))
     await clock.stop()
     await clock.advanceTime(by: .ticks(2))
     await clock.start()
-    #expect(await clock.elapsedTime == .ticks(2))
+    #expect(await clock.elapsedTime == .zero)
   }
 
   @Test(arguments: [

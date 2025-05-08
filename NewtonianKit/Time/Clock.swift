@@ -148,13 +148,6 @@ actor Clock {
   /// - SeeAlso: ``advanceTime(by:)``
   private var lastSubtickTime: Subticking? = nil
 
-  /// Amounts by which the time has been requested to be advanced while this ``Clock`` was
-  /// interrupted.
-  ///
-  /// - SeeAlso: ``advanceTime(by:)``
-  /// - SeeAlso: ``isInterrupted``
-  private var pendingAdvancements = Deque<Subticking>()
-
   /// Whether the subticking has been interrupted, due to this ``Clock`` having been paused/stopped.
   ///
   /// - SeeAlso: ``pause()``
@@ -173,9 +166,6 @@ actor Clock {
   /// - SeeAlso: ``Clock.stop()``
   func start() async {
     isInterrupted = false
-    while let pendingAdvancement = pendingAdvancements.popFirst() {
-      await _advanceTime(by: pendingAdvancement)
-    }
   }
 
   /// Listens to each tick of this ``Clock``.
@@ -199,18 +189,22 @@ actor Clock {
     onTickListeners.remove(listener)
   }
 
-  /// Requests the time to be advanced in case this ``Clock`` is not paused/stopped; otherwise, such
-  /// advancement is performed after it is resumed. When advanced, this ``Clock`` will tick
-  /// `advancement.inMicroseconds` / 1,000 times.
+  /// Requests the time to be advanced in case this ``Clock`` is not paused/stopped; When advanced,
+  /// this ``Clock`` will tick `advancement.inMicroseconds` / 1,000 times.
   ///
   /// - Parameter advancement: Amount of time by which this ``Clock`` is to be advanced.
   func advanceTime(by advancement: Subticking) async {
-    guard advancement != .zero else { return }
-    guard !isInterrupted else {
-      pendingAdvancements.append(advancement)
-      return
+    guard !isInterrupted && advancement != .zero else { return }
+    let advancementTime = elapsedTime
+    for meantime in advancementTime...(advancementTime + advancement) {
+      elapsedTime = meantime
+      guard
+        elapsedTime.containsWholeTick
+          && (meantime == advancementTime || lastSubtickTime != advancementTime)
+      else { continue }
+      for listener in onTickListeners { await listener.onTick() }
     }
-    await _advanceTime(by: advancement)
+    lastSubtickTime = elapsedTime
   }
 
   /// Pauses the passage of time.
@@ -229,26 +223,7 @@ actor Clock {
     onTickListeners.removeAll()
     guard !isInterrupted else { return }
     isInterrupted = true
-    pendingAdvancements.removeAll()
     lastSubtickTime = nil
     elapsedTime = .zero
-  }
-
-  /// Advances the virtual time, regardless of whether this ``Clock`` is interrupted. This function
-  /// is intended for scenarios in which the advancement is guaranteed to be allowed (i.e.,
-  /// ``isInterrupted`` is `false`).
-  ///
-  /// - SeeAlso: ``advanceTime(by:)``
-  private func _advanceTime(by advancement: Subticking) async {
-    let advancementTime = elapsedTime
-    for meantime in stride(from: advancementTime, through: advancementTime + advancement, by: 1) {
-      elapsedTime = meantime
-      guard
-        elapsedTime.containsWholeTick
-          && (meantime == advancementTime || lastSubtickTime != advancementTime)
-      else { continue }
-      for listener in onTickListeners { await listener.onTick() }
-    }
-    lastSubtickTime = elapsedTime
   }
 }

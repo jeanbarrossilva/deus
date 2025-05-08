@@ -41,80 +41,6 @@ private final class AnyOnTickListener: OnTickListener, Identifiable, Hashable {
   }
 }
 
-/// Amount of time relative to the subticks of a ``Clock``.
-enum Subticking: AdditiveArithmetic, Strideable {
-  /// Amount of microseconds represented by this unit. In the case of subticks, their `count` is
-  /// returned by the getter of this property as they are; as for ticks, given that theirs are in
-  /// milliseconds, it is multiplied by 1,000.
-  ///
-  /// - SeeAlso: ``.subticks(_:)``
-  /// - SeeAlso: ``.ticks(_:)``
-  private var inMicroseconds: Int {
-    switch self {
-    case .subticks(let count):
-      count
-    case .ticks(let count):
-      count * 1_000
-    }
-  }
-
-  static let zero = Self.subticks(0)
-
-  /// Whether this amount of time is zero or contains a whole tick.
-  ///
-  /// - SeeAlso: ``zero``
-  /// - SeeAlso: ``.ticks(_:)``
-  var containsWholeTick: Bool {
-    switch self {
-    case .subticks(let count):
-      count % 1_000 == 0
-    case .ticks(_):
-      true
-    }
-  }
-
-  /// Duration in microseconds in which each microsecond equals to one subtick.
-  ///
-  /// - Parameter count: Amount of subticks — microseconds.
-  case subticks(_ count: Int)
-
-  /// Duration in milliseconds in which each millisecond equals to one tick, and each tick is one
-  /// thousand subticks.
-  ///
-  /// - Parameter count: Amount of ticks — milliseconds.
-  case ticks(_ count: Int)
-
-  static func + (lhs: Self, rhs: Self) -> Self {
-    if lhs == .zero {
-      rhs
-    } else if rhs == .zero {
-      lhs
-    } else {
-      .subticks(lhs.inMicroseconds + rhs.inMicroseconds)
-    }
-  }
-
-  static func += (lhs: inout Self, rhs: Self) {
-    lhs = lhs + rhs
-  }
-
-  static func - (lhs: Self, rhs: Self) -> Self {
-    if rhs == .zero { lhs } else { .subticks(lhs.inMicroseconds - rhs.inMicroseconds) }
-  }
-
-  static func -= (lhs: inout Self, rhs: Self) {
-    lhs = lhs - rhs
-  }
-
-  func distance(to other: Self) -> Int {
-    inMicroseconds.distance(to: other.inMicroseconds)
-  }
-
-  func advanced(by n: Int) -> Self {
-    n == -inMicroseconds ? .zero : n == 0 ? self : .subticks(inMicroseconds + n)
-  }
-}
-
 /// Listener of ticks of a ``Clock``.
 protocol OnTickListener: AnyObject {
   /// Callback called whenever the ``Clock`` ticks.
@@ -139,14 +65,14 @@ actor Clock {
   ///
   /// - SeeAlso: ``start()``
   /// - SeeAlso: ``pause()``
-  private(set) var elapsedTime = Subticking.zero
+  private(set) var elapsedTime = Duration.zero
 
   /// Last time a subtick was performed upon an advancement of time. Stored for determining whether
   /// such this ``Clock`` should perform a subtick immediately when advancing its time or only on
   /// the next advancement.
   ///
   /// - SeeAlso: ``advanceTime(by:)``
-  private var lastSubtickTime: Subticking? = nil
+  private var lastSubtickTime: Duration? = nil
 
   /// Whether the subticking has been interrupted, due to this ``Clock`` having been paused/stopped.
   ///
@@ -189,17 +115,19 @@ actor Clock {
     onTickListeners.remove(listener)
   }
 
-  /// Requests the time to be advanced in case this ``Clock`` is not paused/stopped; When advanced,
-  /// this ``Clock`` will tick `advancement.inMicroseconds` / 1,000 times.
+  /// Requests the time to be advanced in case this ``Clock`` is not paused/stopped.
+  ///
+  /// When advanced, this ``Clock`` will perform `advancement.inMicroseconds` subticks, with 1 tick
+  /// per 1,000 subticks.
   ///
   /// - Parameter advancement: Amount of time by which this ``Clock`` is to be advanced.
-  func advanceTime(by advancement: Subticking) async {
+  func advanceTime(by advancement: Duration) async {
     guard !isInterrupted && advancement != .zero else { return }
     let advancementTime = elapsedTime
     for meantime in advancementTime...(advancementTime + advancement) {
       elapsedTime = meantime
       guard
-        elapsedTime.containsWholeTick
+        elapsedTime.containsWholeMillisecond
           && (meantime == advancementTime || lastSubtickTime != advancementTime)
       else { continue }
       for listener in onTickListeners { await listener.onTick() }

@@ -39,25 +39,25 @@ struct ClockTests {
   }
 
   @Test(arguments: [
-    [CountingOnTickListener()],
-    [CountingOnTickListener](count: 2) { _ in CountingOnTickListener() },
+    [CountingTimeLapseListener()],
+    [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() },
   ])
-  mutating func adds(onTickListeners: [CountingOnTickListener]) async throws {
-    for listener in onTickListeners { let _ = await clock.add(onTickListener: listener) }
+  mutating func adds(timeLapseListeners: [CountingTimeLapseListener]) async throws {
+    for listener in timeLapseListeners { let _ = await clock.add(timeLapseListener: listener) }
     await clock.advanceTime(by: .milliseconds(2))
-    for listener in onTickListeners { #expect(listener.count == 3) }
+    for listener in timeLapseListeners { #expect(listener.count == 3) }
     await clock.stop()
   }
 
   @Test(arguments: [
-    [CountingOnTickListener()],
-    [CountingOnTickListener](count: 2) { _ in CountingOnTickListener() },
+    [CountingTimeLapseListener()],
+    [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() },
   ])
-  mutating func removes(onTickListeners: [CountingOnTickListener]) async throws {
-    let ids = await onTickListeners.map { listener in await clock.add(onTickListener: listener) }
-    for id in ids { await clock.removeOnTickListener(identifiedAs: id) }
+  mutating func removes(timeLapseListeners: [CountingTimeLapseListener]) async throws {
+    let ids = await timeLapseListeners.map { listener in await clock.add(timeLapseListener: listener) }
+    for id in ids { await clock.removeTimeLapseListener(identifiedAs: id) }
     await clock.advanceTime(by: .milliseconds(2))
-    for listener in onTickListeners { #expect(listener.count == 0) }
+    for listener in timeLapseListeners { #expect(listener.count == 0) }
     await clock.stop()
   }
 
@@ -78,13 +78,13 @@ struct ClockTests {
   }
 
   @Test(arguments: [
-    [CountingOnTickListener()],
-    [CountingOnTickListener](count: 2) { _ in CountingOnTickListener() },
+    [CountingTimeLapseListener()],
+    [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() },
   ])
-  mutating func removesUponStop(onTickListeners: [CountingOnTickListener]) async throws {
-    for listener in onTickListeners { let _ = await clock.add(onTickListener: listener) }
+  mutating func removesUponStop(timeLapseListeners: [CountingTimeLapseListener]) async throws {
+    for listener in timeLapseListeners { let _ = await clock.add(timeLapseListener: listener) }
     await clock.stop()
     await clock.advanceTime(by: .milliseconds(2))
-    for listener in onTickListeners { #expect(listener.count == 0) }
+    for listener in timeLapseListeners { #expect(listener.count == 0) }
   }
 }

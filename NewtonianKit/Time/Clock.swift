@@ -20,7 +20,7 @@ private final class AnyTimeLapseListener: TimeLapseListener, Identifiable, Hasha
 
   /// Type-erased, wrapped ``TimeLapseListener``. It is safe to cast its type to that with which
   /// this struct was instantiated: it is guaranteed that it will always be of type ``O`` (although
-  /// the instance itself might have been mutated by calls to ``onTick()``).
+  /// the instance itself might have been mutated by calls to ``timeDidElapse()``).
   private(set) var base: any AnyObject & TimeLapseListener
 
   init<O: AnyObject & TimeLapseListener>(_ base: O) {
@@ -32,8 +32,8 @@ private final class AnyTimeLapseListener: TimeLapseListener, Identifiable, Hasha
     lhs.id == rhs.id
   }
 
-  func onTimeLapse() async {
-    await base.onTimeLapse()
+  func timeDidElapse() async {
+    await base.timeDidElapse()
   }
 
   func hash(into hasher: inout Hasher) {
@@ -43,8 +43,8 @@ private final class AnyTimeLapseListener: TimeLapseListener, Identifiable, Hasha
 
 /// Listener of lapses of time of a ``Clock``.
 protocol TimeLapseListener: AnyObject {
-  /// Callback called whenever the the ``Clock`` ticks and, therefore, its time has elapsed.
-  func onTimeLapse() async
+  /// Callback called after the ``Clock`` ticks and, therefore, its time has elapsed.
+  func timeDidElapse() async
 }
 
 /// Coordinates the passage of time in a simulated universe, allowing for the movement of bodies and
@@ -128,7 +128,7 @@ actor Clock {
         elapsedTime.containsWholeMillisecond
           && (meantime == advancementTime || lastSubtickTime != advancementTime)
       else { continue }
-      for listener in timeLapseListeners { await listener.onTimeLapse() }
+      for listener in timeLapseListeners { await listener.timeDidElapse() }
     }
     lastSubtickTime = elapsedTime
   }

@@ -16,7 +16,7 @@ struct CountingTimeLapseListenerTests {
 
   @Test func counts() async throws {
     let timeLapseListener = CountingTimeLapseListener()
-    for _ in 0..<64 { await timeLapseListener.onTimeLapse() }
+    for _ in 0..<64 { await timeLapseListener.timeDidElapse() }
     #expect(timeLapseListener.count == 64)
   }
 }

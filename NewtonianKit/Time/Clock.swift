@@ -8,32 +8,32 @@
 internal import Collections
 import Foundation
 
-/// ``OnTickListener`` by which an instance of a conforming struct or class — the ``base`` — should
-/// be wrapped in order to be added and listen to the ticks of a ``Clock``. A randomly generated ID
-/// is passed into it upon instantiation, which allows for both ensuring that it is added to a
-/// ``Clock`` only once and removing it when it should no longer be notified of ticks.
+/// ``TimeLapseListener`` by which an instance of a conforming struct or class — the ``base`` —
+/// should be wrapped in order to be added and listen to the ticks of a ``Clock``. A randomly
+/// generated ID is passed into it upon instantiation, which allows for both ensuring that it is
+/// added to a ``Clock`` only once and removing it when it should no longer be notified of ticks.
 ///
-/// - SeeAlso: ``Clock.add(onTickListener:)``
-/// - SeeAlso: ``Clock.removeOnTickListener(identifiedAs:)``
-private final class AnyOnTickListener: OnTickListener, Identifiable, Hashable {
+/// - SeeAlso: ``Clock.add(timeLapseListener:)``
+/// - SeeAlso: ``Clock.removeTimeLapseListener(identifiedAs:)``
+private final class AnyTimeLapseListener: TimeLapseListener, Identifiable, Hashable {
   let id: UUID
 
-  /// Type-erased, wrapped ``OnTickListener``. It is safe to cast its type to that with which this
-  /// struct was instantiated: it is guaranteed that it will always be of type ``O`` (although the
-  /// instance itself might have been mutated by calls to ``onTick()``).
-  private(set) var base: any AnyObject & OnTickListener
+  /// Type-erased, wrapped ``TimeLapseListener``. It is safe to cast its type to that with which
+  /// this struct was instantiated: it is guaranteed that it will always be of type ``O`` (although
+  /// the instance itself might have been mutated by calls to ``onTick()``).
+  private(set) var base: any AnyObject & TimeLapseListener
 
-  init<O: AnyObject & OnTickListener>(_ base: O) {
+  init<O: AnyObject & TimeLapseListener>(_ base: O) {
     self.id = (base as? any Identifiable)?.id as? UUID ?? UUID()
     self.base = base
   }
 
-  static func == (lhs: AnyOnTickListener, rhs: AnyOnTickListener) -> Bool {
+  static func == (lhs: AnyTimeLapseListener, rhs: AnyTimeLapseListener) -> Bool {
     lhs.id == rhs.id
   }
 
-  func onTick() async {
-    await base.onTick()
+  func onTimeLapse() async {
+    await base.onTimeLapse()
   }
 
   func hash(into hasher: inout Hasher) {
@@ -41,12 +41,10 @@ private final class AnyOnTickListener: OnTickListener, Identifiable, Hashable {
   }
 }
 
-/// Listener of ticks of a ``Clock``.
-protocol OnTickListener: AnyObject {
-  /// Callback called whenever the ``Clock`` ticks.
-  ///
-  /// - SeeAlso: ``Clock.start()``
-  func onTick() async
+/// Listener of lapses of time of a ``Clock``.
+protocol TimeLapseListener: AnyObject {
+  /// Callback called whenever the the ``Clock`` ticks and, therefore, its time has elapsed.
+  func onTimeLapse() async
 }
 
 /// Coordinates the passage of time in a simulated universe, allowing for the movement of bodies and
@@ -58,8 +56,8 @@ protocol OnTickListener: AnyObject {
 /// adding a listener, which will be notified at each millisecond until this clock is either paused
 /// or stopped.
 actor Clock {
-  /// ``Reference`` to ``AnyOnTickListener``s to be notified of ticks of this ``Clock``.
-  private var onTickListeners = Set<AnyOnTickListener>()
+  /// ``Reference`` to ``AnyTimeLapseListener``s to be notified of ticks of this ``Clock``.
+  private var timeLapseListeners = Set<AnyTimeLapseListener>()
 
   /// Total amount of time elapsed between resumptions and pauses.
   ///
@@ -96,23 +94,23 @@ actor Clock {
 
   /// Listens to each tick of this ``Clock``.
   ///
-  /// - Parameter onTickListener: ``AnyOnTickListener`` to be added.
-  /// - Returns: ID of the ``onTickListener`` with which it can be later removed.
-  /// - SeeAlso: ``removeOnTickListener(identifiedAs:)``
-  func add(onTickListener: any AnyObject & OnTickListener) -> UUID {
-    let onTickListener = AnyOnTickListener(onTickListener)
-    onTickListeners.insert(onTickListener)
-    return onTickListener.id
+  /// - Parameter timeLapseListener: ``AnyTimeLapseListener`` to be added.
+  /// - Returns: ID of the ``timeLapseListener`` with which it can be later removed.
+  /// - SeeAlso: ``removeTimeLapseListener(identifiedAs:)``
+  func add(timeLapseListener: any AnyObject & TimeLapseListener) -> UUID {
+    let timeLapseListener = AnyTimeLapseListener(timeLapseListener)
+    timeLapseListeners.insert(timeLapseListener)
+    return timeLapseListener.id
   }
 
   /// Removes a listener of ticks of this ``Clock``.
   ///
-  /// - Parameter id: ID of the ``OnTickListener`` to be removed.
-  func removeOnTickListener(identifiedAs id: UUID) {
-    guard let listener = onTickListeners.first(where: { listener in listener.id == id }) else {
+  /// - Parameter id: ID of the ``TimeLapseListener`` to be removed.
+  func removeTimeLapseListener(identifiedAs id: UUID) {
+    guard let listener = timeLapseListeners.first(where: { listener in listener.id == id }) else {
       return
     }
-    onTickListeners.remove(listener)
+    timeLapseListeners.remove(listener)
   }
 
   /// Requests the time to be advanced in case this ``Clock`` is not paused/stopped.
@@ -130,7 +128,7 @@ actor Clock {
         elapsedTime.containsWholeMillisecond
           && (meantime == advancementTime || lastSubtickTime != advancementTime)
       else { continue }
-      for listener in onTickListeners { await listener.onTick() }
+      for listener in timeLapseListeners { await listener.onTimeLapse() }
     }
     lastSubtickTime = elapsedTime
   }
@@ -148,7 +146,7 @@ actor Clock {
   /// Calling ``start()`` after having called this function starts the passage of time from the
   /// beginning.
   func stop() async {
-    onTickListeners.removeAll()
+    timeLapseListeners.removeAll()
     guard !isInterrupted else { return }
     isInterrupted = true
     lastSubtickTime = nil

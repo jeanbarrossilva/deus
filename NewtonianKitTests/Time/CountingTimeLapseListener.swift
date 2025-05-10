@@ -16,7 +16,12 @@ final class CountingTimeLapseListener: TimeLapseListener {
   /// Amount of times ticks have been notified to this ``CountingTimeLapseListener``.
   private(set) var count = 0
 
-  func timeDidElapse() async {
+  func timeDidElapse(
+    from start: Duration,
+    after previous: Duration?,
+    to current: Duration,
+    toward end: Duration
+  ) async {
     count += 1
   }
 }

@@ -7,17 +7,20 @@
 
 /// Amount of time in a given unit.
 enum Duration: AdditiveArithmetic, Strideable {
+  static let zero = Self.microseconds(0)
+
+  /// Amount of microseconds — the backing unit of a ``Duration`` — in milliseconds.
+  static let millisecondFactor = 1_000
+
   /// Backing, raw value of this ``Duration`` in microseconds.
-  private var inMicroseconds: Int {
+  var inMicroseconds: Int {
     switch self {
     case .microseconds(let value):
       value
     case .milliseconds(let value):
-      value * 1_000
+      value * Self.millisecondFactor
     }
   }
-
-  static let zero = Self.microseconds(0)
 
   /// Whether this amount of time is zero or contains a whole millisecond.
   ///
@@ -26,7 +29,7 @@ enum Duration: AdditiveArithmetic, Strideable {
   var containsWholeMillisecond: Bool {
     switch self {
     case .microseconds(let value):
-      value % 1_000 == 0
+      value % Self.millisecondFactor == 0
     case .milliseconds(_):
       true
     }

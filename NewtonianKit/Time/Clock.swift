@@ -8,32 +8,40 @@
 internal import Collections
 import Foundation
 
-/// ``TimeLapseListener`` by which an instance of a conforming struct or class — the ``base`` —
-/// should be wrapped in order to be added and listen to the ticks of a ``Clock``. A randomly
-/// generated ID is passed into it upon instantiation, which allows for both ensuring that it is
-/// added to a ``Clock`` only once and removing it when it should no longer be notified of ticks.
+/// ``TimeLapseListener`` by which an instance of a conforming struct or class — the `base` — should
+/// be wrapped in order to be added and listen to the ticks of a ``Clock``. A randomly generated ID
+/// is passed into it upon instantiation, which allows for both ensuring that it is added to a
+/// ``Clock`` only once and removing it when it should no longer be notified of ticks.
 ///
-/// - SeeAlso: ``Clock.add(timeLapseListener:)``
+/// - SeeAlso: ``Clock.addTimeLapseListener(_:)``
 /// - SeeAlso: ``Clock.removeTimeLapseListener(identifiedAs:)``
 private final class AnyTimeLapseListener: TimeLapseListener, Identifiable, Hashable {
   let id: UUID
 
-  /// Type-erased, wrapped ``TimeLapseListener``. It is safe to cast its type to that with which
-  /// this struct was instantiated: it is guaranteed that it will always be of type ``O`` (although
-  /// the instance itself might have been mutated by calls to ``timeDidElapse()``).
-  private(set) var base: any AnyObject & TimeLapseListener
+  /// Callback to which calls to ``timeDidElapse(from:after:to:toward)`` delegate.
+  private(set) var timeDidElapse: (Duration, Duration?, Duration, Duration) async -> Void
 
-  init<O: AnyObject & TimeLapseListener>(_ base: O) {
-    self.id = (base as? any Identifiable)?.id as? UUID ?? UUID()
-    self.base = base
+  init(_ base: any AnyObject & TimeLapseListener) {
+    id = (base as? any Identifiable)?.id as? UUID ?? UUID()
+    timeDidElapse = base.timeDidElapse
+  }
+
+  init(timeDidElapse: @escaping TimeDidElapse) {
+    id = UUID()
+    self.timeDidElapse = timeDidElapse
   }
 
   static func == (lhs: AnyTimeLapseListener, rhs: AnyTimeLapseListener) -> Bool {
     lhs.id == rhs.id
   }
 
-  func timeDidElapse() async {
-    await base.timeDidElapse()
+  func timeDidElapse(
+    from start: Duration,
+    after previous: Duration?,
+    to current: Duration,
+    toward end: Duration
+  ) async {
+    await timeDidElapse(start, previous, current, end)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -43,8 +51,36 @@ private final class AnyTimeLapseListener: TimeLapseListener, Identifiable, Hasha
 
 /// Listener of lapses of time of a ``Clock``.
 protocol TimeLapseListener: AnyObject {
+  /// Closure whose signature matches that of the ``timeDidElapse(from:after:to:toward:)`` callback.
+  typealias TimeDidElapse = (
+    _ start: Duration,
+    _ previous: Duration?,
+    _ current: Duration,
+    _ end: Duration
+  ) async -> Void
+
   /// Callback called after the ``Clock`` ticks and, therefore, its time has elapsed.
-  func timeDidElapse() async
+  ///
+  /// - Parameters:
+  ///   - start: Time from which the ``Clock`` is being advanced.
+  ///   - previous: Time prior to the ``current`` one.
+  ///
+  ///     The time of a ``Clock`` elapses 1 ms per tick. However, the lapse may also have been the
+  ///     result of an advancement; in such a scenario, it could have been advanced immediately
+  ///     instead of linearly, and, therefore, the difference between both times might not be of
+  ///     only 1 ms.
+  ///
+  ///     It will be `nil` if this is the first lapse of time of the ``Clock`` and, in this case,
+  ///     ``current`` *may* be zero depending on whether the ``Clock`` has been restarted. If the
+  ///     ``Clock`` is resuming, it will be the amount of time elapsed at the moment it was paused.
+  ///   - current: Current time of the ``Clock``.
+  ///   - end: Target, final time toward which the ``Clock`` is elapsing.
+  func timeDidElapse(
+    from start: Duration,
+    after previous: Duration?,
+    to current: Duration,
+    toward end: Duration
+  ) async
 }
 
 /// Coordinates the passage of time in a simulated universe, allowing for the movement of bodies and
@@ -97,10 +133,17 @@ actor Clock {
   /// - Parameter timeLapseListener: ``AnyTimeLapseListener`` to be added.
   /// - Returns: ID of the ``timeLapseListener`` with which it can be later removed.
   /// - SeeAlso: ``removeTimeLapseListener(identifiedAs:)``
-  func add(timeLapseListener: any AnyObject & TimeLapseListener) -> UUID {
-    let timeLapseListener = AnyTimeLapseListener(timeLapseListener)
-    timeLapseListeners.insert(timeLapseListener)
-    return timeLapseListener.id
+  func addTimeLapseListener(_ timeDidElapse: @escaping TimeLapseListener.TimeDidElapse) -> UUID {
+    _addTimeLapseListener(AnyTimeLapseListener(timeDidElapse: timeDidElapse))
+  }
+
+  /// Listens to each tick of this ``Clock``.
+  ///
+  /// - Parameter timeLapseListener: ``AnyTimeLapseListener`` to be added.
+  /// - Returns: ID of the ``timeLapseListener`` with which it can be later removed.
+  /// - SeeAlso: ``removeTimeLapseListener(identifiedAs:)``
+  func addTimeLapseListener(_ listener: any AnyObject & TimeLapseListener) -> UUID {
+    _addTimeLapseListener(AnyTimeLapseListener(listener))
   }
 
   /// Removes a listener of ticks of this ``Clock``.
@@ -121,14 +164,20 @@ actor Clock {
   /// - Parameter advancement: Amount of time by which this ``Clock`` is to be advanced.
   func advanceTime(by advancement: Duration) async {
     guard !isInterrupted && advancement != .zero else { return }
-    let advancementTime = elapsedTime
-    for meantime in advancementTime...(advancementTime + advancement) {
+    let start = elapsedTime
+    let end = start + advancement
+    for meantime in start...end {
       elapsedTime = meantime
-      guard
-        elapsedTime.containsWholeMillisecond
-          && (meantime == advancementTime || lastSubtickTime != advancementTime)
+      guard elapsedTime.containsWholeMillisecond && (meantime == start || lastSubtickTime != start)
       else { continue }
-      for listener in timeLapseListeners { await listener.timeDidElapse() }
+      for listener in timeLapseListeners {
+        await listener.timeDidElapse(
+          from: start,
+          after: meantime == start ? nil : max(.zero, meantime - .milliseconds(1)),
+          to: meantime,
+          toward: end
+        )
+      }
     }
     lastSubtickTime = elapsedTime
   }
@@ -151,5 +200,16 @@ actor Clock {
     isInterrupted = true
     lastSubtickTime = nil
     elapsedTime = .zero
+  }
+
+  /// Base function for ``AnyTimeLapseListener`` adder functions which adds the ``listener`` and
+  /// provides its ID for later removal.
+  ///
+  /// - Parameter listener: ``AnyTimeLapseListener`` to be added.
+  /// - Returns: ID of the ``listener`` with which it can be later removed.
+  /// - SeeAlso: ``removeTimeLapseListener(identifiedAs:)``
+  private func _addTimeLapseListener(_ listener: AnyTimeLapseListener) -> UUID {
+    timeLapseListeners.insert(listener)
+    return listener.id
   }
 }

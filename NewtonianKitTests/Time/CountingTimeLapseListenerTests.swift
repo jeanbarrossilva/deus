@@ -15,8 +15,19 @@ struct CountingTimeLapseListenerTests {
   }
 
   @Test func counts() async throws {
-    let timeLapseListener = CountingTimeLapseListener()
-    for _ in 0..<64 { await timeLapseListener.timeDidElapse() }
-    #expect(timeLapseListener.count == 64)
+    let listener = CountingTimeLapseListener()
+    let lapse =
+      stride(from: Duration.zero, to: .milliseconds(64), by: Duration.millisecondFactor).map {
+        meantime in meantime
+      }
+    for meantime in lapse {
+      await listener.timeDidElapse(
+        from: lapse.first!,
+        after: meantime == .zero ? nil : meantime - .milliseconds(1),
+        to: meantime,
+        toward: lapse.last!
+      )
+    }
+    #expect(listener.count == 64)
   }
 }

@@ -43,9 +43,78 @@ struct ClockTests {
     [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() },
   ])
   mutating func adds(timeLapseListeners: [CountingTimeLapseListener]) async throws {
-    for listener in timeLapseListeners { let _ = await clock.add(timeLapseListener: listener) }
+    for listener in timeLapseListeners { let _ = await clock.addTimeLapseListener(listener) }
     await clock.advanceTime(by: .milliseconds(2))
     for listener in timeLapseListeners { #expect(listener.count == 3) }
+    await clock.stop()
+  }
+
+  @Test
+  func startTimePassedIntoTimeLapseListenerEqualsToThatElapsedUponAdvancementRequest() async throws
+  {
+    await clock.advanceTime(by: .milliseconds(2))
+    let _ =
+      await clock.addTimeLapseListener { start, _, _, _ in #expect(start == .milliseconds(2)) }
+    await clock.advanceTime(by: .milliseconds(2))
+    await clock.stop()
+  }
+
+  @Test
+  func previousTimeIsNilWhenTimeLapseIsNotifiedToListenerAfterClockIsJustStarted() async throws {
+    let listener = CountingTimeLapseListener()
+    let _ = await clock.addTimeLapseListener { _, previous, _, _ in
+      guard listener.count == 0 else { return }
+      #expect(previous == nil)
+    }
+    let _ = await clock.addTimeLapseListener(listener)
+    await clock.advanceTime(by: .milliseconds(1))
+    await clock.stop()
+  }
+
+  @Test func previousTimePassedIntoTimeLapseListenerEqualsToLastElapsedOneAtPause() async throws {
+    let listener = CountingTimeLapseListener()
+    let _ = await clock.addTimeLapseListener { _, previous, _, _ in
+      switch listener.count {
+      case 4:
+        #expect(previous == .milliseconds(3))
+      case 5:
+        #expect(previous == .milliseconds(4))
+      default:
+        return
+      }
+    }
+    let _ = await clock.addTimeLapseListener(listener)
+    await clock.advanceTime(by: .milliseconds(2))
+    await clock.pause()
+    await clock.advanceTime(by: .milliseconds(1))
+    await clock.stop()
+  }
+
+  @Test
+  func previousTimePassedIntoTimeLapseListenerIsOneMicrosecondLessThanCurrentOne() async throws {
+    let listener = CountingTimeLapseListener()
+    let _ = await clock.addTimeLapseListener { _, previous, current, _ in
+      guard listener.count > 0 else { return }
+      #expect(previous == current - .milliseconds(1))
+    }
+    let _ = await clock.addTimeLapseListener(listener)
+    await clock.advanceTime(by: .milliseconds(2))
+    await clock.stop()
+  }
+
+  @Test func currentTimePassedIntoTimeLapseListenerEqualsToElapsedOneOfClock() async throws {
+    let _ = await clock.addTimeLapseListener { _, _, current, _ in
+      #expect(await current == clock.elapsedTime)
+    }
+    await clock.advanceTime(by: .milliseconds(2))
+    await clock.stop()
+  }
+
+  @Test
+  func endTimePassedIntoTimeLapseListenerIsEqualToThatToWhichTheTimeIsAdvancedToward() async throws
+  {
+    let _ = await clock.addTimeLapseListener { _, _, _, end in #expect(end == .milliseconds(2)) }
+    await clock.advanceTime(by: .milliseconds(2))
     await clock.stop()
   }
 
@@ -54,7 +123,8 @@ struct ClockTests {
     [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() },
   ])
   mutating func removes(timeLapseListeners: [CountingTimeLapseListener]) async throws {
-    let ids = await timeLapseListeners.map { listener in await clock.add(timeLapseListener: listener) }
+    let ids =
+      await timeLapseListeners.map { listener in await clock.addTimeLapseListener(listener) }
     for id in ids { await clock.removeTimeLapseListener(identifiedAs: id) }
     await clock.advanceTime(by: .milliseconds(2))
     for listener in timeLapseListeners { #expect(listener.count == 0) }
@@ -82,7 +152,7 @@ struct ClockTests {
     [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() },
   ])
   mutating func removesUponStop(timeLapseListeners: [CountingTimeLapseListener]) async throws {
-    for listener in timeLapseListeners { let _ = await clock.add(timeLapseListener: listener) }
+    for listener in timeLapseListeners { let _ = await clock.addTimeLapseListener(listener) }
     await clock.stop()
     await clock.advanceTime(by: .milliseconds(2))
     for listener in timeLapseListeners { #expect(listener.count == 0) }

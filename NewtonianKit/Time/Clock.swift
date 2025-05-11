@@ -168,7 +168,7 @@ actor Clock {
     let end = start + advancement
     for meantime in start...end {
       elapsedTime = meantime
-      guard elapsedTime.containsWholeMillisecond && (meantime == start || lastSubtickTime != start)
+      guard elapsedTime.comprisesWholeTicksOnly && (meantime == start || lastSubtickTime != start)
       else { continue }
       for listener in timeLapseListeners {
         await listener.timeDidElapse(
@@ -181,7 +181,7 @@ actor Clock {
     }
     lastSubtickTime = elapsedTime
   }
-
+  
   /// Pauses the passage of time.
   ///
   /// Calling ``start()`` after having called this function resumes the passage of time from where
@@ -212,4 +212,9 @@ actor Clock {
     timeLapseListeners.insert(listener)
     return listener.id
   }
+}
+
+extension Duration {
+  /// Whether an integer amount of ticks can be performed by a ``Clock`` within this ``Duration``.
+  fileprivate var comprisesWholeTicksOnly: Bool { inMicroseconds % Self.millisecondFactor == 0 }
 }

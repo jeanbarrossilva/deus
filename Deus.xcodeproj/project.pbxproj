@@ -11,6 +11,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		4927F3842DD25BC700E368D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49FD311A2DBFC9E2003CEAF9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4927F36B2DD25BC400E368D8;
+			remoteInfo = Deus;
+		};
 		49FD318E2DBFCAF3003CEAF9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49FD311A2DBFC9E2003CEAF9 /* Project object */;
@@ -21,11 +28,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4921F2692DD4ECA900393B6F /* Deus.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Deus.xctestplan; sourceTree = "<group>"; };
+		4927F36C2DD25BC400E368D8 /* Deus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Deus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4927F3832DD25BC700E368D8 /* DeusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeusUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4963A6392DC231FE007AABCF /* NewtonianKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NewtonianKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4963A63A2DC231FE007AABCF /* NewtonianKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewtonianKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		4927F36D2DD25BC400E368D8 /* Deus */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Deus;
+			sourceTree = "<group>";
+		};
+		4927F3862DD25BC700E368D8 /* DeusUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DeusUITests;
+			sourceTree = "<group>";
+		};
 		49FD31852DBFCAF3003CEAF9 /* NewtonianKit */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = NewtonianKit;
@@ -39,6 +59,20 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4927F3692DD25BC400E368D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4927F3802DD25BC700E368D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49FD31812DBFCAF3003CEAF9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -60,10 +94,15 @@
 		49FD31192DBFC9E2003CEAF9 = {
 			isa = PBXGroup;
 			children = (
+				4921F2692DD4ECA900393B6F /* Deus.xctestplan */,
 				49FD31852DBFCAF3003CEAF9 /* NewtonianKit */,
 				49FD31922DBFCAF3003CEAF9 /* NewtonianKitTests */,
 				4963A6392DC231FE007AABCF /* NewtonianKit.framework */,
 				4963A63A2DC231FE007AABCF /* NewtonianKitTests.xctest */,
+				4927F36C2DD25BC400E368D8 /* Deus.app */,
+				4927F36D2DD25BC400E368D8 /* Deus */,
+				4927F3832DD25BC700E368D8 /* DeusUITests.xctest */,
+				4927F3862DD25BC700E368D8 /* DeusUITests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,6 +119,51 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		4927F36B2DD25BC400E368D8 /* Deus */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4927F38B2DD25BC700E368D8 /* Build configuration list for PBXNativeTarget "Deus" */;
+			buildPhases = (
+				4927F3682DD25BC400E368D8 /* Sources */,
+				4927F3692DD25BC400E368D8 /* Frameworks */,
+				4927F36A2DD25BC400E368D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				4927F36D2DD25BC400E368D8 /* Deus */,
+			);
+			name = Deus;
+			packageProductDependencies = (
+			);
+			productName = Deus;
+			productReference = 4927F36C2DD25BC400E368D8 /* Deus.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4927F3822DD25BC700E368D8 /* DeusUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4927F3912DD25BC700E368D8 /* Build configuration list for PBXNativeTarget "DeusUITests" */;
+			buildPhases = (
+				4927F37F2DD25BC700E368D8 /* Sources */,
+				4927F3802DD25BC700E368D8 /* Frameworks */,
+				4927F3812DD25BC700E368D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4927F3852DD25BC700E368D8 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4927F3862DD25BC700E368D8 /* DeusUITests */,
+			);
+			name = DeusUITests;
+			packageProductDependencies = (
+			);
+			productName = DeusUITests;
+			productReference = 4927F3832DD25BC700E368D8 /* DeusUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		49FD31832DBFCAF3003CEAF9 /* NewtonianKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 49FD31992DBFCAF3003CEAF9 /* Build configuration list for PBXNativeTarget "NewtonianKit" */;
@@ -137,6 +221,13 @@
 				LastSwiftUpdateCheck = 1630;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
+					4927F36B2DD25BC400E368D8 = {
+						CreatedOnToolsVersion = 16.3;
+					};
+					4927F3822DD25BC700E368D8 = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = 4927F36B2DD25BC400E368D8;
+					};
 					49FD31832DBFCAF3003CEAF9 = {
 						CreatedOnToolsVersion = 16.3;
 					};
@@ -164,11 +255,27 @@
 			targets = (
 				49FD31832DBFCAF3003CEAF9 /* NewtonianKit */,
 				49FD318B2DBFCAF3003CEAF9 /* NewtonianKitTests */,
+				4927F36B2DD25BC400E368D8 /* Deus */,
+				4927F3822DD25BC700E368D8 /* DeusUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4927F36A2DD25BC400E368D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4927F3812DD25BC700E368D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49FD31822DBFCAF3003CEAF9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -186,6 +293,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4927F3682DD25BC400E368D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4927F37F2DD25BC700E368D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49FD31802DBFCAF3003CEAF9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -203,6 +324,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		4927F3852DD25BC700E368D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4927F36B2DD25BC400E368D8 /* Deus */;
+			targetProxy = 4927F3842DD25BC700E368D8 /* PBXContainerItemProxy */;
+		};
 		49FD318F2DBFCAF3003CEAF9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 49FD31832DBFCAF3003CEAF9 /* NewtonianKit */;
@@ -211,6 +337,92 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		4927F38C2DD25BC700E368D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Deus/Deus.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X5FKTSKM38;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jeanbarrossilva.deus.Deus;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4927F38D2DD25BC700E368D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Deus/Deus.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X5FKTSKM38;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jeanbarrossilva.deus.Deus;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		4927F3922DD25BC700E368D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X5FKTSKM38;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jeanbarrossilva.deus.DeusUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Deus;
+			};
+			name = Debug;
+		};
+		4927F3932DD25BC700E368D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X5FKTSKM38;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jeanbarrossilva.deus.DeusUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Deus;
+			};
+			name = Release;
+		};
 		49FD31422DBFC9E3003CEAF9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -434,6 +646,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4927F38B2DD25BC700E368D8 /* Build configuration list for PBXNativeTarget "Deus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4927F38C2DD25BC700E368D8 /* Debug */,
+				4927F38D2DD25BC700E368D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4927F3912DD25BC700E368D8 /* Build configuration list for PBXNativeTarget "DeusUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4927F3922DD25BC700E368D8 /* Debug */,
+				4927F3932DD25BC700E368D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		49FD311D2DBFC9E2003CEAF9 /* Build configuration list for PBXProject "Deus" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

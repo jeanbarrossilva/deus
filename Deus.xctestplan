@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "6F699247-9C10-47FE-83FE-7C6C019773C4",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Deus.xcodeproj",
+      "identifier" : "4927F36B2DD25BC400E368D8",
+      "name" : "Deus"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Deus.xcodeproj",
+        "identifier" : "4927F3822DD25BC700E368D8",
+        "name" : "DeusUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

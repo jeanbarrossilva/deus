@@ -190,11 +190,11 @@ actor Clock {
     isInterrupted = true
   }
 
-  /// Stops the passage of time, resetting this ``Clock``.
+  /// Resets this ``Clock``, stopping the passage of time.
   ///
   /// Calling ``start()`` after having called this function starts the passage of time from the
   /// beginning.
-  func stop() async {
+  func reset() async {
     timeLapseListeners.removeAll()
     guard !isInterrupted else { return }
     isInterrupted = true

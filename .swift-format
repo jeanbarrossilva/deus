@@ -1,0 +1,9 @@
+{
+  multiElementCollectionTrailingCommas: false,
+  prioritizeKeepingFunctionOutputTogether: true,
+  reflowMultilineStringLiterals: "always",
+  respectsExistingLineBreaks: false,
+  spacesBeforeEndOfLineComments: 1,
+  tabWidth: 2,
+  version: 1
+}

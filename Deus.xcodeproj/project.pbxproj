@@ -29,6 +29,7 @@
 
 /* Begin PBXFileReference section */
 		4921F2692DD4ECA900393B6F /* Deus.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Deus.xctestplan; sourceTree = "<group>"; };
+		4921F3192DD54F0B00393B6F /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
 		4927F36C2DD25BC400E368D8 /* Deus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Deus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4927F3832DD25BC700E368D8 /* DeusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeusUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4963A6392DC231FE007AABCF /* NewtonianKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NewtonianKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +95,7 @@
 		49FD31192DBFC9E2003CEAF9 = {
 			isa = PBXGroup;
 			children = (
+				4921F3192DD54F0B00393B6F /* .swift-format */,
 				4921F2692DD4ECA900393B6F /* Deus.xctestplan */,
 				49FD31852DBFCAF3003CEAF9 /* NewtonianKit */,
 				49FD31922DBFCAF3003CEAF9 /* NewtonianKitTests */,

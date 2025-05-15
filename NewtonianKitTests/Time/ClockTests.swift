@@ -5,6 +5,7 @@
 //  Created by Jean Barros Silva on 28/04/25.
 //
 
+import Foundation
 import Testing
 
 @testable import NewtonianKit
@@ -16,17 +17,29 @@ struct ClockTests {
     await clock.start()
   }
 
-  @Test func elapsedTimeIncreasesPerSubtick() async throws {
-    await clock.advanceTime(by: .microseconds(2))
-    #expect(await clock.elapsedTime == .microseconds(2))
+  @Test func virtualModeIsDefaultOne() async throws {
+    try await Task.sleep(for: .microseconds(2))
+    #expect(await clock.elapsedTime == .zero)
+  }
+
+  @Test func timeIsNotElapsedAutomaticallyOnWallModeWhenNotStarted() async throws {
+    await clock.reset()
+    await clock.setMode(.wall)
+    try await Task.sleep(for: .microseconds(2))
+    #expect(await clock.elapsedTime == .zero)
     await clock.reset()
   }
 
-  @Test func ignoresTimeAdvancementsWhenStartedAfterPaused() async throws {
-    await clock.pause()
+  @Test func timeIsElapsedAutomaticallyOnWallModeUponStart() async throws {
+    await clock.setMode(.wall)
+    try await Task.sleep(for: .microseconds(2))
+    #expect(await clock.elapsedTime > .zero)
+    await clock.reset()
+  }
+
+  @Test func elapsedTimeIncreasesPerSubtick() async throws {
     await clock.advanceTime(by: .microseconds(2))
-    await clock.start()
-    #expect(await clock.elapsedTime == .zero)
+    #expect(await clock.elapsedTime == .microseconds(2))
     await clock.reset()
   }
 
@@ -92,12 +105,10 @@ struct ClockTests {
 
   @Test
   func previousTimePassedIntoTimeLapseListenerIsOneMicrosecondLessThanCurrentOne() async throws {
-    let listener = CountingTimeLapseListener()
     let _ = await clock.addTimeLapseListener { _, previous, current, _ in
-      guard listener.count > 0 else { return }
+      guard let previous else { return }
       #expect(previous == current - .milliseconds(1))
     }
-    let _ = await clock.addTimeLapseListener(listener)
     await clock.advanceTime(by: .milliseconds(2))
     await clock.reset()
   }
@@ -129,14 +140,6 @@ struct ClockTests {
     await clock.advanceTime(by: .milliseconds(2))
     for listener in timeLapseListeners { #expect(listener.count == 0) }
     await clock.reset()
-  }
-
-  @Test mutating func pauses() async throws {
-    await clock.advanceTime(by: .milliseconds(2))
-    await clock.pause()
-    await clock.start()
-    await clock.advanceTime(by: .milliseconds(2))
-    #expect(await clock.elapsedTime == .milliseconds(4))
   }
 
   @Test mutating func resets() async throws {

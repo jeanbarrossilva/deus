@@ -8,6 +8,75 @@
 internal import Collections
 import Foundation
 
+/// Closure which is executed whenever a ``Clock`` is started.
+typealias ClockDidStart = () -> Void
+
+/// ``Identifiable`` listener which is notified of starts of a ``Clock``.
+fileprivate final class ClockStartListener: Identifiable, Hashable {
+  /// Callback called whenever the ``Clock`` starts.
+  private let clockDidStart: ClockDidStart
+
+  /// Denotes whether this ``ClockStartListener`` will continue to be notified after subsequent
+  /// ``Clock`` starts.
+  private let repetition: Repetition
+
+  let id = UUID()
+
+  /// Frequency with which a ``ClockStartListener`` should be notified.
+  enum Repetition {
+    /// Notification will be performed only once: either immediately, in case the ``Clock`` is
+    /// already ticking; or by the time it is started. Further calls to ``Clock.start()`` after the
+    /// ``ClockStartListener`` has been notified will be ignored.
+    case once
+
+    /// Callback called after the ``listener`` gets notified.
+    ///
+    /// Dereferences the ``listener`` in case this is ``.once``.
+    ///
+    /// - Parameters:
+    ///   - clock: ``Clock`` whose start has been listened to.
+    ///   - listener: ``ClockStartListener`` to which a start of the ``clock`` has been notified.
+    func didNotify(startOf clock: isolated Clock, to listener: ClockStartListener) {
+      switch self {
+      case .once:
+        clock.removeStartListener(identifiedAs: listener.id)
+      }
+    }
+  }
+
+  init(listening repetition: Repetition, clockDidStart: @escaping ClockDidStart) {
+    self.repetition = repetition
+    self.clockDidStart = clockDidStart
+  }
+
+  static func == (lhs: ClockStartListener, rhs: ClockStartListener) -> Bool {
+    lhs.id == rhs.id
+  }
+
+  func hash(into hasher: inout Hasher) {
+    id.hash(into: &hasher)
+  }
+
+  /// Notifies this ``ClockStartListener`` of a start of the ``clock``, calling its ``didStart``
+  /// callback.
+  ///
+  /// - Parameters:
+  ///   - clock: ``Clock`` whose start is being notified.
+  ///   - isImmediate: Whether this notification is amid ticks of the ``clock`` — in which case it
+  ///     is already started and has not *scheduled* the listening to its starts, but is, rather,
+  ///     notifying this ``ClockStartListener`` immediately.
+  ///
+  ///     Setting this to `false` with ``repetition`` == ``Repetition.once`` signals that an
+  ///     O(`clock.startListeners.count`) lookup for this ``ClockStartListener`` should be performed
+  ///     and it should, then, be removed from such ``Array``. Means that the listening was, in
+  ///     fact, scheduled.
+  func notify(startOf clock: isolated Clock, isImmediate: Bool) {
+    clockDidStart()
+    guard !isImmediate else { return }
+    repetition.didNotify(startOf: clock, to: self)
+  }
+}
+
 /// ``TimeLapseListener`` by which an instance of a conforming struct or class — the `base` — should
 /// be wrapped in order to be added and listen to the ticks of a ``Clock``. A randomly generated ID
 /// is passed into it upon instantiation, which allows for both ensuring that it is added to a
@@ -92,7 +161,27 @@ protocol TimeLapseListener: AnyObject {
 /// adding a listener, which will be notified at each millisecond until this clock is either paused
 /// or stopped.
 actor Clock {
-  /// ``Reference`` to ``AnyTimeLapseListener``s to be notified of ticks of this ``Clock``.
+  /// ``Mode`` in which this ``Clock`` is ticking or will tick, determining whether its time is that
+  /// of a wall-clock or virtual. It is defined as virtual by default — meaning that it will not
+  /// elapse automatically when started; rather, it will do so upon explicit calls to
+  /// ``advanceTime(by:)`` —, and can be changed via ``setMode(_:)``.
+  private var mode = Mode.virtual
+  
+  /// ``Timer`` by which the subticking of this ``Clock`` is scheduled performed periodically when
+  /// in wall-clock mode. Will be `nil` in case the mode is virtual or upon an advancement of time,
+  /// after which it is initialized and fired again.
+  ///
+  /// - SeeAlso: ``Mode.wall``
+  /// - SeeAlso: ``advanceTime(by:)``
+  /// - SeeAlso: ``Timer.fire()``
+  private var timer: Timer? = nil
+  
+  /// ``ClockStartListener``s to be notified when this ``Clock`` starts.
+  ///
+  /// - SeeAlso: ``start()``
+  private var startListeners = Set<ClockStartListener>()
+
+  /// ``AnyTimeLapseListener``s to be notified of ticks of this ``Clock``.
   private var timeLapseListeners = Set<AnyTimeLapseListener>()
 
   /// Total amount of time elapsed between resumptions and pauses.
@@ -114,6 +203,84 @@ actor Clock {
   /// - SeeAlso: ``stop()``
   private var isInterrupted = true
 
+  /// Mode based on which a ``Clock`` passes its time. Determines whether its time will elapse
+  /// automatically until reset, and such option can be defined at any moment via calls to
+  /// ``Clock.setMode(_:)``.
+  ///
+  /// The main difference between the two modes is, essentially, on whether the passage of time upon
+  /// a start is automatic — in such case, the ``.wall`` mode (meaning "walltime") would be used —
+  /// or manual, requiring explicit advancements — scenario for which ``.virtual`` is.
+  ///
+  /// - SeeAlso: ``Clock.reset()``
+  enum Mode: Sendable {
+    /// Denotes that a ``Clock`` should elapse its time only upon command, with explicit calls to
+    /// ``Clock.advanceTime(by:)``. Its ticking is, then, dependent of such advancements, and does
+    /// not occur until they are both performed and done so by a sufficient amount — 1,000
+    /// microseconds = 1,000 subticks = 1 millisecond = 1 tick.
+    ///
+    /// This ``Mode`` is especially useful for tests, given that the passage of time can be
+    /// precisely controlled and, therefore, is deterministic.
+    case virtual
+
+    /// Denotes that a ``Clock`` should elapse its time automatically when started or immediately if
+    /// it is currently uninterrupted, via the the mechanisms specific to the underlying operating
+    /// system.
+    case wall
+
+    /// Callback called before this ``Mode`` is set to the ``clock``.
+    ///
+    /// Triggers the system-based passage of time in case this is the ``.wall`` ``Mode``; otherwise,
+    /// invalidates and dereferences the ``Timer``, since the ``.virtual`` ``Mode`` requires
+    /// explicit advancements of time via ``Clock.advanceTime(by:)``.
+    ///
+    /// - Parameter clock: ``Clock`` whose ``Mode`` will be set to this one.
+    /// - SeeAlso: ``Timer.invalidate()``
+    fileprivate func willBeSet(to clock: isolated Clock) async {
+      guard clock.mode != self else { return }
+      clock.timer?.invalidate()
+      clock.timer = nil
+      await willBeSetToAndDidPrepare(clock: clock)
+    }
+
+    /// Handles setting the mode of the ``clock`` to this one, considering that the previous state
+    /// resulted from the current mode has already been reset and, therefore, it is safe to perform
+    /// the configuration specific to this ``Mode``.
+    ///
+    /// By the time this function is called, it is implicitly guaranteed that:
+    ///
+    /// - ``clock.mode`` != `self`;
+    /// - ``clock.timer`` == `nil`.
+    ///
+    /// - Parameter clock: ``Clock`` whose mode will be set to this one.
+    private func willBeSetToAndDidPrepare(clock: isolated Clock) async {
+      switch self {
+      case .virtual:
+        return
+      case .wall:
+        clock.addStartListener(listening: .once) {
+          let timer = Timer(
+            timeInterval: 0.00001,
+            repeats: true,
+            block: { _ in Task { await clock.advanceTimeUnconditionally(by: .microseconds(1)) } }
+          )
+          clock.timer = timer
+          timer.fire()
+        }
+      }
+    }
+  }
+
+  /// Determines how time will be elapsed by this ``Clock``: whether virtually — manually —, with
+  /// explicit advancements; or as that of a wall-clock, automatically and through the underlying
+  /// operating system.
+  ///
+  /// - Parameter mode: ``Mode`` to be defined and applied in case this ``Clock`` is ticking.
+  /// - SeeAlso: ``start()``
+  func setMode(_ mode: Mode) async {
+    await mode.willBeSet(to: self)
+    self.mode = mode
+  }
+
   /// Initiates the passage of time. From the moment this function is called, this ``Clock`` starts
   /// ticking on a per-millisecond basis and, upon each of its ticks, the added listeners are
   /// notified.
@@ -125,7 +292,9 @@ actor Clock {
   /// - SeeAlso: ``Clock.pause()``
   /// - SeeAlso: ``Clock.stop()``
   func start() async {
+    guard isInterrupted else { return }
     isInterrupted = false
+    for listener in startListeners { listener.notify(startOf: self, isImmediate: false) }
   }
 
   /// Listens to each tick of this ``Clock``.
@@ -164,6 +333,41 @@ actor Clock {
   /// - Parameter advancement: Amount of time by which this ``Clock`` is to be advanced.
   func advanceTime(by advancement: Duration) async {
     guard !isInterrupted && advancement != .zero else { return }
+    await advanceTimeUnconditionally(by: advancement)
+  }
+
+  /// Resets this ``Clock``, stopping the passage of time.
+  ///
+  /// Calling ``start()`` after having called this function starts the passage of time from the
+  /// beginning.
+  func reset() async {
+    timeLapseListeners.removeAll()
+    guard !isInterrupted else { return }
+    await setMode(.virtual)
+    isInterrupted = true
+    lastSubtickTime = nil
+    elapsedTime = .zero
+  }
+
+  /// Removes a listener of starts of this ``Clock``.
+  ///
+  /// - Parameter id: ID of the ``ClockStartListener`` to be removed.
+  fileprivate func removeStartListener(identifiedAs id: UUID) {
+    guard let listener = startListeners.first(where: { listener in listener.id == id }) else {
+      return
+    }
+    startListeners.remove(listener)
+  }
+
+  /// Adds ``advancement`` to the time that has elapsed, notifying each added listener when a tick
+  /// is performed. Differs from the public function for advancing time in that this one does not
+  /// ensure that this ``Clock`` is uninterrupted or the given ``advancement`` is greater than zero:
+  /// it is implied that both conditions are true.
+  ///
+  /// - Parameter advancement: Amount of time by which this ``Clock`` is to be advanced.
+  /// - SeeAlso: ``advanceTime(by:)``
+  /// - SeeAlso: ``isInterrupted``
+  private func advanceTimeUnconditionally(by advancement: Duration) async {
     let start = elapsedTime
     let end = start + advancement
     for meantime in start...end {
@@ -181,25 +385,23 @@ actor Clock {
     }
     lastSubtickTime = elapsedTime
   }
-  
-  /// Pauses the passage of time.
-  ///
-  /// Calling ``start()`` after having called this function resumes the passage of time from where
-  /// it was paused.
-  func pause() async {
-    isInterrupted = true
-  }
 
-  /// Resets this ``Clock``, stopping the passage of time.
+  /// Listens to starts of this ``Clock``.
   ///
-  /// Calling ``start()`` after having called this function starts the passage of time from the
-  /// beginning.
-  func reset() async {
-    timeLapseListeners.removeAll()
-    guard !isInterrupted else { return }
-    isInterrupted = true
-    lastSubtickTime = nil
-    elapsedTime = .zero
+  /// - Parameters:
+  ///   - repetition: Denotes whether this ``ClockStartListener`` will continue to be notified after
+  ///     subsequent starts.
+  ///   - clockDidStart: Callback called whenever this ``Clock`` starts.
+  private func addStartListener(
+    listening repetition: ClockStartListener.Repetition,
+    _ clockDidStart: @escaping ClockDidStart
+  ) {
+    let listener = ClockStartListener(listening: repetition, clockDidStart: clockDidStart)
+    guard isInterrupted else {
+      listener.notify(startOf: self, isImmediate: true)
+      return
+    }
+    startListeners.insert(listener)
   }
 
   /// Base function for ``AnyTimeLapseListener`` adder functions which adds the ``listener`` and

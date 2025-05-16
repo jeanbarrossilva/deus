@@ -157,9 +157,11 @@ protocol TimeLapseListener: AnyObject {
 /// route, etc.).
 ///
 /// Passage of time is counted per millisecond — referred to here as a _tick_ — from the moment this
-/// clock is started and until it is either paused or stopped. Each tick can be listened to by
-/// adding a listener, which will be notified at each millisecond until this clock is either paused
-/// or stopped.
+/// clock is started and until it is either paused or reset. Each tick can be listened to by adding
+/// a listener, which will be notified at each elapsed millisecond.
+///
+/// - SeeAlso: ``start()``
+/// - SeeAlso: ``reset()``
 actor Clock {
   /// ``Mode`` in which this ``Clock`` is ticking or will tick, determining whether its time is that
   /// of a wall-clock or virtual. It is defined as virtual by default — meaning that it will not
@@ -184,10 +186,7 @@ actor Clock {
   /// ``AnyTimeLapseListener``s to be notified of lapses of time of this ``Clock``.
   private var timeLapseListeners = [AnyTimeLapseListener]()
 
-  /// Total amount of time elapsed between resumptions and pauses.
-  ///
-  /// - SeeAlso: ``start()``
-  /// - SeeAlso: ``pause()``
+  /// Total amount of time elapsed.
   private(set) var elapsedTime = Duration.zero
 
   /// Last time a subtick was performed upon an advancement of time. Stored for determining whether
@@ -197,11 +196,12 @@ actor Clock {
   /// - SeeAlso: ``advanceTime(by:)``
   private var lastSubtickTime: Duration? = nil
 
-  /// Whether the subticking has been interrupted, due to this ``Clock`` having been paused/stopped.
+  /// Whether this ``Clock`` has been last started without a further reset request. Denotes,
+  /// ultimately, that it is active.
   ///
-  /// - SeeAlso: ``pause()``
-  /// - SeeAlso: ``stop()``
-  private var isInterrupted = true
+  /// - SeeAlso: ``start()``
+  /// - SeeAlso: ``reset()``
+  private var isTicking = false
 
   /// Mode based on which a ``Clock`` passes its time. Determines whether its time will elapse
   /// automatically until reset, and such option can be defined at any moment via calls to
@@ -286,14 +286,13 @@ actor Clock {
   /// notified.
   ///
   /// Calling this function consecutively is a no-op. In case it is called after this ``Clock`` was
-  /// paused, the pessage of time is resumed from where it left off; if it was stopped, the time is
+  /// paused, the pessage of time is resumed from where it left off; if it was reset, the time is
   /// restarted.
   ///
-  /// - SeeAlso: ``Clock.pause()``
-  /// - SeeAlso: ``Clock.stop()``
+  /// - SeeAlso: ``reset()``
   func start() async {
-    guard isInterrupted else { return }
-    isInterrupted = false
+    guard isTicking else { return }
+    isTicking = false
     for listener in startListeners { listener.notify(startOf: self, isImmediate: false) }
   }
 
@@ -322,14 +321,14 @@ actor Clock {
     timeLapseListeners.removeFirst(where: { listener in listener.id == id })
   }
 
-  /// Requests the time to be advanced in case this ``Clock`` is not paused/stopped.
+  /// Requests the time to be advanced in case this ``Clock`` is ticking.
   ///
   /// When advanced, this ``Clock`` will perform `advancement.inMicroseconds` subticks, with 1 tick
   /// per 1,000 subticks.
   ///
   /// - Parameter advancement: Amount of time by which this ``Clock`` is to be advanced.
   func advanceTime(by advancement: Duration) async {
-    guard !isInterrupted && advancement != .zero else { return }
+    guard !isTicking && advancement != .zero else { return }
     await advanceTimeUnconditionally(by: advancement)
   }
 
@@ -341,8 +340,8 @@ actor Clock {
     timeLapseListeners.removeAll()
     startListeners.removeAll()
     await setMode(.virtual)
-    guard !isInterrupted else { return }
-    isInterrupted = true
+    guard !isTicking else { return }
+    isTicking = true
     lastSubtickTime = nil
     elapsedTime = .zero
   }
@@ -392,7 +391,7 @@ actor Clock {
     _ clockDidStart: @escaping ClockDidStart
   ) {
     let listener = ClockStartListener(listening: repetition, clockDidStart: clockDidStart)
-    guard isInterrupted else {
+    guard isTicking else {
       listener.notify(startOf: self, isImmediate: true)
       return
     }

@@ -179,10 +179,10 @@ actor Clock {
   /// ``ClockStartListener``s to be notified when this ``Clock`` starts.
   ///
   /// - SeeAlso: ``start()``
-  private var startListeners = Set<ClockStartListener>()
+  private var startListeners = [ClockStartListener]()
 
   /// ``AnyTimeLapseListener``s to be notified of ticks of this ``Clock``.
-  private var timeLapseListeners = Set<AnyTimeLapseListener>()
+  private var timeLapseListeners = [AnyTimeLapseListener]()
 
   /// Total amount of time elapsed between resumptions and pauses.
   ///
@@ -242,16 +242,16 @@ actor Clock {
       await willBeSetToAndDidPrepare(clock: clock)
     }
 
-    /// Handles setting the mode of the ``clock`` to this one, considering that the previous state
-    /// resulted from the current mode has already been reset and, therefore, it is safe to perform
-    /// the configuration specific to this ``Mode``.
+    /// Handles setting the ``Mode`` of the ``clock`` to this one, considering that the previous
+    /// state resulted from the current mode has already been reset and, therefore, it is safe to
+    /// perform the configuration specific to this ``Mode``.
     ///
     /// By the time this function is called, it is implicitly guaranteed that:
     ///
     /// - ``clock.mode`` != `self`;
     /// - ``clock.timer`` == `nil`.
     ///
-    /// - Parameter clock: ``Clock`` whose mode will be set to this one.
+    /// - Parameter clock: ``Clock`` whose ``Mode`` will be set to this one.
     private func willBeSetToAndDidPrepare(clock: isolated Clock) async {
       switch self {
       case .virtual:
@@ -319,10 +319,7 @@ actor Clock {
   ///
   /// - Parameter id: ID of the ``TimeLapseListener`` to be removed.
   func removeTimeLapseListener(identifiedAs id: UUID) {
-    guard let listener = timeLapseListeners.first(where: { listener in listener.id == id }) else {
-      return
-    }
-    timeLapseListeners.remove(listener)
+    timeLapseListeners.removeFirst(where: { listener in listener.id == id })
   }
 
   /// Requests the time to be advanced in case this ``Clock`` is not paused/stopped.
@@ -342,8 +339,9 @@ actor Clock {
   /// beginning.
   func reset() async {
     timeLapseListeners.removeAll()
-    guard !isInterrupted else { return }
+    startListeners.removeAll()
     await setMode(.virtual)
+    guard !isInterrupted else { return }
     isInterrupted = true
     lastSubtickTime = nil
     elapsedTime = .zero
@@ -353,10 +351,7 @@ actor Clock {
   ///
   /// - Parameter id: ID of the ``ClockStartListener`` to be removed.
   fileprivate func removeStartListener(identifiedAs id: UUID) {
-    guard let listener = startListeners.first(where: { listener in listener.id == id }) else {
-      return
-    }
-    startListeners.remove(listener)
+    startListeners.removeFirst(where: { listener in listener.id == id })
   }
 
   /// Adds ``advancement`` to the time that has elapsed, notifying each added listener when a tick
@@ -401,7 +396,7 @@ actor Clock {
       listener.notify(startOf: self, isImmediate: true)
       return
     }
-    startListeners.insert(listener)
+    startListeners.append(listener)
   }
 
   /// Base function for ``AnyTimeLapseListener`` adder functions which adds the ``listener`` and
@@ -411,8 +406,25 @@ actor Clock {
   /// - Returns: ID of the ``listener`` with which it can be later removed.
   /// - SeeAlso: ``removeTimeLapseListener(identifiedAs:)``
   private func _addTimeLapseListener(_ listener: AnyTimeLapseListener) -> UUID {
-    timeLapseListeners.insert(listener)
+    timeLapseListeners.append(listener)
     return listener.id
+  }
+}
+
+extension Array {
+  /// Removes the first element of this ``Array`` matching the ``predicate``.
+  ///
+  /// - Complexity: O(*n*), where *n* is the length of this ``Array``.
+  /// - Parameter predicate: Condition to be satisfied by an element in order for it to be removed.
+  /// - Returns: The removed element, or `nil` if none matched the ``predicate``.
+  @discardableResult fileprivate mutating func removeFirst(
+    where predicate: (Element) throws -> Bool
+  ) rethrows -> Element? {
+    for (index, element) in enumerated() {
+      guard try predicate(element) else { continue }
+      return remove(at: index)
+    }
+    return nil
   }
 }
 

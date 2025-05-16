@@ -291,8 +291,8 @@ actor Clock {
   ///
   /// - SeeAlso: ``reset()``
   func start() async {
-    guard isTicking else { return }
-    isTicking = false
+    guard !isTicking else { return }
+    isTicking = true
     for listener in startListeners { listener.notify(startOf: self, isImmediate: false) }
   }
 
@@ -328,7 +328,7 @@ actor Clock {
   ///
   /// - Parameter advancement: Amount of time by which this ``Clock`` is to be advanced.
   func advanceTime(by advancement: Duration) async {
-    guard !isTicking && advancement != .zero else { return }
+    guard isTicking && advancement != .zero else { return }
     await advanceTimeUnconditionally(by: advancement)
   }
 
@@ -340,8 +340,8 @@ actor Clock {
     timeLapseListeners.removeAll()
     startListeners.removeAll()
     await setMode(.virtual)
-    guard !isTicking else { return }
-    isTicking = true
+    guard isTicking else { return }
+    isTicking = false
     lastSubtickTime = nil
     elapsedTime = .zero
   }
@@ -355,12 +355,12 @@ actor Clock {
 
   /// Adds ``advancement`` to the time that has elapsed, notifying each added listener when a tick
   /// is performed. Differs from the public function for advancing time in that this one does not
-  /// ensure that this ``Clock`` is uninterrupted or the given ``advancement`` is greater than zero:
-  /// it is implied that both conditions are true.
+  /// ensure that this ``Clock`` is ticking or the given ``advancement`` is greater than zero: it is
+  /// implied that both conditions are true.
   ///
   /// - Parameter advancement: Amount of time by which this ``Clock`` is to be advanced.
   /// - SeeAlso: ``advanceTime(by:)``
-  /// - SeeAlso: ``isInterrupted``
+  /// - SeeAlso: ``isTicking``
   private func advanceTimeUnconditionally(by advancement: Duration) async {
     let start = elapsedTime
     let end = start + advancement
@@ -391,7 +391,7 @@ actor Clock {
     _ clockDidStart: @escaping ClockDidStart
   ) {
     let listener = ClockStartListener(listening: repetition, clockDidStart: clockDidStart)
-    guard isTicking else {
+    guard !isTicking else {
       listener.notify(startOf: self, isImmediate: true)
       return
     }

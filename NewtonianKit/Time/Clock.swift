@@ -203,13 +203,13 @@ actor Clock {
   /// - SeeAlso: ``reset()``
   private var isTicking = false
 
-  /// Mode based on which a ``Clock`` passes its time. Determines whether its time will elapse
-  /// automatically until reset, and such option can be defined at any moment via calls to
-  /// ``Clock.setMode(_:)``.
+  /// Mode based on which a ``Clock`` elapses its time, determines whether its time will be elapsed
+  /// automatically until either a mode switch or a reset is performed. Such mode can be defined at
+  /// any moment via calls to ``Clock.setMode(_:)``.
   ///
   /// The main difference between the two modes is, essentially, on whether the passage of time upon
-  /// a start is automatic — in such case, the ``.wall`` mode (meaning "walltime") would be used —
-  /// or manual, requiring explicit advancements — scenario for which ``.virtual`` is.
+  /// a start is automatic — in such case, the ``.wall`` mode (meaning "wall-clock mode") would be
+  /// used — or manual, requiring explicit advancements — scenario for which ``.virtual`` is.
   ///
   /// - SeeAlso: ``Clock.reset()``
   enum Mode: Sendable {

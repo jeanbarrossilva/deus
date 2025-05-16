@@ -77,10 +77,10 @@ fileprivate final class ClockStartListener: Identifiable, Hashable {
   }
 }
 
-/// ``TimeLapseListener`` by which an instance of a conforming struct or class — the `base` — should
-/// be wrapped in order to be added and listen to the ticks of a ``Clock``. A randomly generated ID
-/// is passed into it upon instantiation, which allows for both ensuring that it is added to a
-/// ``Clock`` only once and removing it when it should no longer be notified of ticks.
+/// ``TimeLapseListener`` by which an instance of a conforming class can be wrapped in order to be
+/// added and listen to the lapses of time of a ``Clock``. A randomly generated ID is assigned to it
+/// upo instantiation, which allows for both ensuring that it is added to a ``Clock`` only once and
+/// removing it when it should no longer be notified of time lapses.
 ///
 /// - SeeAlso: ``Clock.addTimeLapseListener(_:)``
 /// - SeeAlso: ``Clock.removeTimeLapseListener(identifiedAs:)``
@@ -88,7 +88,7 @@ private final class AnyTimeLapseListener: TimeLapseListener, Identifiable, Hasha
   let id: UUID
 
   /// Callback to which calls to ``timeDidElapse(from:after:to:toward)`` delegate.
-  private(set) var timeDidElapse: (Duration, Duration?, Duration, Duration) async -> Void
+  private(set) var timeDidElapse: TimeDidElapse
 
   init(_ base: any AnyObject & TimeLapseListener) {
     id = (base as? any Identifiable)?.id as? UUID ?? UUID()
@@ -128,7 +128,7 @@ protocol TimeLapseListener: AnyObject {
     _ end: Duration
   ) async -> Void
 
-  /// Callback called after the ``Clock`` ticks and, therefore, its time has elapsed.
+  /// Callback called after a lapse of time of the ``Clock``.
   ///
   /// - Parameters:
   ///   - start: Time from which the ``Clock`` is being advanced.
@@ -143,7 +143,7 @@ protocol TimeLapseListener: AnyObject {
   ///     ``current`` *may* be zero depending on whether the ``Clock`` has been restarted. If the
   ///     ``Clock`` is resuming, it will be the amount of time elapsed at the moment it was paused.
   ///   - current: Current time of the ``Clock``.
-  ///   - end: Target, final time toward which the ``Clock`` is elapsing.
+  ///   - end: Target, final time toward which the time of the ``Clock`` is elapsing.
   func timeDidElapse(
     from start: Duration,
     after previous: Duration?,
@@ -181,7 +181,7 @@ actor Clock {
   /// - SeeAlso: ``start()``
   private var startListeners = [ClockStartListener]()
 
-  /// ``AnyTimeLapseListener``s to be notified of ticks of this ``Clock``.
+  /// ``AnyTimeLapseListener``s to be notified of lapses of time of this ``Clock``.
   private var timeLapseListeners = [AnyTimeLapseListener]()
 
   /// Total amount of time elapsed between resumptions and pauses.
@@ -297,7 +297,7 @@ actor Clock {
     for listener in startListeners { listener.notify(startOf: self, isImmediate: false) }
   }
 
-  /// Listens to each tick of this ``Clock``.
+  /// Listens to lapses of time of this ``Clock``.
   ///
   /// - Parameter timeLapseListener: ``AnyTimeLapseListener`` to be added.
   /// - Returns: ID of the ``timeLapseListener`` with which it can be later removed.
@@ -306,7 +306,7 @@ actor Clock {
     _addTimeLapseListener(AnyTimeLapseListener(timeDidElapse: timeDidElapse))
   }
 
-  /// Listens to each tick of this ``Clock``.
+  /// Listens to lapses of time of this ``Clock``.
   ///
   /// - Parameter timeLapseListener: ``AnyTimeLapseListener`` to be added.
   /// - Returns: ID of the ``timeLapseListener`` with which it can be later removed.
@@ -315,7 +315,7 @@ actor Clock {
     _addTimeLapseListener(AnyTimeLapseListener(listener))
   }
 
-  /// Removes a listener of ticks of this ``Clock``.
+  /// Removes a listener of lapses of time of this ``Clock``.
   ///
   /// - Parameter id: ID of the ``TimeLapseListener`` to be removed.
   func removeTimeLapseListener(identifiedAs id: UUID) {

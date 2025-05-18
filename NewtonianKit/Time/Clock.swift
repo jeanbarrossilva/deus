@@ -495,7 +495,7 @@ extension Duration {
 }
 
 extension BezierCurve {
-  /// Cubic Bézier curve with P₀ = (.25, .1), P₁ = (0, 0), P₂ = (1, 1), P₃ = (0, 0).
+  /// Cubic Bézier curve with P₀ = (0, 0), P₁ = (.25, .1), P₂ = (.25, .1), P₃ = (1, 1).
   fileprivate static var eased = {
     let controller = Point(x: 0.25, y: 0.1)
     let start = Point.zero.controlled(by: controller)

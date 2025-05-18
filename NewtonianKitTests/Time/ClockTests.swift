@@ -38,14 +38,14 @@ struct ClockTests {
   }
 
   @Test func elapsedTimeIncreasesPerSubtick() async throws {
-    await clock.advanceTime(by: .microseconds(2))
+    await clock.advanceTime(by: .microseconds(2), spacing: .linear)
     #expect(await clock.elapsedTime == .microseconds(2))
     await clock.reset()
   }
 
-  @Test func ignoresTimeAdvancementsWhenStartedAfterReset() async throws {
+  @Test func ignoresTimeAdvancementsWhenNotTicking() async throws {
     await clock.reset()
-    await clock.advanceTime(by: .microseconds(2))
+    await clock.advanceTime(by: .microseconds(2), spacing: .linear)
     await clock.start()
     #expect(await clock.elapsedTime == .zero)
     await clock.reset()
@@ -55,9 +55,9 @@ struct ClockTests {
     [CountingTimeLapseListener()],
     [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() },
   ])
-  mutating func adds(timeLapseListeners: [CountingTimeLapseListener]) async throws {
+  func adds(timeLapseListeners: [CountingTimeLapseListener]) async throws {
     for listener in timeLapseListeners { let _ = await clock.addTimeLapseListener(listener) }
-    await clock.advanceTime(by: .milliseconds(2))
+    await clock.advanceTime(by: .milliseconds(2), spacing: .linear)
     for listener in timeLapseListeners { #expect(listener.count == 3) }
     await clock.reset()
   }
@@ -65,41 +65,43 @@ struct ClockTests {
   @Test
   func startTimePassedIntoTimeLapseListenerEqualsToThatElapsedUponAdvancementRequest() async throws
   {
-    await clock.advanceTime(by: .milliseconds(2))
+    await clock.advanceTime(by: .milliseconds(2), spacing: .linear)
     let _ =
       await clock.addTimeLapseListener { start, _, _, _ in #expect(start == .milliseconds(2)) }
-    await clock.advanceTime(by: .milliseconds(2))
+    await clock.advanceTime(by: .milliseconds(2), spacing: .linear)
     await clock.reset()
   }
 
   @Test
   func previousTimeIsNilWhenTimeLapseIsNotifiedToListenerAfterClockIsJustStarted() async throws {
     let listener = CountingTimeLapseListener()
+    let _ = await clock.addTimeLapseListener(listener)
     let _ = await clock.addTimeLapseListener { _, previous, _, _ in
       guard listener.count == 0 else { return }
       #expect(previous == nil)
     }
-    let _ = await clock.addTimeLapseListener(listener)
-    await clock.advanceTime(by: .milliseconds(1))
+    await clock.advanceTime(by: .milliseconds(1), spacing: .linear)
     await clock.reset()
   }
 
   @Test func previousTimePassedIntoTimeLapseListenerEqualsToLastElapsedOneAtPause() async throws {
     let listener = CountingTimeLapseListener()
-    let _ = await clock.addTimeLapseListener { _, previous, _, _ in
+    let _ = await clock.addTimeLapseListener(listener)
+    let _ = await clock.addTimeLapseListener { _, previous, current, _ in
       switch listener.count {
+      case 0, 1, 2, 3:
+        return
       case 4:
         #expect(previous == .milliseconds(3))
       case 5:
         #expect(previous == .milliseconds(4))
       default:
-        return
+        fatalError("Unexpected time lapse to \(current).")
       }
     }
-    let _ = await clock.addTimeLapseListener(listener)
-    await clock.advanceTime(by: .milliseconds(2))
+    await clock.advanceTime(by: .milliseconds(2), spacing: .linear)
     await clock.reset()
-    await clock.advanceTime(by: .milliseconds(1))
+    await clock.advanceTime(by: .milliseconds(1), spacing: .linear)
     await clock.reset()
   }
 
@@ -109,7 +111,7 @@ struct ClockTests {
       guard let previous else { return }
       #expect(previous == current - .milliseconds(1))
     }
-    await clock.advanceTime(by: .milliseconds(2))
+    await clock.advanceTime(by: .milliseconds(2), spacing: .linear)
     await clock.reset()
   }
 
@@ -117,7 +119,7 @@ struct ClockTests {
     let _ = await clock.addTimeLapseListener { _, _, current, _ in
       #expect(await current == clock.elapsedTime)
     }
-    await clock.advanceTime(by: .milliseconds(2))
+    await clock.advanceTime(by: .milliseconds(2), spacing: .linear)
     await clock.reset()
   }
 
@@ -125,7 +127,69 @@ struct ClockTests {
   func endTimePassedIntoTimeLapseListenerIsEqualToThatToWhichTheTimeIsAdvancedToward() async throws
   {
     let _ = await clock.addTimeLapseListener { _, _, _, end in #expect(end == .milliseconds(2)) }
-    await clock.advanceTime(by: .milliseconds(2))
+    await clock.advanceTime(by: .milliseconds(2), spacing: .linear)
+    await clock.reset()
+  }
+
+  @Test func advancesTimeExtremely() async throws {
+    let listener = CountingTimeLapseListener()
+    let _ = await clock.addTimeLapseListener(listener)
+    let _ = await clock.addTimeLapseListener { _, _, current, _ in
+      switch listener.count {
+      case 1:
+        #expect(current == .zero)
+      case 2:
+        #expect(current == .milliseconds(8))
+      default:
+        fatalError("Unexpected time lapse to \(current).")
+      }
+    }
+    await clock.advanceTime(by: .milliseconds(8), spacing: .extreme)
+    await clock.reset()
+  }
+
+  @Test func advancesTimeLinearly() async throws {
+    let listener = CountingTimeLapseListener()
+    let _ = await clock.addTimeLapseListener(listener)
+    let _ = await clock.addTimeLapseListener { _, _, current, _ in
+      #expect(current == .milliseconds(listener.count - 1))
+    }
+    await clock.advanceTime(by: .milliseconds(8), spacing: .linear)
+    await clock.reset()
+  }
+
+  @Test func advancesTimeEasedly() async throws {
+    let listener = CountingTimeLapseListener()
+    let _ = await clock.addTimeLapseListener(listener)
+    let _ = await clock.addTimeLapseListener { _, _, current, _ in
+      switch listener.count {
+      case 1:
+        #expect(current == .milliseconds(0))
+      case 2:
+        #expect(current == .milliseconds(56))
+      case 3:
+        #expect(current == .milliseconds(112))
+      case 4:
+        #expect(current == .milliseconds(180))
+      case 5:
+        #expect(current == .milliseconds(272))
+      case 6:
+        #expect(current == .milliseconds(400))
+      case 7:
+        #expect(current == .milliseconds(576))
+      case 8:
+        #expect(current == .milliseconds(812))
+      case 9:
+        #expect(current == .milliseconds(1_120))
+      case 10:
+        #expect(current == .milliseconds(1_512))
+      case 11:
+        #expect(current == .seconds(2))
+      default:
+        fatalError("Unexpected time lapse to \(current).")
+      }
+    }
+    await clock.advanceTime(by: .seconds(2), spacing: .eased)
     await clock.reset()
   }
 
@@ -133,19 +197,19 @@ struct ClockTests {
     [CountingTimeLapseListener()],
     [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() },
   ])
-  mutating func removes(timeLapseListeners: [CountingTimeLapseListener]) async throws {
+  func removes(timeLapseListeners: [CountingTimeLapseListener]) async throws {
     let ids =
       await timeLapseListeners.map { listener in await clock.addTimeLapseListener(listener) }
     for id in ids { await clock.removeTimeLapseListener(identifiedAs: id) }
-    await clock.advanceTime(by: .milliseconds(2))
+    await clock.advanceTime(by: .milliseconds(2), spacing: .linear)
     for listener in timeLapseListeners { #expect(listener.count == 0) }
     await clock.reset()
   }
 
-  @Test mutating func resets() async throws {
-    await clock.advanceTime(by: .milliseconds(2))
+  @Test func resets() async throws {
+    await clock.advanceTime(by: .milliseconds(2), spacing: .linear)
     await clock.reset()
-    await clock.advanceTime(by: .milliseconds(2))
+    await clock.advanceTime(by: .milliseconds(2), spacing: .linear)
     await clock.start()
     #expect(await clock.elapsedTime == .zero)
   }
@@ -154,10 +218,10 @@ struct ClockTests {
     [CountingTimeLapseListener()],
     [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() },
   ])
-  mutating func removesUponReset(timeLapseListeners: [CountingTimeLapseListener]) async throws {
+  func removesUponReset(timeLapseListeners: [CountingTimeLapseListener]) async throws {
     for listener in timeLapseListeners { let _ = await clock.addTimeLapseListener(listener) }
     await clock.reset()
-    await clock.advanceTime(by: .milliseconds(2))
+    await clock.advanceTime(by: .milliseconds(2), spacing: .linear)
     for listener in timeLapseListeners { #expect(listener.count == 0) }
   }
 }

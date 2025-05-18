@@ -166,7 +166,7 @@ actor Clock {
   /// ``Mode`` in which this ``Clock`` is ticking or will tick, determining whether its time is that
   /// of a wall-clock or virtual. It is defined as virtual by default — meaning that it will not
   /// elapse automatically when started; rather, it will do so upon explicit calls to
-  /// ``advanceTime(by:)`` —, and can be changed via ``setMode(_:)``.
+  /// ``advanceTime(by:spacing:)`` —, and can be changed via ``setMode(_:)``.
   private var mode = Mode.virtual
   
   /// ``Timer`` by which the subticking of this ``Clock`` is scheduled performed periodically when
@@ -174,7 +174,7 @@ actor Clock {
   /// after which it is initialized and fired again.
   ///
   /// - SeeAlso: ``Mode.wall``
-  /// - SeeAlso: ``advanceTime(by:)``
+  /// - SeeAlso: ``advanceTime(by:spacing:)``
   /// - SeeAlso: ``Timer.fire()``
   private var timer: Timer? = nil
   
@@ -193,7 +193,7 @@ actor Clock {
   /// such this ``Clock`` should perform a subtick immediately when advancing its time or only on
   /// the next advancement.
   ///
-  /// - SeeAlso: ``advanceTime(by:)``
+  /// - SeeAlso: ``advanceTime(by:spacing:)``
   private var lastSubtickTime: Duration? = nil
 
   /// Whether this ``Clock`` has been last started without a further reset request. Denotes,
@@ -261,10 +261,55 @@ actor Clock {
           let timer = Timer(
             timeInterval: 0.00001,
             repeats: true,
-            block: { _ in Task { await clock.advanceTimeUnconditionally(by: .microseconds(1)) } }
+            block: { _ in
+              Task { await clock.advanceTimeUnconditionally(by: .subticks(1), spacing: .extreme) }
+            }
           )
           clock.timer = timer
           timer.fire()
+        }
+      }
+    }
+  }
+
+  /// Factor of advancements of time of a ``Clock`` for progressing from its current time to that
+  /// toward which the advancement has been requested. Ultimately, determines the meantimes to be
+  /// iterated through and defined as the current time of the ``Clock`` while such advancement is
+  /// ongoing.
+  enum Spacing {
+    /// Considers only the current time of the ``Clock`` and the target one.
+    case extreme
+
+    /// Considers each millisecond between the current time of the ``Clock`` and the target one.
+    case linear
+
+    /// Time will be elapsed fastly in the beginning and toward the end of the advancement while
+    /// slowly in between.
+    case eased
+
+    /// Spaces the given range of time according to this policy.
+    ///
+    /// - Parameter timeLapse: ``ClosedRange`` from the current time of the ``Clock`` to that toward
+    ///   which an advancement will be performed.
+    /// - Returns: Meantimes (possibly including the original start and end ones) to be set as the
+    ///   current time of the ``Clock`` while advancing.
+    /// - SeeAlso: ``Clock.advanceTime(by:spacing:)``
+    fileprivate func space(timeLapse: ClosedRange<Duration>) -> [Duration] {
+      switch self {
+      case .extreme:
+        return [timeLapse.lowerBound, timeLapse.upperBound]
+      case .linear:
+        return stride(
+          from: timeLapse.lowerBound,
+          through: timeLapse.upperBound,
+          by: Duration.subtickFactor
+        )
+          .map { meantime in meantime }
+      case .eased:
+        return stride(from: 0.0, through: 1, by: 0.05).map { t in
+          .subticks(
+            Int(BezierCurve.eased[t].y * Double(timeLapse.upperBound.comprisableSubtickCount))
+          )
         }
       }
     }
@@ -323,13 +368,21 @@ actor Clock {
 
   /// Requests the time to be advanced in case this ``Clock`` is ticking.
   ///
-  /// When advanced, this ``Clock`` will perform `advancement.inMicroseconds` subticks, with 1 tick
-  /// per 1,000 subticks.
+  /// - Parameters:
+  ///   - advancement: Amount of time by which this ``Clock`` is to be advanced.
+  ///   - spacing: Determines the meantimes between `elapsedTime...(elapsedTime + advancement)`
+  ///     through which iterate and of which added ``TimeLapseListener``s will be notified for each
+  ///     whole tick (1 ms) comprised by such advancement.
   ///
-  /// - Parameter advancement: Amount of time by which this ``Clock`` is to be advanced.
-  func advanceTime(by advancement: Duration) async {
+  ///     Note that, internally, a ``Clock`` elapses its time on a per-microsecond basis. Depending
+  ///     on the available computational power, passing in a ``Spacing`` which produces a long range
+  ///     is discouraged in case the distance between the current time and the target one in
+  ///     microseconds is large.
+
+  // TODO: Measure and define exactly what a "large" time range means.
+  func advanceTime(by advancement: Duration, spacing: Spacing) async {
     guard isTicking && advancement != .zero else { return }
-    await advanceTimeUnconditionally(by: advancement)
+    await advanceTimeUnconditionally(by: advancement, spacing: spacing)
   }
 
   /// Resets this ``Clock``, stopping the passage of time.
@@ -358,15 +411,19 @@ actor Clock {
   /// ensure that this ``Clock`` is ticking or the given ``advancement`` is greater than zero: it is
   /// implied that both conditions are true.
   ///
-  /// - Parameter advancement: Amount of time by which this ``Clock`` is to be advanced.
-  /// - SeeAlso: ``advanceTime(by:)``
+  /// - Parameters:
+  ///   - advancement: Amount of time by which this ``Clock`` is to be advanced.
+  ///   - spacing: Determines the meantimes between `elapsedTime...(elapsedTime + advancement)`
+  ///     through which iterate and of which added ``TimeLapseListener``s will be notified for each
+  ///     whole tick (1 ms) comprised by such advancement.
+  /// - SeeAlso: ``advanceTime(by:spacing:)``
   /// - SeeAlso: ``isTicking``
-  private func advanceTimeUnconditionally(by advancement: Duration) async {
+  private func advanceTimeUnconditionally(by advancement: Duration, spacing: Spacing) async {
     let start = elapsedTime
     let end = start + advancement
-    for meantime in start...end {
+    for meantime in spacing.space(timeLapse: start...end) {
       elapsedTime = meantime
-      guard elapsedTime.comprisesWholeTicksOnly && (meantime == start || lastSubtickTime != start)
+      guard elapsedTime.canOnlyCompriseWholeTicks && (meantime == start || lastSubtickTime != start)
       else { continue }
       for listener in timeLapseListeners {
         await listener.timeDidElapse(
@@ -410,6 +467,43 @@ actor Clock {
   }
 }
 
+extension Duration {
+  /// Amount of microseconds — the backing unit of a ``Duration`` — by which a subtick is comprised.
+  ///
+  /// - SeeAlso: ``tickFactor``
+  fileprivate static var subtickFactor = microsecondFactor
+  
+  /// Amount of microseconds — the backing unit of a ``Duration`` — by which a tick (1,000 subticks)
+  /// is comprised.
+  ///
+  /// - SeeAlso: ``subtickFactor``
+  fileprivate static var tickFactor = millisecondFactor
+  
+  /// Whether an integer amount of ticks can be performed by a ``Clock`` within this ``Duration``.
+  fileprivate var canOnlyCompriseWholeTicks: Bool { inMicroseconds % Self.tickFactor == 0 }
+  
+  /// Amount of times a ``Clock`` can perform a subtick within this ``Duration``.
+  fileprivate var comprisableSubtickCount: Int { inMicroseconds }
+  
+  /// Makes a ``Duration`` within which a ``Clock`` can perform subticks the specified amount of
+  /// times.
+  ///
+  /// - Parameter count: Quantity of subticks comprised by the ``Duration``.
+  fileprivate static func subticks(_ count: Int) -> Duration {
+    .microseconds(count)
+  }
+}
+
+extension BezierCurve {
+  /// Cubic Bézier curve with P₀ = (.25, .1), P₁ = (0, 0), P₂ = (1, 1), P₃ = (0, 0).
+  fileprivate static var eased = {
+    let controller = Point(x: 0.25, y: 0.1)
+    let start = Point.zero.controlled(by: controller)
+    let end = Point(x: 1, y: 1).controlled(by: controller)
+    return BezierCurve.make(from: start, to: end)
+  }()
+}
+
 extension Array {
   /// Removes the first element of this ``Array`` matching the ``predicate``.
   ///
@@ -425,9 +519,4 @@ extension Array {
     }
     return nil
   }
-}
-
-extension Duration {
-  /// Whether an integer amount of ticks can be performed by a ``Clock`` within this ``Duration``.
-  fileprivate var comprisesWholeTicksOnly: Bool { inMicroseconds % Self.millisecondFactor == 0 }
 }

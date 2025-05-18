@@ -5,6 +5,8 @@
 //  Created by Jean Barros Silva on 08/05/25.
 //
 
+import Foundation
+
 /// Amount of time in a given unit.
 enum Duration: AdditiveArithmetic, Strideable {
   static let zero = Self.microseconds(0)
@@ -15,13 +17,30 @@ enum Duration: AdditiveArithmetic, Strideable {
   /// Amount of microseconds — the backing unit of a ``Duration`` — in a millisecond.
   static let millisecondFactor = 1_000
 
+  /// Amount of microseconds — the backing unit of a ``Duration`` — in a second.
+  static let secondFactor = 1_000_000
+
   /// Backing, raw value of this ``Duration`` in microseconds.
   var inMicroseconds: Int {
     switch self {
     case .microseconds(let value):
-      value * Self.microsecondFactor
+      value
     case .milliseconds(let value):
       value * Self.millisecondFactor
+    case .seconds(let value):
+      value * Self.secondFactor
+    }
+  }
+
+  /// Conversion of this ``Duration`` into milliseconds.
+  var inMilliseconds: Double {
+    switch self {
+    case .microseconds(let value):
+      Double(value) / Double(Self.millisecondFactor)
+    case .milliseconds(let value):
+      Double(value)
+    case .seconds(let value):
+      Double(value) * Double(Self.secondFactor) / Double(Self.millisecondFactor)
     }
   }
 
@@ -30,6 +49,9 @@ enum Duration: AdditiveArithmetic, Strideable {
 
   /// Amount of time in milliseconds.
   case milliseconds(Int)
+
+  /// Amount of time in seconds.
+  case seconds(Int)
 
   static func + (lhs: Self, rhs: Self) -> Self {
     if lhs == .zero {

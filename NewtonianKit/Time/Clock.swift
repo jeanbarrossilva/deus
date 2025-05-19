@@ -12,7 +12,7 @@ import Foundation
 typealias ClockDidStart = () -> Void
 
 /// ``Identifiable`` listener which is notified of starts of a ``Clock``.
-fileprivate final class ClockStartListener: Identifiable, Hashable {
+private final class ClockStartListener: Identifiable, Hashable {
   /// Callback called whenever the ``Clock`` starts.
   private let clockDidStart: ClockDidStart
 
@@ -168,7 +168,7 @@ actor Clock {
   /// elapse automatically when started; rather, it will do so upon explicit calls to
   /// ``advanceTime(by:spacing:)`` —, and can be changed via ``setMode(_:)``.
   private var mode = Mode.virtual
-  
+
   /// ``Timer`` by which the subticking of this ``Clock`` is scheduled performed periodically when
   /// in wall-clock mode. Will be `nil` in case the mode is virtual or upon an advancement of time,
   /// after which it is initialized and fired again.
@@ -177,7 +177,7 @@ actor Clock {
   /// - SeeAlso: ``advanceTime(by:spacing:)``
   /// - SeeAlso: ``Timer.fire()``
   private var timer: Timer? = nil
-  
+
   /// ``ClockStartListener``s to be notified when this ``Clock`` starts.
   ///
   /// - SeeAlso: ``start()``
@@ -304,7 +304,7 @@ actor Clock {
           through: timeLapse.upperBound,
           by: Duration.subtickFactor
         )
-          .map { meantime in meantime }
+        .map { meantime in meantime }
       case .eased:
         return stride(from: 0.0, through: 1, by: 0.05).map { t in
           .subticks(
@@ -472,19 +472,19 @@ extension Duration {
   ///
   /// - SeeAlso: ``tickFactor``
   fileprivate static var subtickFactor = microsecondFactor
-  
+
   /// Amount of microseconds — the backing unit of a ``Duration`` — by which a tick (1,000 subticks)
   /// is comprised.
   ///
   /// - SeeAlso: ``subtickFactor``
   fileprivate static var tickFactor = millisecondFactor
-  
+
   /// Whether an integer amount of ticks can be performed by a ``Clock`` within this ``Duration``.
   fileprivate var canOnlyCompriseWholeTicks: Bool { inMicroseconds % Self.tickFactor == 0 }
-  
+
   /// Amount of times a ``Clock`` can perform a subtick within this ``Duration``.
   fileprivate var comprisableSubtickCount: Int { inMicroseconds }
-  
+
   /// Makes a ``Duration`` within which a ``Clock`` can perform subticks the specified amount of
   /// times.
   ///

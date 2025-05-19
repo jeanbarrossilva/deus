@@ -15,7 +15,7 @@ extension Array {
   /// - Parameter transform: Transformation to be performed to an element contained in this
   ///   ``Array``.
   /// - Returns: The transformations made to each element.
-  func map<R>(_ transform: (_ listener: Element) async throws -> R) async rethrows -> [R] {
+  func map<R>(_ transform: (Element) async throws -> R) async rethrows -> [R] {
     var results = [R?](count: count) { _ in nil }
     for index in indices { results[index] = try await transform(self[index]) }
     return results as! [R]

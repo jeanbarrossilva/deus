@@ -11,7 +11,7 @@ import Foundation
 protocol TwoD: AdditiveArithmetic, CustomStringConvertible {
   /// Final position in the x-axis.
   var x: Double { get }
-  
+
   /// Final position in the y-axis.
   var y: Double { get }
 
@@ -31,7 +31,7 @@ extension TwoD {
   init<B: TwoD>(from base: B) {
     self = .at(x: base.x, y: base.y)
   }
-  
+
   /// Multiplies each coordinate of the 2D abstraction by the value.
   ///
   /// - Parameters:
@@ -43,7 +43,7 @@ extension TwoD {
     guard rhs != 1 else { return lhs }
     return .at(x: lhs.x * rhs, y: lhs.y * rhs)
   }
-  
+
   /// Returns a 2D abstraction at the given coordinates.
   ///
   /// - Parameters:
@@ -89,7 +89,7 @@ extension TwoD where Self: AdditiveArithmetic {
     guard rhs != .zero else { return lhs }
     return .at(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
   }
-  
+
   static func - (lhs: Self, rhs: Self) -> Self {
     guard lhs != rhs else { return .zero }
     guard rhs != .zero else { return lhs }

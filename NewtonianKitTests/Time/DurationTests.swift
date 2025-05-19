@@ -25,7 +25,7 @@ struct DurationTests {
   @Test func convertsMicrosecondsIntoMicroseconds() throws {
     #expect(Duration.microseconds(2).inMicroseconds == 2)
   }
-  
+
   @Test func convertsMicrosecondsIntoMilliseconds() throws {
     #expect(Duration.microseconds(2).inMilliseconds == 0.002)
   }

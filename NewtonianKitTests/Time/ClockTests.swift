@@ -53,7 +53,7 @@ struct ClockTests {
 
   @Test(arguments: [
     [CountingTimeLapseListener()],
-    [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() },
+    [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() }
   ])
   func adds(timeLapseListeners: [CountingTimeLapseListener]) async throws {
     for listener in timeLapseListeners { let _ = await clock.addTimeLapseListener(listener) }
@@ -195,7 +195,7 @@ struct ClockTests {
 
   @Test(arguments: [
     [CountingTimeLapseListener()],
-    [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() },
+    [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() }
   ])
   func removes(timeLapseListeners: [CountingTimeLapseListener]) async throws {
     let ids =
@@ -216,7 +216,7 @@ struct ClockTests {
 
   @Test(arguments: [
     [CountingTimeLapseListener()],
-    [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() },
+    [CountingTimeLapseListener](count: 2) { _ in CountingTimeLapseListener() }
   ])
   func removesUponReset(timeLapseListeners: [CountingTimeLapseListener]) async throws {
     for listener in timeLapseListeners { let _ = await clock.addTimeLapseListener(listener) }

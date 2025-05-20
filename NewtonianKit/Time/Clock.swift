@@ -57,8 +57,8 @@ private final class ClockStartListener: Identifiable, Hashable {
     id.hash(into: &hasher)
   }
 
-  /// Notifies this ``ClockStartListener`` of a start of the ``clock``, calling its ``didStart``
-  /// callback.
+  /// Notifies this ``ClockStartListener`` of a start of the ``clock``, calling its
+  /// ``clockDidStart`` callback.
   ///
   /// - Parameters:
   ///   - clock: ``Clock`` whose start is being notified.

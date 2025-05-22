@@ -1,11 +1,11 @@
 //
 //  Array+Transform.swift
-//  Deus
+//  RelativityKitTests
 //
 //  Created by Jean Barros Silva on 02/05/25.
 //
 
-@testable import NewtonianKit
+@testable import RelativityKit
 
 extension Array {
   /// Produces an ``Array`` containing the result of having applied the given transformation to each

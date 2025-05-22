@@ -7,7 +7,7 @@
 
 import Testing
 
-@testable import NewtonianKit
+@testable import RelativityKit
 
 struct CountingTimeLapseListenerTests {
   @Test func countIsZeroByDefault() throws {

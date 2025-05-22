@@ -7,7 +7,7 @@
 
 import Testing
 
-@testable import NewtonianKit
+@testable import RelativityKit
 
 struct DurationTests {
   @Test func zeroEqualsToZeroMicroseconds() throws {

@@ -29,7 +29,8 @@ private struct CubicBezierCurve: BezierCurveProtocol {
     Self.assertIsInRange(t: t)
     let (p0, p1, p2, p3, y) =
       (start.controllee, start.controller, end.controller, end.controllee, 1 - t)
-    return p0 * pow(y, 3) + p1 * t * 3 * pow(y, 2) + p2 * (3 * y * pow(t, 2)) + p3 * pow(t, 3)
+    return (p0 * pow(y, 3)) as Point + p1 * 3 * pow(y, 2) * t + p2 * 3 * y * pow(t, 2) + p3
+      * pow(t, 3)
   }
 }
 
@@ -37,7 +38,7 @@ private struct CubicBezierCurve: BezierCurveProtocol {
 /// comprises a controlled ``Point`` and another one which controls it: its control ``Point``. The
 /// first is positioned on the curve in relation to the latter (which is not, itself, part of the
 /// curve).
-struct Control {
+public struct Control {
   /// ``Control`` whose both ``Point``s are (0, 0).
   static var zero = Control(controller: .zero, controllee: .zero)
 
@@ -69,18 +70,18 @@ extension Point {
   ///
   /// - Parameter controller: ``Point`` which influences this one by arching the curve toward
   ///   itself.
-  func controlled(by controller: Self) -> Control {
+  public func controlled(by controller: Self) -> Control {
     Control.with(controller: controller, controllee: self)
   }
 }
 
 /// Parametric curve defined by a set of ``Point``s.
-protocol BezierCurveProtocol {
+public protocol BezierCurveProtocol {
   /// Obtains a ``Point`` in this curve.
   ///
   /// - Parameter t: Progression across the curve on which the ``Point`` is.
   ///
-  ///   0 ≤ ``t`` ≤ 1.
+  ///   0 ≤ `t` ≤ 1.
   subscript(_ t: Double) -> Point { get }
 }
 
@@ -100,13 +101,13 @@ extension BezierCurveProtocol {
 }
 
 /// Factory of Bézier curves.
-struct BezierCurve {
+public struct BezierCurve {
   /// Makes a cubic Bézier curve.
   ///
   /// - Parameters:
   ///   - start: P₀ = `start.controllee` and P₁ = `start.controller`.
   ///   - end: P₂ = `end.controller` and P₃ = `end.controllee`.
-  static func make(from start: Control, to end: Control) -> any BezierCurveProtocol {
+  public static func make(from start: Control, to end: Control) -> any BezierCurveProtocol {
     CubicBezierCurve(start: start, end: end)
   }
 }

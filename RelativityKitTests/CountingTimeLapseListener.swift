@@ -7,7 +7,7 @@
 
 import Foundation
 
-@testable import NewtonianKit
+@testable import RelativityKit
 
 /// ``Clock.TimeLapseListener`` which counts the amount of times it has been notified of ticks.
 ///

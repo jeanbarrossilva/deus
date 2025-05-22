@@ -5,8 +5,8 @@
 //  Created by Jean Barros Silva on 28/04/25.
 //
 
-internal import Collections
 import Foundation
+import Geometry
 
 /// Closure which is executed whenever a ``Clock`` is started.
 typealias ClockDidStart = () -> Void

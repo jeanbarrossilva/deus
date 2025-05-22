@@ -1,13 +1,13 @@
 //
 //  VectorTests.swift
-//  NewtonianKitTests
+//  GeometryTests
 //
 //  Created by Jean Barros Silva on 28/04/25.
 //
 
 import Testing
 
-@testable import NewtonianKit
+@testable import Geometry
 
 struct VectorTests {
   @Test func moduleOfZeroVectorIsZero() throws {

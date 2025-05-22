@@ -7,7 +7,7 @@
 
 import Testing
 
-@testable import NewtonianKit
+@testable import Geometry
 
 struct TwoDTests {
   @Test func returnsZero2DAbstractionWhenRequestingOneAtZeroZero() throws {

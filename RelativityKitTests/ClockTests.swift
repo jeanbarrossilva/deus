@@ -8,7 +8,7 @@
 import Foundation
 import Testing
 
-@testable import NewtonianKit
+@testable import RelativityKit
 
 struct ClockTests {
   private var clock = Clock()

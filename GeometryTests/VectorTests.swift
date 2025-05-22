@@ -1,6 +1,6 @@
 //
 //  VectorTests.swift
-//  NewtonianKitTests
+//  GeometryTests
 //
 //  Created by Jean Barros Silva on 28/04/25.
 //

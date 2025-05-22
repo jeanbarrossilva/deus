@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "6F699247-9C10-47FE-83FE-7C6C019773C4",
+      "id" : "C9F1D29C-7362-4022-BC80-73FEC98D0F7B",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -20,8 +20,24 @@
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:Deus.xcodeproj",
+        "identifier" : "4960AB4F2DDCE34E00EB1410",
+        "name" : "GeometryTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Deus.xcodeproj",
         "identifier" : "4927F3822DD25BC700E368D8",
         "name" : "DeusUITests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Deus.xcodeproj",
+        "identifier" : "494EFC002DDF36B200C66063",
+        "name" : "RelativityKitTests"
       }
     }
   ],

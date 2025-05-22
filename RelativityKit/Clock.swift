@@ -5,7 +5,6 @@
 //  Created by Jean Barros Silva on 28/04/25.
 //
 
-internal import Collections
 import Foundation
 import Geometry
 

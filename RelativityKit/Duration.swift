@@ -1,15 +1,13 @@
 //
 //  Duration.swift
-//  Deus
+//  RelativityKit
 //
 //  Created by Jean Barros Silva on 08/05/25.
 //
 
-import Foundation
-
 /// Amount of time in a given unit.
-enum Duration: AdditiveArithmetic, Strideable {
-  static let zero = Self.microseconds(0)
+public enum Duration: AdditiveArithmetic, Strideable {
+  public static let zero = Self.microseconds(0)
 
   /// Amount of microseconds — the backing unit of a ``Duration`` — in a microsecond. Logically, 1.
   static let microsecondFactor = 1
@@ -53,7 +51,13 @@ enum Duration: AdditiveArithmetic, Strideable {
   /// Amount of time in seconds.
   case seconds(Int)
 
-  static func + (lhs: Self, rhs: Self) -> Self {
+  /// Sums one ``Duration`` to another.
+  ///
+  /// - Parameters:
+  ///   - lhs: ``Duration`` to which `rhs` will be summed.
+  ///   - rhs: ``Duration`` to sum to `lhs`.
+  /// - Returns: Sum of `lhs` and `rhs`.
+  public static func + (lhs: Self, rhs: Self) -> Self {
     if lhs == .zero {
       rhs
     } else if rhs == .zero {
@@ -63,23 +67,41 @@ enum Duration: AdditiveArithmetic, Strideable {
     }
   }
 
-  static func += (lhs: inout Self, rhs: Self) {
+  /// Assigns the sum of one ``Duration`` by another to `lhs`.
+  ///
+  /// - Parameters:
+  ///   - lhs: ``Duration`` to which `rhs` will be summed and the sum will be assigned.
+  ///   - rhs: ``Duration`` to sum to `lhs`.
+  public static func += (lhs: inout Self, rhs: Self) {
     lhs = lhs + rhs
   }
 
-  static func - (lhs: Self, rhs: Self) -> Self {
+  /// Subtracts one ``Duration`` from another.
+  ///
+  /// - Parameters:
+  ///   - lhs: ``Duration`` from which `rhs` will be subtracted.
+  ///   - rhs: ``Duration`` to subtract from `lhs`.
+  /// - Returns: Difference between `lhs` and `rhs`.
+  public static func - (lhs: Self, rhs: Self) -> Self {
     if rhs == .zero { lhs } else { .microseconds(lhs.inMicroseconds - rhs.inMicroseconds) }
   }
 
-  static func -= (lhs: inout Self, rhs: Self) {
+  /// Assigns the difference between one ``Duration`` and another.
+  ///
+  /// - Parameters:
+  ///   - lhs: ``Duration`` from which `rhs` will be subtracted and to which the difference will be
+  ///     assigned.
+  ///   - rhs: ``Duration`` to subtract from `lhs`.
+  public static func -= (lhs: inout Self, rhs: Self) {
     lhs = lhs - rhs
   }
 
-  func distance(to other: Self) -> Int {
+  public func distance(to other: Self) -> Int {
     inMicroseconds.distance(to: other.inMicroseconds)
   }
 
-  func advanced(by n: Int) -> Self {
-    n == -inMicroseconds ? .zero : n == 0 ? self : .microseconds(inMicroseconds + n)
+  public func advanced(by n: Int) -> Self {
+    guard n != 0 else { return self }
+    return .microseconds(inMicroseconds + n)
   }
 }

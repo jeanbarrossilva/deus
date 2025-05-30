@@ -5,6 +5,136 @@
 //  Created by Jean Barros Silva on 24/05/25.
 //
 
+/// Heaviest ``Quark``, with a Lagrangian mass of 173.21 ± 0.51 ± 0.7 GeV/*c*². Decays to a bottom
+/// ``Quark``.
+///
+/// - SeeAlso: ``bottom``
+/// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
+struct TopQuark: Quark {
+  static var charge = Quarks.positiveTwoThirdsOfE
+  static var symbol: Character = "t"
+
+  static func < (lhs: Self, rhs: any Quark) -> Bool {
+    lhs != rhs
+      && type(of: rhs).symbol != BottomQuark.symbol
+      && type(of: rhs).symbol != CharmQuark.symbol
+      && type(of: rhs).symbol != StrangeQuark.symbol
+      && type(of: rhs).symbol != DownQuark.symbol
+      && type(of: rhs).symbol != UpQuark.symbol
+  }
+
+  static func > (lhs: Self, rhs: any Quark) -> Bool {
+    lhs != rhs
+      && type(of: rhs).symbol == BottomQuark.symbol
+      || type(of: rhs).symbol == CharmQuark.symbol
+      || type(of: rhs).symbol == StrangeQuark.symbol
+      || type(of: rhs).symbol == DownQuark.symbol
+      || type(of: rhs).symbol == UpQuark.symbol
+  }
+}
+
+/// Second heaviest ``Quark``, with a Lagrangian mass of 4.18 ± 30 GeV/*c*². Decays to a charm
+/// ``Quark``.
+///
+/// - SeeAlso: ``charm``
+/// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
+struct BottomQuark: Quark {
+  static var charge = Quarks.negativeOneThirdOfE
+  static var symbol: Character = "b"
+
+  static func < (lhs: Self, rhs: any Quark) -> Bool {
+    lhs != rhs
+      && type(of: rhs).symbol != CharmQuark.symbol
+      && type(of: rhs).symbol != StrangeQuark.symbol
+      && type(of: rhs).symbol != DownQuark.symbol
+      && type(of: rhs).symbol != UpQuark.symbol
+  }
+
+  static func > (lhs: Self, rhs: any Quark) -> Bool {
+    lhs != rhs
+      && type(of: rhs).symbol == CharmQuark.symbol
+      || type(of: rhs).symbol == StrangeQuark.symbol
+      || type(of: rhs).symbol == DownQuark.symbol
+      || type(of: rhs).symbol == UpQuark.symbol
+  }
+}
+
+/// Third heaviest ``Quark``, with a Lagrangian mass of 1.275 ± 0.025 GeV/*c*². Decays to a strange
+/// ``Quark``.
+///
+/// - SeeAlso: ``strange``
+/// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
+struct CharmQuark: Quark {
+  static var charge = Quarks.positiveTwoThirdsOfE
+  static var symbol: Character = "c"
+
+  static func < (lhs: Self, rhs: any Quark) -> Bool {
+    lhs != rhs
+      && type(of: rhs).symbol != StrangeQuark.symbol
+      && type(of: rhs).symbol != DownQuark.symbol
+      && type(of: rhs).symbol != UpQuark.symbol
+  }
+
+  static func > (lhs: Self, rhs: any Quark) -> Bool {
+    lhs != rhs
+      && type(of: rhs).symbol == StrangeQuark.symbol
+      || type(of: rhs).symbol == DownQuark.symbol
+      || type(of: rhs).symbol == UpQuark.symbol
+  }
+}
+
+/// Third lightest ``Quark``, with a Lagrangian mass of 95 ± 5 MeV/*c*². Decays to a down ``Quark``.
+///
+/// - SeeAlso: ``down``
+/// - SeeAlso: ``Energy/megaelectronvolt(_:)``
+struct StrangeQuark: Quark {
+  static var charge = Quarks.negativeOneThirdOfE
+  static var symbol: Character = "s"
+
+  static func < (lhs: Self, rhs: any Quark) -> Bool {
+    lhs != rhs && type(of: rhs).symbol != DownQuark.symbol && type(of: rhs).symbol != UpQuark.symbol
+  }
+
+  static func > (lhs: Self, rhs: any Quark) -> Bool {
+    lhs != rhs && type(of: rhs).symbol == DownQuark.symbol || type(of: rhs).symbol == UpQuark.symbol
+  }
+}
+
+/// Second lightest ``Quark``, with a Lagrangian mass of 4.8 ± 0.5 ± 0.3 MeV/*c*². Decays to an up
+/// ``Quark``.
+///
+/// - SeeAlso: ``up``
+/// - SeeAlso: ``Energy/megaelectronvolt(_:)``
+struct DownQuark: Quark {
+  static let charge = Quarks.negativeOneThirdOfE
+  static let symbol: Character = "d"
+
+  static func < (lhs: Self, rhs: any Quark) -> Bool {
+    lhs != rhs && type(of: rhs).symbol != UpQuark.symbol
+  }
+
+  static func > (lhs: Self, rhs: any Quark) -> Bool {
+    lhs != rhs && type(of: rhs).symbol == UpQuark.symbol
+  }
+}
+
+/// Lightest ``Quark``, with a Lagrangian mass of 2.3 ± 0.7 ± 0.5 MeV/*c*². As per the Standard
+/// Model, cannot decay.
+///
+/// - SeeAlso: ``Energy/megaelectronvolt(_:)``
+struct UpQuark: Quark {
+  static let charge = Quarks.positiveTwoThirdsOfE
+  static let symbol: Character = "u"
+
+  static func < (lhs: Self, rhs: any Quark) -> Bool {
+    lhs > rhs
+  }
+
+  static func > (lhs: Self, rhs: any Quark) -> Bool {
+    lhs != rhs
+  }
+}
+
 /// Elementary, subatomic particle which is confined (meaning that it cannot exist by itself in
 /// nature), glued to at least another one by gluons via strong force. It is the only particle in
 /// the Standard Model which experiences each of the four fundamental forces: strong, weak,
@@ -49,87 +179,68 @@
 /// - SeeAlso: ``Charge/elementary(_:)``
 /// - SeeAlso: ``Energy/megaelectronvolt(_:)``
 /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
-public enum Quark: Comparable {
-  /// Intrinsic angular momentum of a ``Quark`` — ½.
-  ///
-  /// Having a fractional charge classifies ``Quark``s as **fermions**.
-  public static var spin = Spin.half
-
-  /// Force experienced by this ``Quark`` in an electromagnetic field. Up-type ``Quark``s have a
-  /// charge of +⅔ e; down-type ones, -⅓ e.
+public protocol Quark {
+  /// Force experienced by this type of ``Quark`` in an electromagnetic field. Up-type ``Quark``s
+  /// have a charge of +⅔ e; down-type ones, -⅓ e.
   ///
   /// - SeeAlso: ``Charge/elementary(_:)``
-  public var charge: Charge {
-    switch self {
-    case .up, .charm, .top:
-      Self.twoThirdsOfE
-    case .down, .strange, .bottom:
-      Self.negativeOneThirdOfE
-    }
+  static var charge: Charge { get }
+
+  /// Character which identifies this flavor of ``Quark`` as per the International System of Units
+  /// (SI).
+  static var symbol: Character { get }
+
+  /// Determines whether this ``Quark`` is less than another one in terms of mass.
+  ///
+  /// - Parameters:
+  ///   - lhs: ``Quark`` to be compared with `rhs`.
+  ///   - rhs: ``Quark`` to be compared with `lhs`.
+  /// - Returns: `true` if the mass of `lhs` is less than that of `rhs`; otherwise, `false`.
+  static func < (lhs: Self, rhs: any Quark) -> Bool
+
+  /// Determines whether this ``Quark`` is greater than another one in terms of mass.
+  ///
+  /// - Parameters:
+  ///   - lhs: ``Quark`` to be compared with `rhs`.
+  ///   - rhs: ``Quark`` to be compared with `lhs`.
+  /// - Returns: `true` if the mass of `lhs` is greater than that of `rhs`; otherwise, `false`.
+  static func > (lhs: Self, rhs: any Quark) -> Bool
+}
+
+extension Quark {
+  /// Determines whether this ``Quark`` differs from another one in terms of mass.
+  ///
+  /// - Parameters:
+  ///   - lhs: ``Quark`` to be compared with `rhs`.
+  ///   - rhs: ``Quark`` to be compared with `lhs`.
+  /// - Returns: `true` if the mass of `lhs` differs from that of `rhs`; otherwise, `false`.
+  public static func != (lhs: Self, rhs: any Quark) -> Bool {
+    !(lhs == rhs)
   }
 
-  /// Character which identifies this ``Quark`` as per the International System of Units (SI).
-  public var symbol: Character {
-    switch self {
-    case .up:
-      "u"
-    case .down:
-      "d"
-    case .strange:
-      "s"
-    case .charm:
-      "c"
-    case .bottom:
-      "b"
-    case .top:
-      "t"
-    }
+  /// Determines whether this ``Quark`` is equal to another one in terms of mass.
+  ///
+  /// - Parameters:
+  ///   - lhs: ``Quark`` to be compared with `rhs`.
+  ///   - rhs: ``Quark`` to be compared with `lhs`.
+  /// - Returns: `true` if the mass of `lhs` equals to that of `rhs`; otherwise, `false`.
+  public static func == (lhs: Self, rhs: any Quark) -> Bool {
+    type(of: lhs).symbol == type(of: rhs).symbol
   }
+}
 
-  /// ``charge`` of up-type quarks.
-  private static let twoThirdsOfE = Charge.elementary(2 / 3)
-
-  /// ``charge`` of down-type quarks.
-  private static let negativeOneThirdOfE = Charge.elementary(-1 / 3)
-
-  /// Lightest ``Quark``, with a Lagrangian mass of 2.3 ± 0.7 ± 0.5 MeV/*c*². As per the Standard
-  /// Model, cannot decay.
+/// Collection of properties shared by ``Quark``s.
+public struct Quarks {
+  /// Intrinsic angular momentum of a ``Quark`` — ½ *ħ*.
   ///
-  /// - SeeAlso: ``Energy/megaelectronvolt(_:)``
-  case up
+  /// Having a fractional ``Spin`` classifies ``Quark``s as **fermions**.
+  public static var spin = Spin.half
 
-  /// Second lightest ``Quark``, with a Lagrangian mass of 4.8 ± 0.5 ± 0.3 MeV/*c*². Decays to an up
-  /// ``Quark``.
-  ///
-  /// - SeeAlso: ``up``
-  /// - SeeAlso: ``Energy/megaelectronvolt(_:)``
-  case down
+  /// ``Charge`` of an up-type ``Quark``.
+  static let positiveTwoThirdsOfE = Charge.elementary(2 / 3)
 
-  /// Third lightest ``Quark``, with a Lagrangian mass of 95 ± 5 MeV/*c*². Decays to a down
-  /// ``Quark``.
-  ///
-  /// - SeeAlso: ``down``
-  /// - SeeAlso: ``Energy/megaelectronvolt(_:)``
-  case strange
+  /// ``Charge`` of a down-type ``Quark``.
+  static let negativeOneThirdOfE = Charge.elementary(-1 / 3)
 
-  /// Third heaviest ``Quark``, with a Lagrangian mass of 1.275 ± 0.025 GeV/*c*². Decays to a
-  /// strange ``Quark``.
-  ///
-  /// - SeeAlso: ``strange``
-  /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
-  case charm
-
-  /// Second heaviest ``Quark``, with a Lagrangian mass of 4.18 ± 30 GeV/*c*². Decays to a charm
-  /// ``Quark``.
-  ///
-  /// - SeeAlso: ``charm``
-  /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
-  case bottom
-
-  /// Heaviest ``Quark``, with a Lagrangian mass of 173.21 ± 0.51 ± 0.7 GeV/*c*². Decays to a bottom
-  /// ``Quark``.
-  ///
-  /// - SeeAlso: ``bottom``
-  /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
-  case top
+  private init() {}
 }

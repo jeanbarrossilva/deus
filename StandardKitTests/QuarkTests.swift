@@ -11,50 +11,54 @@ import Testing
 
 struct QuarkTests {
   @Test func spinIsHalf() {
-    #expect(Quark.spin == .half)
+    #expect(Quarks.spin == .half)
   }
 
   @Test func upQuarkSymbolIsU() {
-    #expect(Quark.up.symbol == "u")
+    #expect(UpQuark.symbol == "u")
   }
 
   @Test func downQuarkSymbolIsD() {
-    #expect(Quark.down.symbol == "d")
-  }
-
-  @Test func charmQuarkSymbolIsC() {
-    #expect(Quark.charm.symbol == "c")
+    #expect(DownQuark.symbol == "d")
   }
 
   @Test func strangeQuarkSymbolIsS() {
-    #expect(Quark.strange.symbol == "s")
+    #expect(StrangeQuark.symbol == "s")
   }
 
-  @Test func topQuarkSymbolIsT() {
-    #expect(Quark.top.symbol == "t")
+  @Test func charmQuarkSymbolIsC() {
+    #expect(CharmQuark.symbol == "c")
   }
 
   @Test func bottomQuarkSymbolIsB() {
-    #expect(Quark.bottom.symbol == "b")
+    #expect(BottomQuark.symbol == "b")
+  }
+
+  @Test func topQuarkSymbolIsT() {
+    #expect(TopQuark.symbol == "t")
   }
 
   @Test func chargeOfUpTypeQuarksIsTwoThirdsOfE() {
-    #expect(Quark.up.charge == Quark.charm.charge)
-    #expect(Quark.charm.charge == Quark.top.charge)
-    #expect(Quark.top.charge == .elementary(2 / 3))
+    #expect(UpQuark.charge == CharmQuark.charge)
+    #expect(CharmQuark.charge == TopQuark.charge)
+    #expect(TopQuark.charge == .elementary(2 / 3))
   }
 
   @Test func chargeOfDownTypeQuarksIsNegativeOneThirdOfE() {
-    #expect(Quark.down.charge == Quark.strange.charge)
-    #expect(Quark.strange.charge == Quark.bottom.charge)
-    #expect(Quark.bottom.charge == .elementary(-1 / 3))
+    #expect(DownQuark.charge == StrangeQuark.charge)
+    #expect(StrangeQuark.charge == BottomQuark.charge)
+    #expect(BottomQuark.charge == .elementary(-1 / 3))
   }
 
   @Test func quarksAreComparedByMass() {
-    #expect(Quark.up < .down)
-    #expect(Quark.down < .strange)
-    #expect(Quark.strange < .charm)
-    #expect(Quark.charm < .top)
-    #expect(Quark.top < .bottom)
+    let down = DownQuark()
+    let strange = StrangeQuark()
+    let charm = CharmQuark()
+    let bottom = BottomQuark()
+    #expect(UpQuark() < down)
+    #expect(down < strange)
+    #expect(strange < charm)
+    #expect(charm < bottom)
+    #expect(bottom < TopQuark())
   }
 }

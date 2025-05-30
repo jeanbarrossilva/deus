@@ -1,0 +1,25 @@
+%{
+  measurement_classes_and_backing_unit_cases = {
+    'Charge': 'elementary',
+    'Energy': 'megaelectronvolt'
+  }
+}%
+
+import Testing
+
+@testable import StandardKit
+
+struct MeasurementBackingUnitTests {
+  % for index, (measurement_class, backing_unit_case) in enumerate(measurement_classes_and_backing_unit_cases.items()):
+    % decapitalized_measurement_class = measurement_class[0].lower() + measurement_class[1:]
+    % title_cased_backing_unit_case = backing_unit_case[0].upper() + backing_unit_case[1:]
+  @Test func ${decapitalized_measurement_class}BackingUnitIs${title_cased_backing_unit_case}() {
+    #expect(${measurement_class}.make(value: 0).symbol == ${measurement_class}.backingUnitSymbol)
+    #expect(${measurement_class}.backingUnitSymbol == ${measurement_class}.${backing_unit_case}(0).symbol)
+    #expect(${measurement_class}.${backing_unit_case}(2).value == 2)
+  }
+    % if index < len(measurement_classes_and_backing_unit_cases) - 1:
+
+    % end
+  % end
+}

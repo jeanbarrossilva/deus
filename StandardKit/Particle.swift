@@ -22,13 +22,13 @@
 ///
 /// - SeeAlso: ``Spin``
 public protocol Particle {
-  /// Force experienced by this type of ``Particle`` in an electromagnetic field.
-  static var charge: Charge { get }
-
   /// Intrinsic angular momentum of this type of ``Particle``.
   static var spin: Spin { get }
 
+  /// Force experienced by this type of ``Particle`` in an electromagnetic field.
+  var charge: Charge { get }
+
   /// Character which identifies this type of ``Particle`` as per the International System of Units
   /// (SI).
-  static var symbol: Character { get }
+  var symbol: Character { get }
 }

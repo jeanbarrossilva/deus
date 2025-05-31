@@ -62,7 +62,6 @@ public enum Quark: Comparable, Particle {
     }
   }
 
-  /// Character which identifies this ``Quark`` as per the International System of Units (SI).
   public var symbol: Character {
     switch self {
     case .up:

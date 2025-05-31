@@ -127,14 +127,3 @@ public enum Quark: Comparable, Particle {
   /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
   case top
 }
-
-/// Collection of properties shared by ``Quark``s.
-private struct Quarks {
-  /// ``Charge`` of an up-type ``Quark``.
-  static let positiveTwoThirdsOfE = Charge.elementary(2 / 3)
-
-  /// ``Charge`` of a down-type ``Quark``.
-  static let negativeOneThirdOfE = Charge.elementary(-1 / 3)
-
-  private init() {}
-}

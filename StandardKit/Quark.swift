@@ -135,14 +135,15 @@ struct UpQuark: Quark {
   }
 }
 
-/// Elementary, subatomic particle which is confined (meaning that it cannot exist by itself in
-/// nature), glued to at least another one by gluons via strong force. It is the only particle in
-/// the Standard Model which experiences each of the four fundamental forces: strong, weak,
-/// electromagnetic and gravitational.
+/// A quark (q) is an elementary fermion ``Particle`` which is confined — cannot exist by itself in
+/// nature — and bound to at least another one by gluons via strong force. It is the only
+/// ``Particle`` in the Standard Model which experiences each of the four fundamental forces:
+/// strong, weak, electromagnetic and gravitational.
 ///
 /// ## Classification
 ///
-/// There are six flavors of quarks, divided into two ``charge``-based types and three generations:
+/// There are six flavors of quarks, divided into two ``Particle/charge``-based types and three
+/// generations:
 ///
 /// Flavor   | Generation | Spin   | Charge | Type    | Lagrangian mass               |
 /// -------- | ---------- | ------ | ------ | ------- | ----------------------------- |
@@ -162,7 +163,7 @@ struct UpQuark: Quark {
 /// Ordinary matter, such as nucleons and, therefore, atoms, is composed by 1ˢᵗ-generation quarks
 /// due to their stability: they have a decay width Γ ≈ 0 and, consequently, a lifetime τ ≈ ∞,
 /// because them being the lightest ones prohibits their decay to lighter — unknown or nonexistent —
-/// particles. Scenarios beyond the Standard Model in which they do decay is those of Grand
+/// ``Particle``s. Scenarios beyond the Standard Model in which they do decay are those of Grand
 /// Unification Theories, which theorize that the aforementioned four fundamental forces were one in
 /// the very early universe (first picosecond of its existence) and, as described by the theory of
 /// proton decay by Andrei Sakharov, such quarks have τ ≈ 10³⁴ years; nonetheless, they are
@@ -179,17 +180,7 @@ struct UpQuark: Quark {
 /// - SeeAlso: ``Charge/elementary(_:)``
 /// - SeeAlso: ``Energy/megaelectronvolt(_:)``
 /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
-public protocol Quark {
-  /// Force experienced by this type of ``Quark`` in an electromagnetic field. Up-type ``Quark``s
-  /// have a charge of +⅔ e; down-type ones, -⅓ e.
-  ///
-  /// - SeeAlso: ``Charge/elementary(_:)``
-  static var charge: Charge { get }
-
-  /// Character which identifies this flavor of ``Quark`` as per the International System of Units
-  /// (SI).
-  static var symbol: Character { get }
-
+public protocol Quark: Particle {
   /// Determines whether this ``Quark`` is less than another one in terms of mass.
   ///
   /// - Parameters:
@@ -229,13 +220,12 @@ extension Quark {
   }
 }
 
-/// Collection of properties shared by ``Quark``s.
-public struct Quarks {
-  /// Intrinsic angular momentum of a ``Quark`` — ½ *ħ*.
-  ///
-  /// Having a fractional ``Spin`` classifies ``Quark``s as **fermions**.
-  public static var spin = Spin.half
+extension Quark where Self: Particle {
+  public static var spin: Spin { .half }
+}
 
+/// Collection of properties shared by ``Quark``s.
+private struct Quarks {
   /// ``Charge`` of an up-type ``Quark``.
   static let positiveTwoThirdsOfE = Charge.elementary(2 / 3)
 

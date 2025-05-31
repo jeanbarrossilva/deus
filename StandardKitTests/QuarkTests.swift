@@ -10,10 +10,6 @@ import Testing
 @testable import StandardKit
 
 struct QuarkTests {
-  @Test func spinIsHalf() {
-    #expect(Quarks.spin == .half)
-  }
-
   @Test func upQuarkSymbolIsU() {
     #expect(UpQuark.symbol == "u")
   }

@@ -28,7 +28,7 @@
 /// description (respectively, a visual perception of the electromagnetic spectrum and a projection
 /// of physical movement from one point toward another). These are uniquely-quantum properties of a
 /// ``ColoredParticle``.
-public enum Color: Opposable {
+public indirect enum Color: Equatable, Opposable {
   /// Red (r) direction in the SU(3)₍color₎ field.
   case red
 
@@ -37,6 +37,9 @@ public enum Color: Opposable {
 
   /// Blue (b) direction in the SU(3)₍color₎ field.
   case blue
+
+  /// Counterpart of a ``Color``: antired, antigreen or antiblue.
+  case anti(Color)
 }
 
 /// Direct (in the case of a gluon ``Particle``) or indirect result of a localized excitation of the
@@ -44,8 +47,7 @@ public enum Color: Opposable {
 public protocol ColoredParticle: _ColoredParticle, Particle {}
 
 extension Anti: _ColoredParticle where Counterpart: _ColoredParticle {
-  // FIXME: Compute anticolor.
-  public var color: Color { counterpart.color }
+  public var color: Color { .anti(counterpart.color) }
 }
 
 /// Non-``Opposable``-conformant protocol of a ``ColoredParticle``.

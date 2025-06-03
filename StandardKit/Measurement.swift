@@ -7,6 +7,17 @@
 
 import Foundation
 
+/// `NumberFormatter` by which the specified quantity is described in a string alongside its symbol.
+///
+/// - SeeAlso: ``Measurement/description``
+/// - SeeAlso: ``Measurement/symbol``
+private let valueFormatter = {
+  let formatter = NumberFormatter()
+  formatter.usesGroupingSeparator = true
+  formatter.maximumFractionDigits = 2
+  return formatter
+}()
+
 /// Amount dependent of a system of units defined by the International System of Units (SI).
 public protocol Measurement: Comparable, CustomStringConvertible, SignedNumeric {
   /// ``symbol`` of the backing unit of this ``Measurement``.
@@ -41,7 +52,7 @@ extension Measurement where Self: Comparable {
 extension Measurement where Self: CustomStringConvertible {
   /// Describes the dimensioned value and unit in which it was quantified (e.g., "2 cm").
   public var description: String {
-    guard let formattedValue = Measurements.valueFormatter.string(for: value) else {
+    guard let formattedValue = valueFormatter.string(for: value) else {
       return "\(value) \(symbol)"
     }
     return "\(formattedValue) \(symbol)"
@@ -89,21 +100,4 @@ extension Measurement where Self: SignedNumeric {
   public mutating func negate() {
     self -= self
   }
-}
-
-/// Collection of static utilities of a ``Measurement``.
-private struct Measurements {
-  private init() {}
-
-  /// `NumberFormatter` by which the specified quantity is described in a string alongside its
-  /// symbol.
-  ///
-  /// - SeeAlso: ``Measurement/description``
-  /// - SeeAlso: ``Measurement/symbol``
-  static let valueFormatter = {
-    let formatter = NumberFormatter()
-    formatter.usesGroupingSeparator = true
-    formatter.maximumFractionDigits = 2
-    return formatter
-  }()
 }

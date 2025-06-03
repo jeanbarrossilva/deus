@@ -5,7 +5,7 @@
 //  Created by Jean Barros Silva on 02/06/25.
 //
 
-/// Matter or property which has a counterpart of opposite charge: its "anti" part.
+/// Matter or property which has a counterpart of opposite charge: its ``Anti`` part.
 ///
 /// There is an imbalance regarding the amount of matter and antimatter in nature, unexplained by
 /// the Standard Model. In 1967, Andrei Sakharov theorized that such disproportion may have arisen

@@ -12,7 +12,7 @@
 ///
 /// ## Classification
 ///
-/// There are six flavors of quarks, divided into two charge-based types and three generations:
+/// There are six flavors of quarks, divided into two ``charge``-based types and three generations:
 ///
 /// Flavor      | Generation | Spin   | Charge | Type    | Lagrangian mass               |
 /// ----------- | ---------- | ------ | ------ | ------- | ----------------------------- |
@@ -98,7 +98,7 @@ public enum Quark: ColoredParticle, Equatable {
   /// ``charge`` of up-type quarks.
   private static let twoThirdsOfE = Charge.elementary(2 / 3)
 
-  /// ``charge`` of down-type quarks.
+  /// ``Charge`` of down-type quarks.
   private static let negativeOneThirdOfE = Charge.elementary(-1 / 3)
 
   /// Lightest ``Quark``, with a Lagrangian mass of 2.3 ± 0.7 ± 0.5 MeV/*c*². As per the Standard

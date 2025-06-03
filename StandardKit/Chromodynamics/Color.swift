@@ -48,7 +48,7 @@ extension Anti: Colored where Counterpart: Colored {
   public var color: Color { counterpart.color }
 }
 
-/// Matter with ``color``.
+/// Matter or antimatter with ``color``.
 public protocol Colored {
   /// Measured transformation under the SU(3) symmetry.
   var color: Color { get }

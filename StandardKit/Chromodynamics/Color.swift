@@ -41,15 +41,17 @@ public enum Color: Opposable {
 
 /// Direct (in the case of a gluon ``Particle``) or indirect result of a localized excitation of the
 /// ``Color`` field.
-public protocol ColoredParticle: Colored, Particle {}
+public protocol ColoredParticle: _ColoredParticle, Particle {}
 
-extension Anti: Colored where Counterpart: Colored {
+extension Anti: _ColoredParticle where Counterpart: _ColoredParticle {
   // FIXME: Compute anticolor.
   public var color: Color { counterpart.color }
 }
 
-/// Matter or antimatter with ``color``.
-public protocol Colored {
+/// Non-``Opposable``-conformant protocol of a ``ColoredParticle``.
+///
+/// > Warning: This should not be referenced by external consumers.
+public protocol _ColoredParticle {
   /// Measured transformation under the SU(3) symmetry.
   var color: Color { get }
 }

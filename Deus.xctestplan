@@ -39,6 +39,13 @@
         "identifier" : "494EFC002DDF36B200C66063",
         "name" : "RelativityKitTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Deus.xcodeproj",
+        "identifier" : "49EF5D562DE20D36008AFB31",
+        "name" : "StandardKitTests"
+      }
     }
   ],
   "version" : 1

@@ -28,7 +28,9 @@
 /// description (respectively, a visual perception of the electromagnetic spectrum and a projection
 /// of physical movement from one point toward another). These are uniquely-quantum properties of a
 /// ``ColoredParticle``.
-public indirect enum Color: Equatable, Opposable {
+public indirect enum Color: CaseIterable, Equatable, Opposable {
+  public static var allCases = [red, green, blue]
+
   /// Red (r) direction in the SU(3)₍color₎ field.
   case red
 

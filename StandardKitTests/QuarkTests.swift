@@ -11,46 +11,38 @@ import Testing
 
 struct QuarkTests {
   @Test func upQuarkSymbolIsU() {
-    #expect(Quark.up.symbol == "u")
+    #expect(Quark.up(color: .red).symbol == "u")
   }
 
   @Test func downQuarkSymbolIsD() {
-    #expect(Quark.down.symbol == "d")
+    #expect(Quark.down(color: .red).symbol == "d")
   }
 
   @Test func charmQuarkSymbolIsC() {
-    #expect(Quark.charm.symbol == "c")
+    #expect(Quark.charm(color: .red).symbol == "c")
   }
 
   @Test func strangeQuarkSymbolIsS() {
-    #expect(Quark.strange.symbol == "s")
+    #expect(Quark.strange(color: .red).symbol == "s")
   }
 
   @Test func topQuarkSymbolIsT() {
-    #expect(Quark.top.symbol == "t")
+    #expect(Quark.top(color: .red).symbol == "t")
   }
 
   @Test func bottomQuarkSymbolIsB() {
-    #expect(Quark.bottom.symbol == "b")
+    #expect(Quark.bottom(color: .red).symbol == "b")
   }
 
   @Test func chargeOfUpTypeQuarksIsTwoThirdsOfE() {
-    #expect(Quark.up.charge == Quark.charm.charge)
-    #expect(Quark.charm.charge == Quark.top.charge)
-    #expect(Quark.top.charge == .elementary(2 / 3))
+    #expect(Quark.up(color: .red).charge == Quark.charm(color: .red).charge)
+    #expect(Quark.charm(color: .red).charge == Quark.top(color: .red).charge)
+    #expect(Quark.top(color: .red).charge == .elementary(2 / 3))
   }
 
   @Test func chargeOfDownTypeQuarksIsNegativeOneThirdOfE() {
-    #expect(Quark.down.charge == Quark.strange.charge)
-    #expect(Quark.strange.charge == Quark.bottom.charge)
-    #expect(Quark.bottom.charge == .elementary(-1 / 3))
-  }
-
-  @Test func quarksAreComparedByMass() {
-    #expect(Quark.up < .down)
-    #expect(Quark.down < .strange)
-    #expect(Quark.strange < .charm)
-    #expect(Quark.charm < .bottom)
-    #expect(Quark.bottom < .top)
+    #expect(Quark.down(color: .red).charge == Quark.strange(color: .red).charge)
+    #expect(Quark.strange(color: .red).charge == Quark.bottom(color: .red).charge)
+    #expect(Quark.bottom(color: .red).charge == .elementary(-1 / 3))
   }
 }

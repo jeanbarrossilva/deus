@@ -21,7 +21,20 @@
 /// Fermion   | s ∈ (ℤ + ½) × *ħ* | **Pauli exclusion**: identical particles of such family cannot have equal quantum states in the same spacetime.                         |
 ///
 /// - SeeAlso: ``Spin``
-public protocol Particle {
+public protocol Particle: _Particle, Opposable {}
+
+extension Anti: _Particle where Counterpart: _Particle {
+  // FIXME: Reverse the spin of antiparticle.
+  public static var spin: Spin { Counterpart.spin }
+
+  public var charge: Charge { -counterpart.charge }
+  public var symbol: String { counterpart.symbol + "\u{0305}" }
+}
+
+/// Non-``Opposable``-conformant protocol of a ``Particle``.
+///
+/// > Warning: This should not be referenced by external consumers.
+public protocol _Particle {
   /// Intrinsic angular momentum of this type of ``Particle``.
   static var spin: Spin { get }
 
@@ -30,5 +43,5 @@ public protocol Particle {
 
   /// Character which identifies this type of ``Particle`` as per the International System of Units
   /// (SI).
-  var symbol: Character { get }
+  var symbol: String { get }
 }

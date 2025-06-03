@@ -5,24 +5,23 @@
 //  Created by Jean Barros Silva on 24/05/25.
 //
 
-/// A quark (q) is an elementary fermion ``Particle`` which is confined — cannot exist by itself in
-/// nature — and bound to at least another one by gluons via strong force. It is the only
-/// ``Particle`` in the Standard Model which experiences each of the four fundamental forces:
-/// strong, weak, electromagnetic and gravitational.
+/// A quark (q) is an elementary fermion ``ColoredParticle`` which is confined, bound to at least
+/// another one by gluon ``Particle``s via strong force. It is the only ``Particle`` in the Standard
+/// Model which experiences each of the four fundamental forces: strong, weak, electromagnetic and
+/// gravitational.
 ///
 /// ## Classification
 ///
-/// There are six flavors of quarks, divided into two ``Particle/charge``-based types and three
-/// generations:
+/// There are six flavors of quarks, divided into two charge-based types and three generations:
 ///
-/// Flavor   | Generation | Spin   | Charge | Type    | Lagrangian mass               |
-/// -------- | ---------- | ------ | ------ | ------- | ----------------------------- |
-/// Up       | 1ˢᵗ        | ½ *ħ*  | +⅔ e   | Up      | 2.3 ± 0.7 ± 0.5 MeV/*c*²      |
-/// Down     | 1ˢᵗ        | ½ *ħ*  | -⅓ e   | Down    | 4.8 ± 0.5 ± 0.3 MeV/*c*²      |
-/// Strange  | 2ⁿᵈ        | ½ *ħ*  | -⅓ e   | Down    | 95 ± 5 MeV/*c*²               |
-/// Charm    | 2ⁿᵈ        | ½ *ħ*  | +⅔ e   | Up      | 1.275 ± 0.025 GeV/*c*²        |
-/// Bottom   | 3ʳᵈ        | ½ *ħ*  | -⅓ e   | Down    | 4.18 ± 30 GeV/*c*²            |
-/// Top      | 3ʳᵈ        | ½ *ħ*  | +⅔ e   | Up      | 173.21 ± 0.51 ± 0.7 GeV/*c*²  |
+/// Flavor      | Generation | Spin   | Charge | Type    | Lagrangian mass               |
+/// ----------- | ---------- | ------ | ------ | ------- | ----------------------------- |
+/// Up (u)      | 1ˢᵗ        | ½ *ħ*  | +⅔ e   | Up      | 2.3 ± 0.7 ± 0.5 MeV/*c*²      |
+/// Down (d)    | 1ˢᵗ        | ½ *ħ*  | -⅓ e   | Down    | 4.8 ± 0.5 ± 0.3 MeV/*c*²      |
+/// Strange (s) | 2ⁿᵈ        | ½ *ħ*  | -⅓ e   | Down    | 95 ± 5 MeV/*c*²               |
+/// Charm (c)   | 2ⁿᵈ        | ½ *ħ*  | +⅔ e   | Up      | 1.275 ± 0.025 GeV/*c*²        |
+/// Bottom (b)  | 3ʳᵈ        | ½ *ħ*  | -⅓ e   | Down    | 4.18 ± 30 GeV/*c*²            |
+/// Top (t)     | 3ʳᵈ        | ½ *ħ*  | +⅔ e   | Up      | 173.21 ± 0.51 ± 0.7 GeV/*c*²  |
 ///
 /// > Note: The names up, down, strange, charm, bottom and top have no intrinsic meaning nor do they
 /// describe the behavior of such quarks; they were chosen arbitrarily, with the sole purpose of
@@ -32,25 +31,25 @@
 ///
 /// Ordinary matter, such as nucleons and, therefore, atoms, is composed by 1ˢᵗ-generation quarks
 /// due to their stability: they have a decay width Γ ≈ 0 and, consequently, a lifetime τ ≈ ∞,
-/// because them being the lightest ones prohibits their decay to lighter — unknown or nonexistent —
-/// ``Particle``s. Scenarios beyond the Standard Model in which they do decay are those of Grand
-/// Unification Theories, which theorize that the aforementioned four fundamental forces were one in
-/// the very early universe (first picosecond of its existence) and, as described by the theory of
-/// proton decay by Andrei Sakharov, such quarks have τ ≈ 10³⁴ years; nonetheless, they are
-/// disconsidered here.
+/// because them being the lightest ones either diminishes the chances of (d) or prohibits (u) their
+/// decay to lighter — unknown or nonexistent — ``Particle``s of the ``Color`` field. Scenarios
+/// beyond the Standard Model in which up quarks decay are those of Grand Unification Theories,
+/// which theorize that the aforementioned four fundamental forces were one in the very early
+/// universe (first picosecond of its existence) and, as described by the theory of proton decay by
+/// Andrei Sakharov, such quarks have τ ≈ 10³⁴ years; nonetheless, they are disconsidered here.
 ///
 /// As for 2ⁿᵈ- and 3ʳᵈ-generation quarks, their masses, ~20 to ~300 times greater than that of the
 /// heaviest 1ˢᵗ-generation quark, alongside their ability to emit a W⁺ or W⁻ via weak interaction
-/// and, subsequently, decay to lighter quarks, make them unstable and result in lifetimes ⪅ 173 GeV
-/// (5 × 10⁻²⁵ s); these are, therefore, mostly present in cosmic rays and other high-energy
-/// collisions. Of the four, the top quark is the only one which is heavy and decays fast enough to
-/// the extent of being unable to hadronize (form a hadron).
+/// and, subsequently, decay to lighter quarks, make them unstable and result in τ ⪅ 173 GeV (5 ×
+/// 10⁻²⁵ s); these are, therefore, mostly present in cosmic rays and other high-energy collisions.
+/// Of the four, the top quark is the only one which is heavy and decays fast enough to the extent
+/// of being unable to hadronize (form a hadron).
 ///
 /// - SeeAlso: ``Spin/half``
 /// - SeeAlso: ``Charge/elementary(_:)``
 /// - SeeAlso: ``Energy/megaelectronvolt(_:)``
 /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
-public enum Quark: Comparable, Particle {
+public enum Quark: ColoredParticle, Equatable {
   public static var spin = Spin.half
 
   public var charge: Charge {
@@ -62,7 +61,7 @@ public enum Quark: Comparable, Particle {
     }
   }
 
-  public var symbol: Character {
+  public var symbol: String {
     switch self {
     case .up:
       "u"
@@ -79,6 +78,23 @@ public enum Quark: Comparable, Particle {
     }
   }
 
+  public var color: Color {
+    switch self {
+    case .up(let color):
+      color
+    case .down(let color):
+      color
+    case .strange(let color):
+      color
+    case .charm(let color):
+      color
+    case .bottom(let color):
+      color
+    case .top(let color):
+      color
+    }
+  }
+
   /// ``charge`` of up-type quarks.
   private static let twoThirdsOfE = Charge.elementary(2 / 3)
 
@@ -89,40 +105,44 @@ public enum Quark: Comparable, Particle {
   /// Model, cannot decay.
   ///
   /// - SeeAlso: ``Energy/megaelectronvolt(_:)``
-  case up
+  case up(color: Color)
 
   /// Second lightest ``Quark``, with a Lagrangian mass of 4.8 ± 0.5 ± 0.3 MeV/*c*². Decays to an up
   /// ``Quark``.
   ///
-  /// - SeeAlso: ``up``
+  /// - SeeAlso: ``up(color:)``
   /// - SeeAlso: ``Energy/megaelectronvolt(_:)``
-  case down
+  case down(color: Color)
 
   /// Third lightest ``Quark``, with a Lagrangian mass of 95 ± 5 MeV/*c*². Decays to a down
   /// ``Quark``.
   ///
-  /// - SeeAlso: ``down``
+  /// - SeeAlso: ``down(color:)``
   /// - SeeAlso: ``Energy/megaelectronvolt(_:)``
-  case strange
+  case strange(color: Color)
 
   /// Third heaviest ``Quark``, with a Lagrangian mass of 1.275 ± 0.025 GeV/*c*². Decays to a
   /// strange ``Quark``.
   ///
-  /// - SeeAlso: ``strange``
+  /// - SeeAlso: ``strange(color:)``
   /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
-  case charm
+  case charm(color: Color)
 
   /// Second heaviest ``Quark``, with a Lagrangian mass of 4.18 ± 30 GeV/*c*². Decays to a charm
   /// ``Quark``.
   ///
-  /// - SeeAlso: ``charm``
+  /// - SeeAlso: ``charm(color:)``
   /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
-  case bottom
+  case bottom(color: Color)
 
   /// Heaviest ``Quark``, with a Lagrangian mass of 173.21 ± 0.51 ± 0.7 GeV/*c*². Decays to a bottom
   /// ``Quark``.
   ///
-  /// - SeeAlso: ``bottom``
+  /// - SeeAlso: ``bottom(color:)``
   /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
-  case top
+  case top(color: Color)
+
+  public static func == (lhs: Self, rhs: Self) -> Bool {
+    lhs.symbol == rhs.symbol && lhs.color == rhs.color
+  }
 }

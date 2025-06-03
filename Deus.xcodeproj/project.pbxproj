@@ -7,10 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4936BB7F2DEBC3B600F3FC28 /* Numerics in Frameworks */ = {isa = PBXBuildFile; productRef = 4936BB7E2DEBC3B600F3FC28 /* Numerics */; };
 		494EFC0C2DDF36B200C66063 /* RelativityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 494EFBF92DDF36B100C66063 /* RelativityKit.framework */; };
 		494EFC0D2DDF36B200C66063 /* RelativityKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 494EFBF92DDF36B100C66063 /* RelativityKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		494EFC152DDF36D700C66063 /* Geometry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4960AB482DDCE34E00EB1410 /* Geometry.framework */; };
 		494EFC162DDF36D700C66063 /* Geometry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4960AB482DDCE34E00EB1410 /* Geometry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		496882DC2DECCE4F004CB967 /* Geometry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4960AB482DDCE34E00EB1410 /* Geometry.framework */; };
+		496882DD2DECCE4F004CB967 /* Geometry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4960AB482DDCE34E00EB1410 /* Geometry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		49EF5D582DE20D36008AFB31 /* StandardKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardKit.framework */; };
 		49EF5D622DE20D36008AFB31 /* StandardKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardKit.framework */; };
 		49EF5D632DE20D36008AFB31 /* StandardKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -52,6 +55,13 @@
 			remoteGlobalIDString = 4960AB472DDCE34E00EB1410;
 			remoteInfo = Geometry;
 		};
+		496882DE2DECCE4F004CB967 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49FD311A2DBFC9E2003CEAF9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4960AB472DDCE34E00EB1410;
+			remoteInfo = Geometry;
+		};
 		49EF5D602DE20D36008AFB31 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49FD311A2DBFC9E2003CEAF9 /* Project object */;
@@ -81,6 +91,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				494EFC162DDF36D700C66063 /* Geometry.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		496882E02DECCE4F004CB967 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				496882DD2DECCE4F004CB967 /* Geometry.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -196,6 +217,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				496882DC2DECCE4F004CB967 /* Geometry.framework in Frameworks */,
+				4936BB7F2DEBC3B600F3FC28 /* Numerics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -422,16 +445,19 @@
 				49EF5D4B2DE20D36008AFB31 /* Sources */,
 				49EF5D4C2DE20D36008AFB31 /* Frameworks */,
 				49EF5D4D2DE20D36008AFB31 /* Resources */,
+				496882E02DECCE4F004CB967 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				496882DF2DECCE4F004CB967 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				49EF5D502DE20D36008AFB31 /* StandardKit */,
 			);
 			name = StandardKit;
 			packageProductDependencies = (
+				4936BB7E2DEBC3B600F3FC28 /* Numerics */,
 			);
 			productName = StandardKit;
 			productReference = 49EF5D4F2DE20D36008AFB31 /* StandardKit.framework */;
@@ -511,6 +537,7 @@
 			mainGroup = 49FD31192DBFC9E2003CEAF9;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				4936BB7D2DEBC3B600F3FC28 /* XCRemoteSwiftPackageReference "swift-numerics" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 49FD31192DBFC9E2003CEAF9;
@@ -695,6 +722,11 @@
 			isa = PBXTargetDependency;
 			target = 4960AB472DDCE34E00EB1410 /* Geometry */;
 			targetProxy = 494EFC172DDF36D700C66063 /* PBXContainerItemProxy */;
+		};
+		496882DF2DECCE4F004CB967 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4960AB472DDCE34E00EB1410 /* Geometry */;
+			targetProxy = 496882DE2DECCE4F004CB967 /* PBXContainerItemProxy */;
 		};
 		49EF5D612DE20D36008AFB31 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -997,7 +1029,7 @@
 		49EF5D652DE20D36008AFB31 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1032,7 +1064,7 @@
 		49EF5D662DE20D36008AFB31 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1305,6 +1337,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4936BB7D2DEBC3B600F3FC28 /* XCRemoteSwiftPackageReference "swift-numerics" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-numerics.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4936BB7E2DEBC3B600F3FC28 /* Numerics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4936BB7D2DEBC3B600F3FC28 /* XCRemoteSwiftPackageReference "swift-numerics" */;
+			productName = Numerics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 49FD311A2DBFC9E2003CEAF9 /* Project object */;
 }

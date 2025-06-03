@@ -21,9 +21,9 @@
 /// Fermion   | s ∈ (ℤ + ½) × *ħ* | **Pauli exclusion**: identical particles of such family cannot have equal quantum states in the same spacetime.                         |
 ///
 /// - SeeAlso: ``Spin``
-public protocol Particle: _Particle, Opposable {}
+public protocol Particle: Localizable, Opposable {}
 
-extension Anti: _Particle where Counterpart: _Particle {
+extension Anti: Localizable where Counterpart: Localizable {
   // FIXME: Reverse the spin of antiparticle.
   public static var spin: Spin { Counterpart.spin }
 
@@ -31,17 +31,15 @@ extension Anti: _Particle where Counterpart: _Particle {
   public var symbol: String { counterpart.symbol + "\u{0305}" }
 }
 
-/// Non-``Opposable``-conformant protocol of a ``Particle``.
-///
-/// > Warning: This should not be referenced by external consumers.
-public protocol _Particle {
-  /// Intrinsic angular momentum of this type of ``Particle``.
+/// Concentration of energy at a position of a field.
+public protocol Localizable {
+  /// Intrinsic angular momentum of this type of ``Localizable``.
   static var spin: Spin { get }
 
-  /// Force experienced by this type of ``Particle`` in an electromagnetic field.
+  /// Force experienced by this type of ``Localizable`` in an electromagnetic field.
   var charge: Charge { get }
 
-  /// Character which identifies this type of ``Particle`` as per the International System of Units
-  /// (SI).
+  /// Character which identifies this type of ``Localizable`` as per the International System of
+  /// Units (SI).
   var symbol: String { get }
 }

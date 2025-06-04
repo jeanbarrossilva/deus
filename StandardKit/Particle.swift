@@ -28,8 +28,6 @@ extension Anti: _Particle where Counterpart: _Particle {
   public static var spin: Spin { Counterpart.spin }
 
   public var charge: Charge { -counterpart.charge }
-
-  // TODO: Return symbol precomposed with the macron when it exists (e.g.,"u̅" ≠ "ū").
   public var symbol: String { counterpart.symbol + "̅" }
 }
 

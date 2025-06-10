@@ -40,7 +40,7 @@ public indirect enum Color: CaseIterable, Equatable, Opposable {
   /// Blue (b) direction in the SU(3)₍color₎ field.
   case blue
 
-  /// Counterpart of a ``Color``: antired, antigreen or antiblue.
+  /// Counterpart of a ``Color``: antired (r̅), antigreen (g̅) or antiblue (b̅).
   case anti(Color)
 }
 

@@ -11,10 +11,10 @@ import Testing
 
 struct EnergyTests {
   @Test func megaelectronvoltSymbolIsMeV() {
-    #expect(Energy.megaelectronvolt(0).symbol == "MeV")
+    #expect(Energy.megaelectronvolts(0).symbol == "MeV")
   }
 
   @Test func gigaelectronvoltSymbolIsGeV() {
-    #expect(Energy.gigaelectronvolt(0).symbol == "GeV")
+    #expect(Energy.gigaelectronvolts(0).symbol == "GeV")
   }
 }

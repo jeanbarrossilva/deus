@@ -2,7 +2,7 @@
   measurement_classes_and_backing_unit_cases = {
     'Angle': 'radians',
     'Charge': 'elementary',
-    'Energy': 'megaelectronvolt'
+    'Energy': 'megaelectronvolts'
   }
 }%
 

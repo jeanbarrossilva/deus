@@ -18,30 +18,30 @@ public enum Energy: Measurement {
 
   public var value: Double {
     switch self {
-    case .megaelectronvolt(let value):
+    case .megaelectronvolts(let value):
       value
-    case .gigaelectronvolt(let value):
+    case .gigaelectronvolts(let value):
       value * 1_000
     }
   }
 
   public var symbol: String {
     switch self {
-    case .megaelectronvolt(_):
+    case .megaelectronvolts(_):
       Self.backingUnitSymbol
-    case .gigaelectronvolt(_):
+    case .gigaelectronvolts(_):
       "GeV"
     }
   }
 
   /// Symbolized as MeV, it is one-hundredth of an electronvolt (eV), with eV = 1.602176634 × 10⁻¹⁹
   /// J and J = C × V.
-  case megaelectronvolt(Double)
+  case megaelectronvolts(Double)
 
   /// Symbolized as GeV, it is one-millionth of an electronvolt (eV).
-  case gigaelectronvolt(Double)
+  case gigaelectronvolts(Double)
 
   public static func make(value: Double) -> Energy {
-    megaelectronvolt(value)
+    megaelectronvolts(value)
   }
 }

@@ -1,3 +1,4 @@
+
 import Testing
 
 @testable import StandardKit
@@ -15,9 +16,9 @@ struct MeasurementBackingUnitTests {
     #expect(Charge.elementary(2).value == 2)
   }
 
-  @Test func energyBackingUnitIsMegaelectronvolt() {
+  @Test func energyBackingUnitIsMegaelectronvolts() {
     #expect(Energy.make(value: 0).symbol == Energy.backingUnitSymbol)
-    #expect(Energy.backingUnitSymbol == Energy.megaelectronvolt(0).symbol)
-    #expect(Energy.megaelectronvolt(2).value == 2)
+    #expect(Energy.backingUnitSymbol == Energy.megaelectronvolts(0).symbol)
+    #expect(Energy.megaelectronvolts(2).value == 2)
   }
 }

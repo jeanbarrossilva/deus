@@ -24,7 +24,6 @@
 public protocol Particle: _Particle, Opposable {}
 
 extension Anti: _Particle where Counterpart: _Particle {
-  // FIXME: Reverse the spin of antiparticle.
   public static var spin: Spin { Counterpart.spin }
 
   public var charge: Charge { -counterpart.charge }

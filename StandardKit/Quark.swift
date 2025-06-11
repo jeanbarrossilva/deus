@@ -47,8 +47,8 @@
 ///
 /// - SeeAlso: ``Spin/half``
 /// - SeeAlso: ``Charge/elementary(_:)``
-/// - SeeAlso: ``Energy/megaelectronvolt(_:)``
-/// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
+/// - SeeAlso: ``Energy/megaelectronvolts(_:)``
+/// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
 public enum Quark: ColoredParticle, Equatable {
   public static var spin = Spin.half
 
@@ -104,42 +104,42 @@ public enum Quark: ColoredParticle, Equatable {
   /// Lightest ``Quark``, with a Lagrangian mass of 2.3 ± 0.7 ± 0.5 MeV/*c*². As per the Standard
   /// Model, cannot decay.
   ///
-  /// - SeeAlso: ``Energy/megaelectronvolt(_:)``
+  /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
   case up(color: Color)
 
   /// Second lightest ``Quark``, with a Lagrangian mass of 4.8 ± 0.5 ± 0.3 MeV/*c*². Decays to an up
   /// ``Quark``.
   ///
   /// - SeeAlso: ``up(color:)``
-  /// - SeeAlso: ``Energy/megaelectronvolt(_:)``
+  /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
   case down(color: Color)
 
   /// Third lightest ``Quark``, with a Lagrangian mass of 95 ± 5 MeV/*c*². Decays to a down
   /// ``Quark``.
   ///
   /// - SeeAlso: ``down(color:)``
-  /// - SeeAlso: ``Energy/megaelectronvolt(_:)``
+  /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
   case strange(color: Color)
 
   /// Third heaviest ``Quark``, with a Lagrangian mass of 1.275 ± 0.025 GeV/*c*². Decays to a
   /// strange ``Quark``.
   ///
   /// - SeeAlso: ``strange(color:)``
-  /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
+  /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
   case charm(color: Color)
 
   /// Second heaviest ``Quark``, with a Lagrangian mass of 4.18 ± 30 GeV/*c*². Decays to a charm
   /// ``Quark``.
   ///
   /// - SeeAlso: ``charm(color:)``
-  /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
+  /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
   case bottom(color: Color)
 
   /// Heaviest ``Quark``, with a Lagrangian mass of 173.21 ± 0.51 ± 0.7 GeV/*c*². Decays to a bottom
   /// ``Quark``.
   ///
   /// - SeeAlso: ``bottom(color:)``
-  /// - SeeAlso: ``Energy/gigaelectronvolt(_:)``
+  /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
   case top(color: Color)
 
   public static func == (lhs: Self, rhs: Self) -> Bool {

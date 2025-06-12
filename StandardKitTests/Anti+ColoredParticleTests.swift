@@ -11,6 +11,6 @@ import Testing
 
 struct ColoredAntiparticleTests {
   @Test(arguments: Color.allCases) func isColoredWithAnticolor(of color: Color) {
-    #expect(Anti(Quark.up(color: color)).color == .anti(color))
+    #expect(Anti(UpQuark(color: color)).color == .anti(color))
   }
 }

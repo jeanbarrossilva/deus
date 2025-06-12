@@ -11,10 +11,10 @@ import Testing
 
 struct AntiparticleTests {
   @Test func chargeIsOpposite() {
-    #expect(Anti(Quark.up(color: .red)).charge == -Charge.elementary(2 / 3))
+    #expect(Anti(UpQuark(color: .red)).charge == -Charge.elementary(2 / 3))
   }
 
   @Test func symbolHasOverbar() {
-    #expect(Anti(Quark.up(color: .red)).symbol == "u̅")
+    #expect(Anti(UpQuark(color: .red)).symbol == "u̅")
   }
 }

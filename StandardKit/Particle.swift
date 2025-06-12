@@ -21,7 +21,7 @@
 /// Fermion   | s ∈ (ℤ + ½) × *ħ* | **Pauli exclusion**: identical particles of such family cannot have equal quantum states in the same spacetime.                         |
 ///
 /// - SeeAlso: ``Spin``
-public protocol Particle: _Particle, Opposable {}
+public protocol Particle: _Particle, Equatable, Opposable {}
 
 extension Anti: _Particle where Counterpart: _Particle {
   public static var spin: Spin { Counterpart.spin }

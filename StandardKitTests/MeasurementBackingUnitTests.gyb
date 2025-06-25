@@ -5,7 +5,6 @@
     'Energy': 'megaelectronvolts'
   }
 }%
-
 import Testing
 
 @testable import StandardKit

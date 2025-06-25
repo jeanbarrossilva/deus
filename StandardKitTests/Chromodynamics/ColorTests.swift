@@ -10,7 +10,19 @@ import Testing
 @testable import StandardKit
 
 struct ColorTests {
-  @Test(arguments: Color.allCases) func anticolorHasCounterpart(color: Color) {
-    #expect(Anti(color).counterpart == color)
+  @Test func redPlusRedIsRed() {
+    #expect(Color.red + .red == .red)
+  }
+
+  @Test func redPlusGreenIsBrown() {
+    #expect(Color.red + .green == .brown)
+  }
+
+  @Test func redPlusBlueIsPurple() {
+    #expect(Color.red + .blue == .purple)
+  }
+
+  @Test func greenPlusBlueIsCyan() {
+    #expect(Color.green + .blue == .cyan)
   }
 }

@@ -94,7 +94,7 @@ struct TopQuark: Quark {
   public let symbol = "t"
 
   public let color: Color
-  
+
   public init(color: Color) {
     self.color = color
   }
@@ -138,7 +138,7 @@ struct TopQuark: Quark {
 /// and, subsequently, decay to lighter quarks, make them unstable and result in τ ⪅ 173 GeV (5 ×
 /// 10⁻²⁵ s); these are, therefore, mostly present in cosmic rays and other high-energy collisions.
 /// Of the four, the top quark is the only one which is heavy and decays fast enough to the extent
-/// of being unable to hadronize (form a hadron).
+/// of being unable to hadronize (form a ``Hadron``).
 ///
 /// - SeeAlso: ``Spin/half``
 /// - SeeAlso: ``Charge/elementary(_:)``

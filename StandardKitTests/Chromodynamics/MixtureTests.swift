@@ -18,7 +18,7 @@ struct MixtureTests {
     @Test(
       arguments: zip(
         [Mixture.brown, .purple, .cyan].spread(count: { _ in 2 }),
-        [Mixture.brown, .purple, .cyan].flatMap(\.colors)
+        [Color.red, .green, .red, .blue, .green, .blue]
       )
     )
     func twoColorMixturePlusOneOfItsColorsIsTheMixtureItself(_ mixture: Mixture, _ color: Color) {

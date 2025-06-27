@@ -6,14 +6,14 @@
 //
 
 /// Relation between each ``Mixture`` and the ``Color``s by which they are composed.
-private let compositions: [Mixture: [Color]] = [
-  .red: [.red],
-  .green: [.green],
-  .blue: [.blue],
-  .brown: [.red, .green],
-  .purple: [.red, .blue],
-  .cyan: [.green, .blue],
-  .white: [.red, .green, .blue]
+private let compositions: [Mixture: Set<Color>] = [
+  .red: Set([.red]),
+  .green: Set([.green]),
+  .blue: Set([.blue]),
+  .brown: Set([.red, .green]),
+  .purple: Set([.red, .blue]),
+  .cyan: Set([.green, .blue]),
+  .white: Set([.red, .green, .blue])
 ]
 
 /// Color charge is a fundamental, confined (unobservable while free) property which determines its
@@ -47,8 +47,8 @@ private let compositions: [Mixture: [Color]] = [
 /// ``ColoredParticle``.
 ///
 /// - SeeAlso: ``Mixture/white``
-public indirect enum Color: CaseIterable, Equatable, Opposable {
-  public static var allCases = [red, green, blue]
+public indirect enum Color: CaseIterable, Equatable, Hashable, Opposable {
+  public static var allCases = Set([red, green, blue])
 
   /// Red (r) direction in the SU(3)₍color₎ field.
   case red
@@ -85,7 +85,7 @@ public indirect enum Color: CaseIterable, Equatable, Opposable {
 /// Combination of two ``Color``s or one ``Mixture`` and one ``Color``.
 public enum Mixture: CaseIterable {
   /// Composition of this ``Mixture``.
-  var colors: [Color] { compositions[self]! }
+  private var colors: Set<Color> { compositions[self]! }
 
   /// Combination of two reds.
   ///
@@ -144,9 +144,7 @@ public enum Mixture: CaseIterable {
   public static func + (lhs: Self, rhs: Color) -> Self {
     guard lhs != .white else { return Self.of(rhs) }
     if let singleColor = lhs.colors.single { return singleColor + rhs }
-    let isColorAntagonist =
-      Color.allCases.filter({ color in !lhs.colors.contains(color) }).contains(rhs)
-    guard isColorAntagonist else { return lhs }
+    guard !Color.allCases.subtracting(lhs.colors).contains(rhs) else { return lhs }
     return .white
   }
 
@@ -174,34 +172,11 @@ public protocol _ColoredParticle {
   var color: Color { get }
 }
 
-extension Array {
-  /// The only element in this `Array`; or `nil` if the `Array` contains none or more than one
+extension Collection {
+  /// The only element in this `Collection`; or `nil` if the `Array` contains none or more than one
   /// element.
-  var single: Element? {
+  fileprivate var single: Element? {
     guard count == 1 else { return nil }
-    return self[0]
-  }
-
-  /// Returns whether all pairs of elements of this `Array` match the `predicate` in some order.
-  ///
-  /// - Parameter predicate: Condition to be satisfied, given a pair of elements (*a*, *b*). If it
-  ///   is unsatisfied when *a* and *b* of the pair are passed in respectively, this closure is
-  ///   called again with the pair switched (*b*, *a*).
-  /// - Returns: `true` in case the `predicate` was satisfied by all pairs of elements in either
-  ///   order; otherwise, `false`.
-  fileprivate func either(
-    _ predicate: (_ first: Element, _ second: Element) throws -> Bool
-  ) rethrows -> Bool {
-    var firstIndex = startIndex
-    var secondIndex = firstIndex + 1
-    let lastIndex = count - 1
-    while secondIndex <= lastIndex {
-      let first = self[firstIndex]
-      let second = self[secondIndex]
-      guard try predicate(first, second) || predicate(second, first) else { return false }
-      firstIndex += 1
-      secondIndex += 1
-    }
-    return true
+    return self.first!
   }
 }

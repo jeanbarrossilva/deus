@@ -32,3 +32,7 @@ public protocol Hadron: Particle {
   /// ``Particle``s.
   var quarks: [any Equatable & Quark] { get }
 }
+
+extension Hadron where Self: Particle {
+  public var charge: Charge { quarks.reduce(.zero) { charge, quark in quark.charge + charge } }
+}

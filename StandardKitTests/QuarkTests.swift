@@ -10,39 +10,48 @@ import Testing
 @testable import StandardKit
 
 struct QuarkTests {
-  @Test func upQuarkSymbolIsU() {
-    #expect(UpQuark(color: .red).symbol == "u")
+  @Suite("Symbol") struct SymbolTests {
+    @Test func upQuarkSymbolIsU() {
+      #expect(UpQuark(color: .red).symbol == "u")
+    }
+
+    @Test func downQuarkSymbolIsD() {
+      #expect(DownQuark(color: .red).symbol == "d")
+    }
+
+    @Test func charmQuarkSymbolIsC() {
+      #expect(CharmQuark(color: .red).symbol == "c")
+    }
+
+    @Test func strangeQuarkSymbolIsS() {
+      #expect(StrangeQuark(color: .red).symbol == "s")
+    }
+
+    @Test func topQuarkSymbolIsT() {
+      #expect(TopQuark(color: .red).symbol == "t")
+    }
+
+    @Test func bottomQuarkSymbolIsB() {
+      #expect(BottomQuark(color: .red).symbol == "b")
+    }
   }
 
-  @Test func downQuarkSymbolIsD() {
-    #expect(DownQuark(color: .red).symbol == "d")
+  @Suite("Charge") struct ChargeTests {
+    @Test func chargeOfUpTypeQuarksIsTwoThirdsOfE() {
+      #expect(UpQuark(color: .red).charge == CharmQuark(color: .red).charge)
+      #expect(CharmQuark(color: .red).charge == TopQuark(color: .red).charge)
+      #expect(TopQuark(color: .red).charge == .elementary(2 / 3))
+    }
+
+    @Test func chargeOfDownTypeQuarksIsNegativeOneThirdOfE() {
+      #expect(DownQuark(color: .red).charge == StrangeQuark(color: .red).charge)
+      #expect(StrangeQuark(color: .red).charge == BottomQuark(color: .red).charge)
+      #expect(BottomQuark(color: .red).charge == .elementary(-1 / 3))
+    }
   }
 
-  @Test func charmQuarkSymbolIsC() {
-    #expect(CharmQuark(color: .red).symbol == "c")
-  }
-
-  @Test func strangeQuarkSymbolIsS() {
-    #expect(StrangeQuark(color: .red).symbol == "s")
-  }
-
-  @Test func topQuarkSymbolIsT() {
-    #expect(TopQuark(color: .red).symbol == "t")
-  }
-
-  @Test func bottomQuarkSymbolIsB() {
-    #expect(BottomQuark(color: .red).symbol == "b")
-  }
-
-  @Test func chargeOfUpTypeQuarksIsTwoThirdsOfE() {
-    #expect(UpQuark(color: .red).charge == CharmQuark(color: .red).charge)
-    #expect(CharmQuark(color: .red).charge == TopQuark(color: .red).charge)
-    #expect(TopQuark(color: .red).charge == .elementary(2 / 3))
-  }
-
-  @Test func chargeOfDownTypeQuarksIsNegativeOneThirdOfE() {
-    #expect(DownQuark(color: .red).charge == StrangeQuark(color: .red).charge)
-    #expect(StrangeQuark(color: .red).charge == BottomQuark(color: .red).charge)
-    #expect(BottomQuark(color: .red).charge == .elementary(-1 / 3))
+  @Suite("Hadronization") struct HadronizationTests {
+    @Test func hadronizes() {
+    }
   }
 }

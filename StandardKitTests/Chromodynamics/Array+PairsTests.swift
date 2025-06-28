@@ -22,12 +22,23 @@ struct ArrayPairsTests {
 
     @Test(arguments: [[2, 4], [2, 4, 8, 16]])
     func testsEachPairInBothNormalAndInterchangedOrdersWhenNoneMatchesThePredicate(_ pairs: [Int]) {
-      var targets = [Int](unsafeUninitializedCapacity: 4, initializingWith: { _, _ in })
-      let _ = pairs.either { first, second in
-        targets.append(first)
-        targets.append(second)
-        return false
-      }
+      let targetCount = pairs.count * 2
+      let targets =
+        [Int](
+          unsafeUninitializedCapacity: targetCount,
+          initializingWith: { buffer, initializedCount in
+            guard let baseAddress = buffer.baseAddress else { return }
+            var index = 0
+            let _ = pairs.either { first, second in
+              baseAddress.advanced(by: index).initialize(to: first)
+              index += 1
+              baseAddress.advanced(by: index).initialize(to: second)
+              index += 1
+              return false
+            }
+            initializedCount = targetCount
+          }
+        )
       #expect(
         targets
           == pairs
@@ -114,7 +125,8 @@ extension Array {
         for (elementIndex, element) in enumerated() {
           currentWindow.append(element)
           guard currentWindow.count == currentWindowUngrownCapacity else { continue }
-          buffer.baseAddress?.advanced(by: currentWindowIndex).initialize(to: currentWindow)
+          guard let baseAddress = buffer.baseAddress else { break }
+          baseAddress.advanced(by: currentWindowIndex).initialize(to: currentWindow)
           currentWindow.removeAll(keepingCapacity: true)
           currentWindowIndex += 1
           currentWindowUngrownCapacity =

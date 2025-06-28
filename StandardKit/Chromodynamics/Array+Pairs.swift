@@ -15,18 +15,16 @@ extension Array {
   ///   (`count` < 2) or the `predicate` was satisfied by all pairs of elements in either order;
   ///   otherwise, `false`.
   func either(_ predicate: (_ first: Element, _ second: Element) throws -> Bool) rethrows -> Bool {
+    guard !isEmpty else { return true }
     var firstIndex = startIndex
     var secondIndex = firstIndex + 1
     while secondIndex < endIndex {
       let first = self[firstIndex]
       let second = self[secondIndex]
-      guard try predicate(first, second) || predicate(second, first) else {
-        firstIndex += 2
-        secondIndex += 2
-        continue
-      }
-      break
+      guard try !predicate(first, second) && !predicate(second, first) else { return true }
+      firstIndex += 2
+      secondIndex += 2
     }
-    return true
+    return false
   }
 }

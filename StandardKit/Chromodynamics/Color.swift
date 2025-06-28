@@ -144,7 +144,7 @@ public enum Mixture: CaseIterable {
   public static func + (lhs: Self, rhs: Color) -> Self {
     guard lhs != .white else { return Self.of(rhs) }
     if let singleColor = lhs.colors.single { return singleColor + rhs }
-    guard !Color.allCases.subtracting(lhs.colors).contains(rhs) else { return lhs }
+    guard Color.allCases.subtracting(lhs.colors).contains(rhs) else { return lhs }
     return .white
   }
 

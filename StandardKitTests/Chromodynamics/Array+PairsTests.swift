@@ -90,24 +90,33 @@ extension Array {
     guard !isEmpty && size > 0 else { return [] }
     guard size < count else { return [self] }
     let partiality = allowsPartiality ? count % size : 0
-    var windows = [Self](unsafeUninitializedCapacity: count / size + partiality)
-    var currentWindow = [Element](unsafeUninitializedCapacity: size)
-    for (index, element) in enumerated() {
-      print(
-        "Distance from \(Swift.min(endIndex, index + 1)) to \(endIndex) for \(element): \(distance(from: Swift.min(endIndex, index + 1), to: endIndex))"
-      )
-      currentWindow.append(element)
-      guard currentWindow.count == currentWindow.capacity else { continue }
-      windows.append(currentWindow)
-      currentWindow.removeAll()
-      // windows.count - index?
-      let nextWindowCapacity =
-        allowsPartiality && distance(from: Swift.min(endIndex, index + 1), to: endIndex) < size
-        ? partiality
-        : size
-      currentWindow.reserveCapacity(nextWindowCapacity)
-    }
-    return windows
+    let windowCount = count / size + partiality
+    return [Self](
+      unsafeUninitializedCapacity: windowCount,
+      initializingWith: { buffer, initializedCount in
+        var currentWindow = Self.init(unsafeUninitializedCapacity: size)
+        var currentWindowIndex = 0
+
+        // Swift may reserve a capacity greater than that which was requested. This variable stores
+        // the actual, ungrown amount of elements known to be contained in the window by the end of
+        // the iteration.
+        var currentWindowUngrownCapacity = currentWindow.capacity
+
+        for (elementIndex, element) in enumerated() {
+          currentWindow.append(element)
+          guard currentWindow.count == currentWindowUngrownCapacity else { continue }
+          buffer.baseAddress?.advanced(by: currentWindowIndex).initialize(to: currentWindow)
+          currentWindow.removeAll(keepingCapacity: true)
+          currentWindowIndex += 1
+          currentWindowUngrownCapacity =
+            allowsPartiality && distance(from: elementIndex + 1, to: endIndex) < size
+            ? partiality
+            : size
+          currentWindow.reserveCapacity(currentWindowUngrownCapacity)
+        }
+        initializedCount = windowCount
+      }
+    )
   }
 
   /// Creates an `Array` of a specific capacity, whose elements are uninitialized.

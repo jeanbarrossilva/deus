@@ -28,8 +28,6 @@ struct ArrayPairsTests {
         targets.append(second)
         return false
       }
-      print([2, 4, 8, 12, 16].windowed(in: 2, allowsPartiality: false))
-      print([2, 4, 8, 12, 16].windowed(in: 2, allowsPartiality: true))
       #expect(
         targets
           == pairs

@@ -95,9 +95,9 @@ extension Array {
         var currentWindow = Self.init(unsafeUninitializedCapacity: size)
         var currentWindowIndex = 0
 
-        // Swift may reserve a capacity greater than that which was requested. This variable stores
-        // the actual, ungrown amount of elements known to be contained in the window by the end of
-        // the iteration.
+        // reserveCapacity(_:) may reserve a capacity greater than that which was requested. This
+        // variable stores the actual, ungrown amount of elements known to be contained in the
+        // window by the end of the iteration.
         var currentWindowUngrownCapacity = currentWindow.capacity
 
         for (elementIndex, element) in enumerated() {

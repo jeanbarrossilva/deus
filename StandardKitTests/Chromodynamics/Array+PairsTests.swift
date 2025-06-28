@@ -89,11 +89,11 @@ extension Array {
   ///     `false`            | `[[2, 4], [8, 12]]`       |
   ///     `true`             | `[[2, 4], [8, 12], [16]]` |
   /// - Returns:
-  ///   Condition            | Result
-  ///   -------------------- | ------
-  ///   `size` ≤ 0           | An empty `Array`
-  ///   `size` > `count`     | An `Array` containing this `Array`
-  ///   0 ≤ `size` < `count` | The elements of this `Array` divided into groups of such size
+  ///   Condition            | Result                                                        |
+  ///   -------------------- | ------------------------------------------------------------- |
+  ///   `size` ≤ 0           | An empty `Array`                                              |
+  ///   `size` ≥ `count`     | An `Array` containing this `Array`                            |
+  ///   0 ≤ `size` < `count` | The elements of this `Array` divided into groups of such size |
   fileprivate func windowed(in size: Int, allowsPartiality: Bool) -> [Self] {
     guard !isEmpty && size > 0 else { return [] }
     guard size < count else { return [self] }

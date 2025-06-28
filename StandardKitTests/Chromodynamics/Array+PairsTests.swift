@@ -51,17 +51,27 @@ struct ArrayPairsTests {
 }
 
 extension Array {
-  /// Pairs each element of this `Array` to a respective one.
+  /// Pairs each element of this `Array` to a respective value.
   ///
-  /// - Parameter pair: Produces the element to be paired to the given one in the returned `Array`.
+  /// - Parameter pair: Produces the value to be paired to the given element in the returned
+  ///   `Array`.
   fileprivate func paired(to pair: (Element) throws -> Element) rethrows -> Self {
     guard !isEmpty else { return [] }
-    var pairs = Self.init(unsafeUninitializedCapacity: count * 2)
-    for element in self {
-      pairs.append(element)
-      pairs.append(try pair(element))
-    }
-    return pairs
+    let pairedCount = count * 2
+    return try Self.init(
+      unsafeUninitializedCapacity: pairedCount,
+      initializingWith: { buffer, initializedCount in
+        var index = 0
+        for element in self {
+          guard let baseAddress = buffer.baseAddress else { break }
+          baseAddress.advanced(by: index).initialize(to: element)
+          index += 1
+          baseAddress.advanced(by: index).initialize(to: try pair(element))
+          index += 1
+        }
+        initializedCount = pairedCount
+      }
+    )
   }
 
   /// Groups elements of this `Array` into `Array`s with the specified amount of elements (windows).
@@ -92,7 +102,8 @@ extension Array {
     return [Self](
       unsafeUninitializedCapacity: windowCount,
       initializingWith: { buffer, initializedCount in
-        var currentWindow = Self.init(unsafeUninitializedCapacity: size)
+        var currentWindow =
+          Self.init(unsafeUninitializedCapacity: size, initializingWith: { _, _ in })
         var currentWindowIndex = 0
 
         // reserveCapacity(_:) may reserve a capacity greater than that which was requested. This
@@ -115,14 +126,5 @@ extension Array {
         initializedCount = windowCount
       }
     )
-  }
-
-  /// Creates an `Array` of a specific capacity, whose elements are uninitialized.
-  ///
-  /// - Parameter unsafeUninitializedCapacity: Amount of elements for which space will be allocated
-  ///   preemptively.
-  private init(unsafeUninitializedCapacity: Int) {
-    self =
-      .init(unsafeUninitializedCapacity: unsafeUninitializedCapacity, initializingWith: { _, _ in })
   }
 }

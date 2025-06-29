@@ -10,7 +10,7 @@ import Testing
 @testable import StandardKit
 
 struct ColoredAntiparticleTests {
-  @Test(arguments: Color.allCases) func isColoredWithAnticolor(of color: Color) {
+  @Test(arguments: Pigment.allCases) func isColoredWithAnticolor(of color: Pigment) {
     #expect(Anti(UpQuark(color: color)).color == .anti(color))
   }
 }

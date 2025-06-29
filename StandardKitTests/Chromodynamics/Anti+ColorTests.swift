@@ -12,19 +12,19 @@ import Testing
 struct AnticolorTests {
   @Suite("Combination") struct CombinationTests {
     @Test func redPlusAntiredIsWhite() {
-      #expect(Color.red + .anti(.red) == .white)
+      #expect(Pigment.red + .anti(.red) == .white)
     }
 
     @Test func greenPlusAntigreenIsWhite() {
-      #expect(Color.green + .anti(.green) == .white)
+      #expect(Pigment.green + .anti(.green) == .white)
     }
 
     @Test func bluePlusAntiblueIsWhite() {
-      #expect(Color.blue + .anti(.blue) == .white)
+      #expect(Pigment.blue + .anti(.blue) == .white)
     }
   }
 
-  @Test(arguments: Color.allCases) func anticolorHasCounterpart(color: Color) {
+  @Test(arguments: Pigment.allCases) func anticolorHasCounterpart(color: Pigment) {
     #expect(Anti(color).counterpart == color)
   }
 }

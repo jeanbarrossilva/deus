@@ -27,12 +27,13 @@
 ///             • **q̄**: antiquark, the antiparticle of a ``Quark``.\
 ///             • **⊗**: tensor product of two vector spaces *V* and *W*: an *m* × *n* matrix, where
 ///               *m* is the number of components of *V* and *n* is that of *W*.
-public protocol Hadron: Particle {
+public protocol Hadron: ColoredParticle {
   /// ``Quark``s by which this ``Hadron`` is composed, bound by strong force via the gluon
   /// ``Particle``s.
   var quarks: [any Equatable & Quark] { get }
 }
 
-extension Hadron where Self: Particle {
+extension Hadron where Self: ColoredParticle {
   public var charge: Charge { quarks.reduce(.zero) { charge, quark in quark.charge + charge } }
+  public var color: Mixture { .white }
 }

@@ -19,9 +19,9 @@ public struct UpQuark: Quark {
   public let charge = twoThirdsOfE
   public let symbol = "u"
 
-  public let color: Color
+  public let color: Pigment
 
-  public init(color: Color) {
+  public init(color: Pigment) {
     self.color = color
   }
 }
@@ -34,9 +34,9 @@ public struct DownQuark: Quark {
   public let charge = negativeOneThirdOfE
   public let symbol = "d"
 
-  public let color: Color
+  public let color: Pigment
 
-  public init(color: Color) {
+  public init(color: Pigment) {
     self.color = color
   }
 }
@@ -48,9 +48,9 @@ public struct StrangeQuark: Quark {
   public let charge = negativeOneThirdOfE
   public let symbol = "s"
 
-  public let color: Color
+  public let color: Pigment
 
-  public init(color: Color) {
+  public init(color: Pigment) {
     self.color = color
   }
 }
@@ -63,9 +63,9 @@ public struct CharmQuark: Quark {
   public let charge = twoThirdsOfE
   public let symbol = "c"
 
-  public let color: Color
+  public let color: Pigment
 
-  public init(color: Color) {
+  public init(color: Pigment) {
     self.color = color
   }
 }
@@ -78,9 +78,9 @@ public struct BottomQuark: Quark {
   public let charge = negativeOneThirdOfE
   public let symbol = "b"
 
-  public let color: Color
+  public let color: Pigment
 
-  public init(color: Color) {
+  public init(color: Pigment) {
     self.color = color
   }
 }
@@ -93,9 +93,9 @@ struct TopQuark: Quark {
   public let charge = twoThirdsOfE
   public let symbol = "t"
 
-  public let color: Color
+  public let color: Pigment
 
-  public init(color: Color) {
+  public init(color: Pigment) {
     self.color = color
   }
 }
@@ -144,8 +144,8 @@ struct TopQuark: Quark {
 /// - SeeAlso: ``Charge/elementary(_:)``
 /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
 /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
-public protocol Quark: ColoredParticle {}
+public protocol Quark: ColoredParticle<Pigment> {}
 
-extension Quark where Self: Particle {
+extension Quark where Self: ColoredParticle {
   public static var spin: Spin { .half }
 }

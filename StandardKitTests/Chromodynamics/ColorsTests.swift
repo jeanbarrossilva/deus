@@ -1,5 +1,5 @@
 //
-//  MixtureTests.swift
+//  ColorsTests.swift
 //  Deus
 //
 //  Created by Jean Barros Silva on 2025.06.20.
@@ -9,19 +9,35 @@ import Testing
 
 @testable import StandardKit
 
-struct MixtureTests {
+struct ColorsTests {
   @Suite("Combination") struct CombinationTests {
-    @Test(arguments: Color.allCases) func whitePlusColorIsColor(_ color: Color) {
+    @Test func redPlusRedIsRed() {
+      #expect(Pigment.red + .red == .red)
+    }
+
+    @Test func redPlusGreenIsBrown() {
+      #expect(Pigment.red + .green == .brown)
+    }
+
+    @Test func redPlusBlueIsPurple() {
+      #expect(Pigment.red + .blue == .purple)
+    }
+
+    @Test func greenPlusBlueIsCyan() {
+      #expect(Pigment.green + .blue == .cyan)
+    }
+
+    @Test(arguments: Pigment.allCases) func whitePlusColorIsColor(_ color: Pigment) {
       #expect(Mixture.white + color == .of(color))
     }
 
     @Test(
       arguments: zip(
         [Mixture.brown, .purple, .cyan].spread(count: { _ in 2 }),
-        [Color.red, .green, .red, .blue, .green, .blue]
+        [Pigment.red, .green, .red, .blue, .green, .blue]
       )
     )
-    func twoColorMixturePlusOneOfItsColorsIsTheMixtureItself(_ mixture: Mixture, _ color: Color) {
+    func twoColorMixturePlusOneOfItsColorsIsTheMixtureItself(_ mixture: Mixture, _ color: Pigment) {
       #expect(mixture + color == mixture)
     }
   }
@@ -45,7 +61,7 @@ extension Array {
   ///
   /// - Parameter count: Determines the amount of times the given element will be repeated in the
   ///   returned `Array`.
-  func spread(count: (Element) throws -> Int) rethrows -> Self {
+  fileprivate func spread(count: (Element) throws -> Int) rethrows -> Self {
     guard !isEmpty else { return self }
     let counts = try map(count)
     let totalCount = counts.reduce(0, +)

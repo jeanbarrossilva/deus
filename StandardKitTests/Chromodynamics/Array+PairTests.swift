@@ -42,7 +42,7 @@ struct ArrayPairTests {
       #expect(
         targets
           == pairs
-          .windowed(in: 2, allowsPartiality: false)
+          .chunked(into: 2, allowsPartiality: false)
           .paired(to: { pair in pair.reversed() })
           .joined()
           .map(\.self)

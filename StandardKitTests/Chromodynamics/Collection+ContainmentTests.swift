@@ -1,5 +1,5 @@
 //
-//  Array+ContainmentTests.swift
+//  Collection+ContainmentTests.swift
 //  Deus
 //
 //  Created by Jean Barros Silva on 2025.06.21.
@@ -9,7 +9,7 @@ import Testing
 
 @testable import StandardKit
 
-struct ArrayContainmentTests {
+@Suite("Collection+Containment tests") struct CollectionContainmentTests {
   @Test func testsWhetherContainsOnlyAnElementWhenItDoes() {
     #expect([2, 2].contains(only: 2))
   }

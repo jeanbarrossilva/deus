@@ -2,12 +2,12 @@
 //  Collection+PairTests.swift
 //  Deus
 //
-//  Created by Jean Barros Silva on 2025.06.29.
+//  Created by Jean Barros Silva on 2025.06.25.
 //
 
 import Testing
 
-struct CollectionPairTests {
+@Suite("Collection+Pair tests") struct CollectionPairTests {
   @Suite("Pairing") struct PairingTests {
     @Test func pairingOnAnEmptyArrayReturnsAnEmptyArray() {
       #expect([Int]().paired(to: { n in n }) == [])

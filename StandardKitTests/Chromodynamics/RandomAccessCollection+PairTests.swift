@@ -1,15 +1,15 @@
 //
-//  Array+PairsTests.swift
+//  RandomAccessCollection+PairTests.swift
 //  Deus
 //
-//  Created by Jean Barros Silva on 2025.06.25.
+//  Created by Jean Barros Silva on 2025.06.30.
 //
 
 import Testing
 
 @testable import StandardKit
 
-struct ArrayPairTests {
+@Suite("RandomAccessCollection+Pair tests") struct RandomAccessCollectionPairTests {
   @Suite("Interchangeable match") struct InterchangeableMatchTests {
     @Test(arguments: [[], [2]]) func doesNotTestWhenThereAreNoPairs(_ pairs: [Int]) {
       var testCount = 0

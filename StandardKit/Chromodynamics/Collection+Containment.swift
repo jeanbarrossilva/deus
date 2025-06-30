@@ -1,11 +1,11 @@
 //
-//  Array+Containment.swift
+//  Collection+Containment.swift
 //  Deus
 //
 //  Created by Jean Barros Silva on 2025.06.21.
 //
 
-extension Array where Element: Equatable {
+extension Collection where Element: Equatable {
   /// Returns whether all elements are structurally equal to the given one.
   ///
   /// ## Semantics

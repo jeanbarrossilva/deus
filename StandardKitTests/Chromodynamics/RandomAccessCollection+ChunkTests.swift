@@ -40,7 +40,7 @@ import Testing
     #expect(
       [2, 4, 8, 16, 32, 64, 128, 256]
         .chunked(into: 3, allowsPartiality: true)
-        .map( { chunks in .init(chunks) }) == [[2, 4, 8], [16, 32, 64], [128, 256]]
+        .map({ chunks in .init(chunks) }) == [[2, 4, 8], [16, 32, 64], [128, 256]]
     )
   }
 }

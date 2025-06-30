@@ -5,7 +5,7 @@
 //  Created by Jean Barros Silva on 2025.06.28.
 //
 
-extension RandomAccessCollection where Index: BinaryInteger, Index.Stride: SignedInteger {
+extension RandomAccessCollection {
   /// Divides this `Collection` into chunks of `size`.
   ///
   /// ## Difference from that of swift-algorithms
@@ -40,24 +40,26 @@ extension RandomAccessCollection where Index: BinaryInteger, Index.Stride: Signe
   func chunked(into size: Int, allowsPartiality: Bool = true) -> [SubSequence] {
     guard !isEmpty && size > 0 else { return [] }
     guard size < count else { return [self[...]] }
-    let partiality = allowsPartiality && count % size > 0 ? 1 : 0
-    let chunkCount = count / size + partiality
+    let countOfPartialChunks = allowsPartiality && count % size > 0 ? 1 : 0
+    let countOfCompleteChunks = count / size
+    let totalCountOfChunks = countOfCompleteChunks + countOfPartialChunks
     return [SubSequence](
-      unsafeUninitializedCapacity: chunkCount,
+      unsafeUninitializedCapacity: totalCountOfChunks,
       initializingWith: { buffer, initializedCount in
         guard var addressOfCurrentChunk = buffer.baseAddress else { return }
-        var currentChunk = self[startIndex...startIndex.advanced(by: size - 1)]
-        let indexOfLastChunk = startIndex + Index(chunkCount - 1)
-        for indexOfCurrentChunk in startIndex...indexOfLastChunk {
+        var currentChunk = self[startIndex...index(startIndex, offsetBy: size - 1)]
+        var indexOfCurrentChunk = startIndex
+        while indexOfCurrentChunk < index(startIndex, offsetBy: totalCountOfChunks) {
           addressOfCurrentChunk.initialize(to: currentChunk)
-          guard indexOfCurrentChunk < indexOfLastChunk else { break }
           addressOfCurrentChunk = addressOfCurrentChunk.successor()
           currentChunk =
             self[
-              currentChunk.endIndex..<Swift.min(endIndex, currentChunk.endIndex.advanced(by: size))
+              currentChunk
+                .endIndex..<Swift.min(endIndex, index(currentChunk.endIndex, offsetBy: size))
             ]
+          indexOfCurrentChunk = index(indexOfCurrentChunk, offsetBy: 1)
         }
-        initializedCount = chunkCount
+        initializedCount = totalCountOfChunks
       }
     )
   }

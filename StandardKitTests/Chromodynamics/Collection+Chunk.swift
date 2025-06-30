@@ -5,7 +5,7 @@
 //  Created by Jean Barros Silva on 2025.06.28.
 //
 
-extension Collection where Self: Equatable, Index: BinaryInteger, Index.Stride: SignedInteger {
+extension Collection where Index: BinaryInteger, Index.Stride: SignedInteger {
   /// Divides this `Collection` into chunks of `size`.
   ///
   /// ## Difference from that of swift-algorithms

@@ -32,11 +32,11 @@ extension Collection where Self: Equatable, Index: BinaryInteger, Index.Stride: 
   ///     `false`            | `[[2, 4], [8, 12]]`       |
   ///     `true`             | `[[2, 4], [8, 12], [16]]` |
   /// - Returns:
-  ///   Sizing               | Result          |
-  ///   -------------------- | --------------- |
-  ///   `size` ≤ 0           | `[]`            |
-  ///   `size` ≥ `count`     | `[self[...]]`   |
-  ///   0 < `size` < `count` | ≤ `size` chunks |
+  ///   Sizing               | Result                |
+  ///   -------------------- | --------------------- |
+  ///   `size` ≤ 0           | `[]`                  |
+  ///   `size` ≥ `count`     | `[self[...]]`         |
+  ///   0 < `size` < `count` | ≤-`size`-sized chunks |
   func chunked(into size: Int, allowsPartiality: Bool = true) -> [SubSequence] {
     guard !isEmpty && size > 0 else { return [] }
     guard size < count else { return [self[...]] }

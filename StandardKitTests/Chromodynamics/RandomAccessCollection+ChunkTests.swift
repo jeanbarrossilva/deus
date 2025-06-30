@@ -1,5 +1,5 @@
 //
-//  Collection+ChunkTests.swift
+//  RandomAccessCollection+ChunkTests.swift
 //  Deus
 //
 //  Created by Jean Barros Silva on 2025.06.28.
@@ -7,7 +7,7 @@
 
 import Testing
 
-struct CollectionChunkTests {
+@Suite("RandomAccessCollection+Chunk tests") struct RandomAccessCollectionChunkTests {
   @Test(arguments: [false, true])
   func chunkingAnEmptyCollectionReturnsAnEmptyArray(allowsPartiality: Bool) {
     #expect([Int]().chunked(into: 2, allowsPartiality: allowsPartiality) == [])

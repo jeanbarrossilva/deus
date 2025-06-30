@@ -1,11 +1,11 @@
 //
-//  Collection+Chunk.swift
+//  RandomAccessCollection+Chunk.swift
 //  Deus
 //
 //  Created by Jean Barros Silva on 2025.06.28.
 //
 
-extension Collection where Index: BinaryInteger, Index.Stride: SignedInteger {
+extension RandomAccessCollection where Index: BinaryInteger, Index.Stride: SignedInteger {
   /// Divides this `Collection` into chunks of `size`.
   ///
   /// ## Difference from that of swift-algorithms
@@ -40,21 +40,22 @@ extension Collection where Index: BinaryInteger, Index.Stride: SignedInteger {
   func chunked(into size: Int, allowsPartiality: Bool = true) -> [SubSequence] {
     guard !isEmpty && size > 0 else { return [] }
     guard size < count else { return [self[...]] }
-    let partiality = allowsPartiality ? count % size : 0
+    let partiality = allowsPartiality && count % size > 0 ? 1 : 0
     let chunkCount = count / size + partiality
     return [SubSequence](
       unsafeUninitializedCapacity: chunkCount,
       initializingWith: { buffer, initializedCount in
         guard var addressOfCurrentChunk = buffer.baseAddress else { return }
-        let size = size as? Index ?? Index(size)
-        var currentChunk = self[startIndex...(startIndex + size - 1)]
+        var currentChunk = self[startIndex...startIndex.advanced(by: size - 1)]
         let indexOfLastChunk = startIndex + Index(chunkCount - 1)
         for indexOfCurrentChunk in startIndex...indexOfLastChunk {
           addressOfCurrentChunk.initialize(to: currentChunk)
           guard indexOfCurrentChunk < indexOfLastChunk else { break }
           addressOfCurrentChunk = addressOfCurrentChunk.successor()
           currentChunk =
-            self[currentChunk.endIndex..<Swift.min(endIndex, currentChunk.endIndex + size)]
+            self[
+              currentChunk.endIndex..<Swift.min(endIndex, currentChunk.endIndex.advanced(by: size))
+            ]
         }
         initializedCount = chunkCount
       }

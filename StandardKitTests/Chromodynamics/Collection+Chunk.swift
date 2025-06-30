@@ -41,21 +41,22 @@ extension Collection where Index: BinaryInteger, Index.Stride: SignedInteger {
     guard !isEmpty && size > 0 else { return [] }
     guard size < count else { return [self[...]] }
     let partiality = allowsPartiality ? count % size : 0
-    let windowCount = count / size + partiality
+    let chunkCount = count / size + partiality
     return [SubSequence](
-      unsafeUninitializedCapacity: windowCount,
+      unsafeUninitializedCapacity: chunkCount,
       initializingWith: { buffer, initializedCount in
-        guard var windowAddress = buffer.baseAddress else { return }
-        let size = Index(size)
-        var window = self[startIndex..<(startIndex + size)]
-        let indexOfLastWindow = startIndex + Index(windowCount - 1)
-        for indexOfCurrentWindow in startIndex...indexOfLastWindow {
-          windowAddress.initialize(to: window)
-          guard indexOfCurrentWindow < indexOfLastWindow else { break }
-          windowAddress = windowAddress.successor()
-          window = self[window.endIndex..<Swift.min(endIndex, window.endIndex + size)]
+        guard var addressOfCurrentChunk = buffer.baseAddress else { return }
+        let size = size as? Index ?? Index(size)
+        var currentChunk = self[startIndex...(startIndex + size - 1)]
+        let indexOfLastChunk = startIndex + Index(chunkCount - 1)
+        for indexOfCurrentChunk in startIndex...indexOfLastChunk {
+          addressOfCurrentChunk.initialize(to: currentChunk)
+          guard indexOfCurrentChunk < indexOfLastChunk else { break }
+          addressOfCurrentChunk = addressOfCurrentChunk.successor()
+          currentChunk =
+            self[currentChunk.endIndex..<Swift.min(endIndex, currentChunk.endIndex + size)]
         }
-        initializedCount = windowCount
+        initializedCount = chunkCount
       }
     )
   }

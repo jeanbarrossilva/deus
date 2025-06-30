@@ -30,13 +30,17 @@ struct CollectionChunkTests {
 
   @Test(arguments: [false, true]) func chunksImpartially(allowsPartiality: Bool) {
     #expect(
-      [2, 4, 8, 12].chunked(into: 2, allowsPartiality: allowsPartiality) == [[2, 4], [8, 12]]
+      [2, 4, 8, 12]
+        .chunked(into: 2, allowsPartiality: allowsPartiality)
+        .map { chunks in .init(chunks) } == [[2, 4], [8, 12]]
     )
   }
 
   @Test func chunksPartially() {
     #expect(
-      [2, 4, 8, 12, 16].chunked(into: 2, allowsPartiality: true) == [[2, 4], [8, 12], [16]]
+      [2, 4, 8, 12, 16]
+        .chunked(into: 2, allowsPartiality: true)
+        .map { chunks in .init(chunks) } == [[2, 4], [8, 12], [16]]
     )
   }
 }

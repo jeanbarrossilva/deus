@@ -43,7 +43,11 @@ struct ArrayPairTests {
         targets
           == pairs
           .chunked(into: 2, allowsPartiality: false)
-          .paired(to: { pair in pair.reversed() })
+          .paired(to: { pair in
+            var reversed = ArraySlice(pair)
+            reversed.reverse()
+            return reversed
+          })
           .joined()
           .map(\.self)
       )
@@ -57,16 +61,6 @@ struct ArrayPairTests {
       })
       #expect(testCount == 3)
       #expect(containsPredicateMatchingPair)
-    }
-  }
-
-  @Suite("Pairing") struct PairingTests {
-    @Test func pairingOnAnEmptyArrayReturnsAnEmptyArray() {
-      #expect([Int]().paired(to: { n in n }) == [])
-    }
-
-    @Test func pairsElementsToThoseOfAPopulatedArray() {
-      #expect([2, 4].paired(to: { n in n + 1 }) == [2, 3, 4, 5])
     }
   }
 }

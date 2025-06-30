@@ -5,7 +5,7 @@
 //  Created by Jean Barros Silva on 2025.06.28.
 //
 
-extension Collection {
+extension Collection where Self: Equatable, Index: BinaryInteger, Index.Stride: SignedInteger {
   /// Divides this `Collection` into chunks of `size`.
   ///
   /// ## Difference from that of swift-algorithms
@@ -35,37 +35,25 @@ extension Collection {
   ///   Sizing               | Result          |
   ///   -------------------- | --------------- |
   ///   `size` ≤ 0           | `[]`            |
-  ///   `size` ≥ `count`     | `[self]`        |
+  ///   `size` ≥ `count`     | `[self[...]]`   |
   ///   0 < `size` < `count` | ≤ `size` chunks |
-  func chunked(into size: Int, allowsPartiality: Bool = true) -> [[Element]] {
+  func chunked(into size: Int, allowsPartiality: Bool = true) -> [SubSequence] {
     guard !isEmpty && size > 0 else { return [] }
-    guard size < count else { return [self as? [Element] ?? map(\.self)] }
+    guard size < count else { return [self[...]] }
     let partiality = allowsPartiality ? count % size : 0
     let windowCount = count / size + partiality
-    return [[Element]](
+    return [SubSequence](
       unsafeUninitializedCapacity: windowCount,
       initializingWith: { buffer, initializedCount in
-        var currentWindow =
-          [Element](unsafeUninitializedCapacity: size, initializingWith: { _, _ in })
-        var currentWindowIndex = 0
-
-        // reserveCapacity(_:) may reserve a capacity greater than that which was requested. This
-        // variable stores the actual, ungrown amount of elements known to be contained in the
-        // window by the end of the iteration.
-        var currentWindowUngrownCapacity = currentWindow.capacity
-
-        for (elementIndex, element) in zip(indices, self) {
-          currentWindow.append(element)
-          guard currentWindow.count == currentWindowUngrownCapacity else { continue }
-          guard let baseAddress = buffer.baseAddress else { break }
-          baseAddress.advanced(by: currentWindowIndex).initialize(to: currentWindow)
-          currentWindow.removeAll(keepingCapacity: true)
-          currentWindowIndex += 1
-          currentWindowUngrownCapacity =
-            allowsPartiality && distance(from: index(after: elementIndex), to: endIndex) < size
-            ? partiality
-            : size
-          currentWindow.reserveCapacity(currentWindowUngrownCapacity)
+        guard var windowAddress = buffer.baseAddress else { return }
+        let size = Index(size)
+        var window = self[startIndex..<(startIndex + size)]
+        let indexOfLastWindow = startIndex + Index(windowCount - 1)
+        for indexOfCurrentWindow in startIndex...indexOfLastWindow {
+          windowAddress.initialize(to: window)
+          guard indexOfCurrentWindow < indexOfLastWindow else { break }
+          windowAddress = windowAddress.successor()
+          window = self[window.endIndex..<Swift.min(endIndex, window.endIndex + size)]
         }
         initializedCount = windowCount
       }

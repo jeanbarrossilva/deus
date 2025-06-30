@@ -30,7 +30,7 @@
 public protocol Hadron: ColoredParticle {
   /// ``Quark``s by which this ``Hadron`` is composed, bound by strong force via the gluon
   /// ``Particle``s.
-  var quarks: [any Equatable & Quark] { get }
+  var quarks: [any Quark] { get }
 }
 
 extension Hadron where Self: ColoredParticle {

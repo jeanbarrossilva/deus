@@ -1,5 +1,5 @@
 //
-//  ColorsTests.swift
+//  ColorTests.swift
 //  Deus
 //
 //  Created by Jean Barros Silva on 2025.06.20.
@@ -9,7 +9,7 @@ import Testing
 
 @testable import StandardKit
 
-struct ColorsTests {
+struct ColorTests {
   @Suite("Combination") struct CombinationTests {
     @Test func redPlusRedIsRed() {
       #expect(Pigment.red + .red == .red)

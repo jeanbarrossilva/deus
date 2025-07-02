@@ -19,7 +19,7 @@ public struct Anti<Counterpart: Opposable> {
   /// Non-anti-matter or -property version of this one.
   let counterpart: Counterpart
 
-  init(_ counterpart: Counterpart) {
+  init(_ counterpart: consuming Counterpart) {
     self.counterpart = counterpart
   }
 }

@@ -16,8 +16,9 @@ private let negativeOneThirdOfE = Charge.elementary(-1 / 3)
 ///
 /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
 public struct UpQuark: Quark {
+  public static let symbol = "u"
+
   public let charge = twoThirdsOfE
-  public let symbol = "u"
 
   public let color: Pigment
 
@@ -31,8 +32,9 @@ public struct UpQuark: Quark {
 ///
 /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
 public struct DownQuark: Quark {
+  public static let symbol = "d"
+
   public let charge = negativeOneThirdOfE
-  public let symbol = "d"
 
   public let color: Pigment
 
@@ -45,8 +47,9 @@ public struct DownQuark: Quark {
 ///
 /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
 public struct StrangeQuark: Quark {
+  public static let symbol = "s"
+
   public let charge = negativeOneThirdOfE
-  public let symbol = "s"
 
   public let color: Pigment
 
@@ -60,8 +63,9 @@ public struct StrangeQuark: Quark {
 ///
 /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
 public struct CharmQuark: Quark {
+  public static let symbol = "c"
+
   public let charge = twoThirdsOfE
-  public let symbol = "c"
 
   public let color: Pigment
 
@@ -75,8 +79,9 @@ public struct CharmQuark: Quark {
 ///
 /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
 public struct BottomQuark: Quark {
+  public static let symbol = "b"
+
   public let charge = negativeOneThirdOfE
-  public let symbol = "b"
 
   public let color: Pigment
 
@@ -90,8 +95,9 @@ public struct BottomQuark: Quark {
 ///
 /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
 struct TopQuark: Quark {
+  public static let symbol = "t"
+
   public let charge = twoThirdsOfE
-  public let symbol = "t"
 
   public let color: Pigment
 
@@ -144,8 +150,13 @@ struct TopQuark: Quark {
 /// - SeeAlso: ``Charge/elementary(_:)``
 /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
 /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
-public protocol Quark: ColoredParticle<Pigment> {}
+public protocol Quark: _Quark, ColoredParticle<Pigment> {}
 
-extension Quark where Self: ColoredParticle {
+extension Anti: _Quark where Counterpart: _Quark {}
+
+/// Non-``Opposable``-conformant protocol of a ``Quark``.
+public protocol _Quark: _ColoredParticle<Pigment> {}
+
+extension _Quark {
   public static var spin: Spin { .half }
 }

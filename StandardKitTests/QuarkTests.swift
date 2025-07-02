@@ -12,27 +12,27 @@ import Testing
 struct QuarkTests {
   @Suite("Symbol") struct SymbolTests {
     @Test func upQuarkSymbolIsU() {
-      #expect(UpQuark(color: .red).symbol == "u")
+      #expect(UpQuark.symbol == "u")
     }
 
     @Test func downQuarkSymbolIsD() {
-      #expect(DownQuark(color: .red).symbol == "d")
+      #expect(DownQuark.symbol == "d")
     }
 
     @Test func charmQuarkSymbolIsC() {
-      #expect(CharmQuark(color: .red).symbol == "c")
+      #expect(CharmQuark.symbol == "c")
     }
 
     @Test func strangeQuarkSymbolIsS() {
-      #expect(StrangeQuark(color: .red).symbol == "s")
+      #expect(StrangeQuark.symbol == "s")
     }
 
     @Test func topQuarkSymbolIsT() {
-      #expect(TopQuark(color: .red).symbol == "t")
+      #expect(TopQuark.symbol == "t")
     }
 
     @Test func bottomQuarkSymbolIsB() {
-      #expect(BottomQuark(color: .red).symbol == "b")
+      #expect(BottomQuark.symbol == "b")
     }
   }
 

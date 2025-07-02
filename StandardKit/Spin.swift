@@ -16,6 +16,10 @@
 /// ``Energy`` and momentum vary continuosly — and the quantum one — in which they are quantized or
 /// discrete.
 public enum Spin {
+  /// 0 *ħ* ``Spin``. The quantum state of ``Particle``s without ``Spin`` remains unchanged across
+  /// transformations.
+  case zero
+
   /// ½ *ħ* ``Spin``. The fermion returns to its initial configuration after completing two turns
   /// (720º).
   case half

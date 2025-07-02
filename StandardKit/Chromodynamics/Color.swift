@@ -179,9 +179,7 @@ extension Anti: _ColoredParticle where Counterpart: _ColoredParticle<Pigment> {
 }
 
 /// Non-``Opposable``-conformant protocol of a ``ColoredParticle``.
-///
-/// > Warning: This should not be referenced by external consumers.
-public protocol _ColoredParticle<Color> {
+public protocol _ColoredParticle<Color>: _Particle {
   /// The specific type of ``Color``.
   associatedtype Color: StandardKit.Color
 

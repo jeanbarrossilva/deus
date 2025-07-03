@@ -15,14 +15,14 @@ private let negativeOneThirdOfE = Charge.elementary(-1 / 3)
 /// Model, cannot decay.
 ///
 /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
-public struct UpQuark: Quark {
-  public static let symbol = "u"
+public struct UpQuark<Color: SingleColor>: Quark {
+  public static var symbol: String { "u" }
 
   public let charge = twoThirdsOfE
 
-  public let color: Pigment
+  public let color: Color
 
-  public init(color: Pigment) {
+  public init(color: Color) {
     self.color = color
   }
 }
@@ -31,14 +31,14 @@ public struct UpQuark: Quark {
 /// ``UpQuark``.
 ///
 /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
-public struct DownQuark: Quark {
-  public static let symbol = "d"
+public struct DownQuark<Color: SingleColor>: Quark {
+  public static var symbol: String { "d" }
 
   public let charge = negativeOneThirdOfE
 
-  public let color: Pigment
+  public let color: Color
 
-  public init(color: Pigment) {
+  public init(color: Color) {
     self.color = color
   }
 }
@@ -46,14 +46,14 @@ public struct DownQuark: Quark {
 /// Third lightest ``Quark``, with a Lagrangian mass of 95 ± 5 MeV/*c*². Decays to a ``DownQuark``.
 ///
 /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
-public struct StrangeQuark: Quark {
-  public static let symbol = "s"
+public struct StrangeQuark<Color: SingleColor>: Quark {
+  public static var symbol: String { "s" }
 
   public let charge = negativeOneThirdOfE
 
-  public let color: Pigment
+  public let color: Color
 
-  public init(color: Pigment) {
+  public init(color: Color) {
     self.color = color
   }
 }
@@ -62,14 +62,14 @@ public struct StrangeQuark: Quark {
 /// ``StrangeQuark``.
 ///
 /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
-public struct CharmQuark: Quark {
-  public static let symbol = "c"
+public struct CharmQuark<Color: SingleColor>: Quark {
+  public static var symbol: String { "c" }
 
   public let charge = twoThirdsOfE
 
-  public let color: Pigment
+  public let color: Color
 
-  public init(color: Pigment) {
+  public init(color: Color) {
     self.color = color
   }
 }
@@ -78,14 +78,14 @@ public struct CharmQuark: Quark {
 /// ``CharmQuark``.
 ///
 /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
-public struct BottomQuark: Quark {
-  public static let symbol = "b"
+public struct BottomQuark<Color: SingleColor>: Quark {
+  public static var symbol: String { "b" }
 
   public let charge = negativeOneThirdOfE
 
-  public let color: Pigment
+  public let color: Color
 
-  public init(color: Pigment) {
+  public init(color: Color) {
     self.color = color
   }
 }
@@ -94,14 +94,14 @@ public struct BottomQuark: Quark {
 /// ``BottomQuark``.
 ///
 /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
-struct TopQuark: Quark {
-  public static let symbol = "t"
+struct TopQuark<Color: SingleColor>: Quark {
+  public static var symbol: String { "t" }
 
   public let charge = twoThirdsOfE
 
-  public let color: Pigment
+  public let color: Color
 
-  public init(color: Pigment) {
+  public init(color: Color) {
     self.color = color
   }
 }
@@ -150,13 +150,17 @@ struct TopQuark: Quark {
 /// - SeeAlso: ``Charge/elementary(_:)``
 /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
 /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
-public protocol Quark: _Quark, ColoredParticle<Pigment> {}
+public protocol Quark: NonOpposableQuark, ColoredParticle where Color: NonOpposableSingleColor {}
 
-extension Anti: _Quark where Counterpart: _Quark {}
+extension Anti: NonOpposableQuark
+where Counterpart: NonOpposableQuark, Counterpart.Color: SingleColor {
+  public typealias Color = Anti<Counterpart.Color>
+}
 
-/// Non-``Opposable``-conformant protocol of a ``Quark``.
-public protocol _Quark: _ColoredParticle<Pigment> {}
-
-extension _Quark {
+extension NonOpposableQuark {
   public static var spin: Spin { .half }
 }
+
+/// Non-``Opposable``-conformant protocol of a ``Quark``.
+public protocol NonOpposableQuark: NonOpposableColoredParticle
+where Color: NonOpposableSingleColor {}

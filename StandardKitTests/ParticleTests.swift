@@ -13,11 +13,11 @@ import Testing
 struct ParticleTests {
   @Test
   func arePartiallyEqual() {
-    #expect(UpQuark(color: .red).isPartiallyEqual(to: UpQuark(color: .green)))
+    #expect(UpQuark(color: red).isPartiallyEqual(to: UpQuark(color: green)))
   }
 
   @Test
   func areNotPartiallyEqual() {
-    #expect(!UpQuark(color: .red).isPartiallyEqual(to: DownQuark(color: .red)))
+    #expect(!UpQuark(color: red).isPartiallyEqual(to: DownQuark(color: red)))
   }
 }

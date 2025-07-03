@@ -29,7 +29,7 @@
 ///               *m* is the number of components of *V* and *n* is that of *W*.
 public protocol Hadron: ColoredParticle<Mixture> {
   /// `Sequence` of ``Quark``s that compose this ``Hadron``.
-  associatedtype Quarks: Sequence<any _Quark>
+  associatedtype Quarks: Sequence<any NonOpposableQuark>
 
   /// ``Quark``s by which this ``Hadron`` is composed, bound by strong force via the gluon
   /// ``Particle``s.
@@ -43,13 +43,8 @@ extension Hadron {
 
 // MARK: - Mesons
 extension UpQuark {
-  static func + (lhs: Self, rhs: Anti<DownQuark>) -> PositivePion {
+  static func + (lhs: Self, rhs: Anti<DownQuark<Self.Color>>) -> PositivePion {
     lazy var netColor = lhs.color + rhs.color
-    precondition(
-      netColor == .white,
-      "Pions should be colorless; combining \(lhs.color) and \(rhs.color) results in \(netColor) "
-        + "instead of \(Mixture.white)."
-    )
     return PositivePion(quarks: [lhs, rhs])
   }
 }
@@ -63,9 +58,9 @@ public struct PositivePion: Equatable, Pion {
   public static let symbol = "π⁺"
 
   public let charge = Charge.elementary(1)
-  public let quarks: InlineArray<2, any _Quark>
+  public let quarks: InlineArray<2, any NonOpposableQuark>
 
-  fileprivate init(quarks: InlineArray<2, any _Quark>) {
+  fileprivate init(quarks: InlineArray<2, any NonOpposableQuark>) {
     self.quarks = quarks
   }
 

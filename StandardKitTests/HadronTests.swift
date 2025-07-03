@@ -17,8 +17,8 @@ struct HadronTests {
     struct PositiveTests {
       @Test("u + d̄ → π⁺")
       func resultsFromCombiningAnUpQuarkAndADownAntiquark() {
-        let upQuark = UpQuark(color: .red)
-        let downAntiquark = Anti(DownQuark(color: .red))
+        let upQuark = UpQuark(color: red)
+        let downAntiquark = Anti(DownQuark(color: red))
         let positivePion = upQuark + downAntiquark
         #expect(positivePion.quarks[0].isPartiallyEqual(to: upQuark))
         #expect(positivePion.quarks[1].isPartiallyEqual(to: downAntiquark))
@@ -26,7 +26,7 @@ struct HadronTests {
 
       @Test
       func chargeIsOneE() {
-        #expect((UpQuark(color: .red) + Anti(DownQuark(color: .red))).charge == .elementary(1))
+        #expect((UpQuark(color: red) + Anti(DownQuark(color: red))).charge == .elementary(1))
       }
     }
   }

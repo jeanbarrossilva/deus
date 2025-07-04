@@ -7,30 +7,22 @@
 
 import Foundation
 
-/// ``Color``s whose cumulative combination result in a white ``Mixture``.
-///
-/// - SeeAlso: ``Mixture/white``
+/// ``Color``s whose cumulative combination result in ``white``.
 public let colors: InlineArray<3, any SingleColor> = [red, green, blue]
 
+/// Final state of confined ``ColoredParticle``s whose net ``Color`` charge is zero, making them
+/// effectively colorless. Results from the combination of ``Color``-anticolor pairs or of all
+/// ``SingleColor``s (``red`` + ``green`` + ``blue``).
+public let white = White()
+
 /// Red (r) direction in the ``Color`` field.
-public let red: Red = Red()
+public let red = Red()
 
 /// Green (g) direction in the ``Color`` field.
-public let green: Green = Green()
+public let green = Green()
 
 /// Blue (r) direction in the ``Color`` field.
-public let blue: Blue = Blue()
-
-/// Relation between each ``Mixture`` and the single ``Color``s by which they are composed.
-private let compositions: [Mixture: Set<AnyHashable>] = [
-  .red: Set(arrayLiteral: red),
-  .green: Set(arrayLiteral: green),
-  .blue: Set(arrayLiteral: blue),
-  .brown: Set(arrayLiteral: red, green),
-  .purple: Set(arrayLiteral: red, blue),
-  .cyan: Set(arrayLiteral: green, blue),
-  .white: Set(arrayLiteral: red, green, blue)
-]
+public let blue = Blue()
 
 /// Delegate of a ``SingleColorLike``-conformant ``Anti`` of ``red``.
 private let antired = Antired()
@@ -85,6 +77,13 @@ public protocol ColoredParticleLike<Color>: ParticleLike {
   var color: Color { get }
 }
 
+/// Final state of confined ``ColoredParticleLike``s whose net ``Color`` charge is zero, making them
+/// effectively colorless. Results from the combination of ``Color``-anticolor pairs or of all
+/// ``SingleColor``s (``red`` + ``green`` + ``blue``).
+public class White: Color {
+  fileprivate init() {}
+}
+
 /// Red (r) direction in the ``Color`` field.
 public class Red: SingleColor {
   fileprivate init() {}
@@ -100,66 +99,12 @@ public class Blue: SingleColor {
   fileprivate init() {}
 }
 
-extension Anti: Color & SingleColorLike where Counterpart: AnyObject & SingleColor {
-  /// Combines both ``Color``s into a white ``Mixture``.
-  ///
-  /// - Parameters:
-  ///   - lhs: Anticolor to which `rhs` will be combined.
-  ///   - rhs: ``Color`` to be combined to `lhs`.
-  public static func + (lhs: Self, rhs: Counterpart) -> Mixture {
-    return .white
-  }
-
-  /// Combines both ``Color``s into a white ``Mixture``.
-  ///
-  /// - Parameters:
-  ///   - lhs: ``Color`` to which `rhs` will be combined.
-  ///   - rhs: Anticolor to be combined to `lhs`.
-  public static func + (lhs: Counterpart, rhs: Self) -> Mixture {
-    return .white
-  }
-}
+extension Anti: Color & SingleColorLike where Counterpart: SingleColor {}
 
 extension Anti: Hashable where Self: SingleColorLike, Counterpart: SingleColor {
   public func hash(into hasher: inout Hasher) {
     antiDelegate(of: counterpart).hash(into: &hasher)
   }
-}
-
-extension SingleColor {
-  /// Forms a ``Mixture`` by combining both ``Color``s.
-  ///
-  /// - Parameters:
-  ///   - lhs: ``Color`` to which `rhs` will be combined.
-  ///   - rhs: ``Color`` to be combined to `lhs`.
-  public static func + <Rhs: SingleColor>(lhs: Self, rhs: Rhs) -> Mixture {
-    let both: [AnyHashable] = [lhs, rhs]
-    return if both is [Red] {
-      .red
-    } else if both is [Green] {
-      .green
-    } else if both is [Blue] {
-      .blue
-    } else if both.either({ first, second in first is Red && second is Green }) {
-      .brown
-    } else if both.either({ first, second in first is Red && second is Blue }) {
-      .purple
-    } else if both.either({ first, second in first is Green && second is Blue }) {
-      .cyan
-    } else {
-      .white
-    }
-  }
-}
-
-extension SingleColor where Self: Equatable {
-  public static func == (lhs: Self, rhs: Self) -> Bool {
-    lhs === rhs
-  }
-}
-
-extension SingleColor where Self: Hashable {
-  public func hash(into hasher: inout Hasher) {}
 }
 
 /// One direction in the ``Color`` field.
@@ -174,89 +119,6 @@ extension Anti: Equatable where Self: SingleColorLike, Counterpart: SingleColorL
 /// Base protocol to which ``Color``s and anticolors conform.
 public protocol SingleColorLike: Color, Equatable, Hashable {}
 
-/// Combination of two ``Color``s.
-public enum Mixture: CaseIterable, Color {
-  /// Combination of two reds.
-  ///
-  /// - SeeAlso: ``red``
-  case red
-
-  /// Combination of two greens.
-  ///
-  /// - SeeAlso: ``green``
-  case green
-
-  /// Combination of two blues.
-  ///
-  /// - SeeAlso: ``blue``
-  case blue
-
-  /// Combination of red and green.
-  ///
-  /// - SeeAlso: ``red``
-  /// - SeeAlso: ``green``
-  case brown
-
-  /// Combination of red and blue.
-  ///
-  /// - SeeAlso: ``red``
-  /// - SeeAlso: ``blue``
-  case purple
-
-  /// Combination of green and blue.
-  ///
-  /// - SeeAlso: ``green``
-  /// - SeeAlso: ``blue``
-  case cyan
-
-  /// Final state of confined ``ColoredParticle``s whose net ``Color`` charge is zero, making them
-  /// effectively colorless. Results from the combination of ``Color``-anticolor pairs or of all
-  /// ``SingleColor``s (red + green + blue).
-  ///
-  /// - SeeAlso: ``red``
-  /// - SeeAlso: ``green``
-  /// - SeeAlso: ``blue``
-  case white
-
-  /// Combines the ``Color`` to the ``Mixture``.
-  ///
-  /// - Parameters:
-  ///   - lhs: ``Mixture`` to which the ``Color`` will be combined.
-  ///   - rhs: ``Color`` to be combined with the ``Mixture``; the combining ``Color``.
-  /// - Returns:
-  ///   Scenario                                                                                    | Result                                                               | Example
-  ///   ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------
-  ///   ``Mixture`` is white                                                                        | ``Mixture`` composed solely of the combining ``Color``               | White + red = red
-  ///   ``Mixture`` is composed by the combining ``Color``                                          | ``Mixture`` as-is                                                    | Brown + red = brown
-  ///   ``Mixture`` is composed by one ``Color``                                                    | Result of such ``Color`` + the combining one, as per `Color/+(_:_:)` | Red + green = brown
-  ///   ``Mixture`` is composed by two ``Color``s and the combining ``Color`` is the antagonist one | White                                                                | Brown + blue = white
-  public static func + (lhs: Self, rhs: some SingleColor) -> Self {
-    guard lhs != .white else { return Self.of(rhs) }
-    let composition = compositions[lhs]!
-    if let singleColor = composition.single { return rhs + (singleColor.base as! any SingleColor) }
-    guard compositions[.white]!.subtracting(composition).contains(rhs) else { return lhs }
-    return .white
-  }
-
-  /// Obtains the ``Mixture`` composed only by the given `color`.
-  ///
-  /// - Parameter color: ``Color`` whose equivalent single-``Color`` ``Mixture`` will be obtained.
-  static func of<SingleColorOfMixture: SingleColor>(_ color: SingleColorOfMixture) -> Self {
-    guard
-      let mixture =
-        compositions
-        .first(where: { _, composition in
-          guard let singleColor = composition.single else { return false }
-          return singleColor.base is SingleColorOfMixture
-        })?
-        .key
-    else {
-      unknown(color)
-    }
-    return mixture
-  }
-}
-
 extension Collection {
   /// The only element in this `Collection`; or `nil` if the `Collection` contains none or more than
   /// one element.
@@ -264,6 +126,16 @@ extension Collection {
     guard count == 1 else { return nil }
     return self.first!
   }
+}
+
+extension Color where Self: AnyObject & Equatable {
+  public static func == (lhs: Self, rhs: Self) -> Bool {
+    lhs === rhs
+  }
+}
+
+extension Color where Self: Hashable {
+  public func hash(into hasher: inout Hasher) {}
 }
 
 /// Color charge is a fundamental, confined (unobservable while free) property which determines its
@@ -285,19 +157,11 @@ extension Collection {
 /// - influence the phase of a direction but not redirect the vector; or
 /// - be effectless.
 ///
-/// ## Combination
-///
-/// Colors can be combined with one another in order to form a ``Mixture`` (e.g., red + green + blue
-/// = white). Such operation is performable by `+(_:_:)`, which takes in two colors and produces the
-/// result of combining both.
-///
 /// > Note: None of the two mentioned concepts, color and direction, refer to their classical
 /// description (respectively, a visual perception of the electromagnetic spectrum and a projection
 /// of physical movement from one point toward another). These are uniquely-quantum properties of a
 /// ``ColoredParticle``.
-///
-/// - SeeAlso: ``Mixture/white``
-public protocol Color {}
+public protocol Color: Hashable {}
 
 /// Antired (r̄) direction in the ``Color`` field.
 private class Antired: SingleColor {

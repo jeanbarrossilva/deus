@@ -10,24 +10,6 @@ import Testing
 @testable import StandardKit
 
 struct AnticolorTests {
-  @Suite("Combination")
-  struct CombinationTests {
-    @Test("r + r̄ = white")
-    func redPlusAntiredIsWhite() {
-      #expect(red + Anti(red) == .white)
-    }
-
-    @Test("g + ḡ = white")
-    func greenPlusAntigreenIsWhite() {
-      #expect(green + Anti(green) == .white)
-    }
-
-    @Test("b + b̄ = white")
-    func bluePlusAntiblueIsWhite() {
-      #expect(blue + Anti(blue) == .white)
-    }
-  }
-
   @Test
   func redIsCounterpartOfAntired() {
     #expect(Anti(red).counterpart === red)

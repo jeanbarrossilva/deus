@@ -27,7 +27,7 @@
 ///             • **q̄**: antiquark, the antiparticle of a ``Quark``.\
 ///             • **⊗**: tensor product of two vector spaces *V* and *W*: an *m* × *n* matrix, where
 ///               *m* is the number of components of *V* and *n* is that of *W*.
-public protocol Hadron: ColoredParticle<Mixture> {
+public protocol Hadron: ColoredParticle<White> {
   /// `Sequence` of ``Quark``s that compose this ``Hadron``.
   associatedtype Quarks: Sequence<any QuarkLike>
 
@@ -38,7 +38,7 @@ public protocol Hadron: ColoredParticle<Mixture> {
 
 extension Hadron {
   public var charge: Charge { quarks.reduce(.zero) { charge, quark in quark.charge + charge } }
-  public var color: Mixture { .white }
+  public var color: White { white }
 }
 
 // MARK: - Mesons

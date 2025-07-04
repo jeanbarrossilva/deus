@@ -44,7 +44,6 @@ extension Hadron {
 // MARK: - Mesons
 extension UpQuark {
   static func + (lhs: Self, rhs: Anti<DownQuark<Self.Color>>) -> PositivePion {
-    lazy var netColor = lhs.color + rhs.color
     return PositivePion(quarks: [lhs, rhs])
   }
 }

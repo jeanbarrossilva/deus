@@ -294,21 +294,12 @@ private class Antiblue: SingleColor {
 private func antiDelegate<Counterpart: AnyObject & SingleColor>(
   of color: Counterpart
 ) -> any SingleColorLike {
-  fold(color, onRed: antired, onGreen: antigreen, onBlue: antiblue)
-}
-
-private func fold<ResultOfFold>(
-  _ color: any AnyObject & SingleColorLike,
-  onRed: @autoclosure () throws -> ResultOfFold,
-  onGreen: @autoclosure () throws -> ResultOfFold,
-  onBlue: @autoclosure () throws -> ResultOfFold
-) rethrows -> ResultOfFold {
   if color === red {
-    return try onRed()
+    return antired
   } else if color === green {
-    return try onGreen()
+    return antigreen
   } else if color === blue {
-    return try onBlue()
+    return antiblue
   } else {
     unknown(color)
   }

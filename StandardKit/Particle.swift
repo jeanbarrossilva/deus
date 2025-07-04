@@ -32,8 +32,8 @@ public protocol Particle: ParticleLike, Opposable {}
 
 extension ParticleLike where Self: Equatable {
   public func isPartiallyEqual<Other: ParticleLike>(to other: Other) -> Bool {
-    guard let other = other as? Self else { return _isPartiallyEqual(to: other) }
-    return self == other || _isPartiallyEqual(to: other)
+    guard let other = other as? Self else { return _particleLikeIsPartiallyEqual(to: other) }
+    return self == other || _particleLikeIsPartiallyEqual(to: other)
   }
 }
 
@@ -79,7 +79,7 @@ public protocol ParticleLike {
 
 extension ParticleLike {
   public func isPartiallyEqual<Other: ParticleLike>(to other: Other) -> Bool {
-    return _isPartiallyEqual(to: other)
+    return _particleLikeIsPartiallyEqual(to: other)
   }
 
   /// The default implementation of ``isPartiallyEqual(to:)``.
@@ -87,7 +87,11 @@ extension ParticleLike {
   /// This function is distinct from the internal one in that it allows for overriders which employ
   /// type-specific checks to resort to the default check in case such type-specific checks return
   /// `false`.
-  fileprivate func _isPartiallyEqual<Other: ParticleLike>(to other: Other) -> Bool {
+  ///
+  /// - Parameter other: ``ParticleLike`` to which this one will be compared.
+  /// - Returns: `true` if the properties shared by these ``ParticleLike`` values are equal;
+  ///   otherwise, `false`.
+  func _particleLikeIsPartiallyEqual<Other: ParticleLike>(to other: Other) -> Bool {
     return Self.spin == Other.spin && Self.symbol == Other.symbol && charge == other.charge
   }
 }

@@ -156,7 +156,7 @@ extension Anti: QuarkLike where Counterpart: Quark, Counterpart.Color: SingleCol
 /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
 public protocol Quark: QuarkLike, ColoredParticle where Color: SingleColorLike {}
 
-extension QuarkLike {
+extension QuarkLike where Self: ParticleLike {
   public static var spin: Spin { .half }
 }
 

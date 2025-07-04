@@ -50,6 +50,32 @@ where Counterpart: ColoredParticle, Counterpart.Color: SingleColor {
 /// ``Color`` field.
 public protocol ColoredParticle<Color>: ColoredParticleLike, Particle {}
 
+extension ColoredParticle where Self: ParticleLike {
+  public func isPartiallyEqual<Other: ParticleLike>(to other: Other) -> Bool {
+    guard let other = other as? any ColoredParticle else {
+      return _particleLikeIsPartiallyEqual(to: other)
+    }
+    return _coloredParticleIsPartiallyEqual(to: other)
+  }
+}
+
+extension ColoredParticleLike {
+  /// The default implementation of ``isPartiallyEqual(to:)``.
+  ///
+  /// - Parameter other: ``ColoredParticleLike`` to which this one will be compared.
+  /// - Returns: `true` if the properties shared by these ``ColoredParticleLike`` values are equal;
+  ///   otherwise, `false`.
+  func _coloredParticleIsPartiallyEqual<Other: ParticleLike>(to other: Other) -> Bool {
+    guard
+      let color = color as? AnyClass,
+      let otherColor = (other as? any ColoredParticleLike)?.color as? AnyClass
+    else {
+      return _particleLikeIsPartiallyEqual(to: other)
+    }
+    return color === otherColor && _particleLikeIsPartiallyEqual(to: other)
+  }
+}
+
 /// Base protocol to which ``ColoredParticle``s and colored antiparticles conform.
 public protocol ColoredParticleLike<Color>: ParticleLike {
   /// The specific type of ``Color``.

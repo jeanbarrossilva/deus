@@ -88,8 +88,8 @@ public struct PositivePion: Equatable, Pion {
 /// ## Stability
 ///
 /// Because of their lightness, the lifetime of pions is extremely short, resulting in them lasting
-/// from 85 to ~26.033 ns before their decay into muons and neutrinos (π⁺ → μ + v) or into gamma
-/// rays. Therefore, they are considered **unstable**.
+/// from 85 attoseconds to ~26.033 ns before their decay into muons and neutrinos (π⁺ → μ + v) or
+/// into gamma rays. Therefore, they are considered **unstable**.
 public protocol Pion: Meson {}
 
 /// ``Hadron`` composed by an even amount of ``Quark``s.

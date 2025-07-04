@@ -47,7 +47,7 @@ extension ColoredParticle where Self: ParticleLike {
     guard let other = other as? any ColoredParticle else {
       return _particleLikeIsPartiallyEqual(to: other)
     }
-    return _coloredParticleIsPartiallyEqual(to: other)
+    return _coloredParticleLikeIsPartiallyEqual(to: other)
   }
 }
 
@@ -57,7 +57,7 @@ extension ColoredParticleLike {
   /// - Parameter other: ``ColoredParticleLike`` to which this one will be compared.
   /// - Returns: `true` if the properties shared by these ``ColoredParticleLike`` values are equal;
   ///   otherwise, `false`.
-  func _coloredParticleIsPartiallyEqual<Other: ParticleLike>(to other: Other) -> Bool {
+  func _coloredParticleLikeIsPartiallyEqual<Other: ParticleLike>(to other: Other) -> Bool {
     guard
       let color = color as? AnyClass,
       let otherColor = (other as? any ColoredParticleLike)?.color as? AnyClass

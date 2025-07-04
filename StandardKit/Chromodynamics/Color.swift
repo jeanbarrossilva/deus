@@ -106,14 +106,19 @@ extension SingleColor {
   /// - Parameters:
   ///   - lhs: ``Color`` to which `rhs` will be combined.
   ///   - rhs: ``Color`` to be combined to `lhs`.
-  public static func + (lhs: Self, rhs: any SingleColor) -> Mixture {
-    if self === rhs {
-      .of(rhs)
-    } else if (self === red || self === green) && (rhs === green || rhs === red) {
+  public static func + <Rhs: SingleColor>(lhs: Self, rhs: Rhs) -> Mixture {
+    let both: [AnyHashable] = [lhs, rhs]
+    return if both is [Red] {
+      .red
+    } else if both is [Green] {
+      .green
+    } else if both is [Blue] {
+      .blue
+    } else if both.either({ first, second in first is Red && second is Green }) {
       .brown
-    } else if (self === red || self === blue) && rhs === blue || rhs === red {
+    } else if both.either({ first, second in first is Red && second is Blue }) {
       .purple
-    } else if (self === green || self === blue) && (rhs === blue || rhs === green) {
+    } else if both.either({ first, second in first is Green && second is Blue }) {
       .cyan
     } else {
       .white
@@ -289,12 +294,21 @@ private class Antiblue: SingleColor {
 private func antiDelegate<Counterpart: AnyObject & SingleColor>(
   of color: Counterpart
 ) -> any SingleColorLike {
+  fold(color, onRed: antired, onGreen: antigreen, onBlue: antiblue)
+}
+
+private func fold<ResultOfFold>(
+  _ color: any AnyObject & SingleColorLike,
+  onRed: @autoclosure () throws -> ResultOfFold,
+  onGreen: @autoclosure () throws -> ResultOfFold,
+  onBlue: @autoclosure () throws -> ResultOfFold
+) rethrows -> ResultOfFold {
   if color === red {
-    return antired
+    return try onRed()
   } else if color === green {
-    return antigreen
+    return try onGreen()
   } else if color === blue {
-    return antiblue
+    return try onBlue()
   } else {
     unknown(color)
   }

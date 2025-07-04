@@ -32,17 +32,13 @@ private let compositions: [Mixture: Set<AnyHashable>] = [
   .white: Set(arrayLiteral: red, green, blue)
 ]
 
-/// Pairing of each single ``Color`` to their respective anticolor (e.g., `self[red] == antired`).
-private let colorAnticolorPairs: [AnyHashable: any SingleColor] =
-  [red: antired, green: antigreen, blue: antiblue]
-
-/// Antired (r̄) direction in the ``Color`` field.
+/// Delegate of a ``NonOpposableSingleColor``-conformant ``Anti`` of ``red``.
 private let antired = Antired()
 
-/// Antigreen (ḡ) direction in the ``Color`` field.
+/// Delegate of a ``NonOpposableSingleColor``-conformant ``Anti`` of ``green``.
 private let antigreen = Antigreen()
 
-/// Antiblue (b̄) direction in the ``Color`` field.
+/// Delegate of a ``NonOpposableSingleColor``-conformant ``Anti`` of ``blue``.
 private let antiblue = Antiblue()
 
 /// Direct (in the case of a gluon ``Particle``) or indirect result of a localized excitation of the
@@ -78,6 +74,32 @@ public class Blue: SingleColor {
   fileprivate init() {}
 }
 
+extension Anti: Color & NonOpposableSingleColor where Counterpart: AnyObject & SingleColor {
+  /// Combines both ``Color``s into a white ``Mixture``.
+  ///
+  /// - Parameters:
+  ///   - lhs: Anticolor to which `rhs` will be combined.
+  ///   - rhs: ``Color`` to be combined to `lhs`.
+  public static func + (lhs: Self, rhs: Counterpart) -> Mixture {
+    return .white
+  }
+
+  /// Combines both ``Color``s into a white ``Mixture``.
+  ///
+  /// - Parameters:
+  ///   - lhs: ``Color`` to which `rhs` will be combined.
+  ///   - rhs: Anticolor to be combined to `lhs`.
+  public static func + (lhs: Counterpart, rhs: Self) -> Mixture {
+    return .white
+  }
+}
+
+extension Anti: Hashable where Self: NonOpposableSingleColor, Counterpart: SingleColor {
+  public func hash(into hasher: inout Hasher) {
+    antiDelegate(of: counterpart).hash(into: &hasher)
+  }
+}
+
 extension SingleColor {
   /// Forms a ``Mixture`` by combining both ``Color``s.
   ///
@@ -106,50 +128,11 @@ extension SingleColor where Self: Equatable {
 }
 
 extension SingleColor where Self: Hashable {
-  public func hash(into hasher: inout Hasher) {
-    colorAnticolorPairs.keys.first(where: { color in color.base as? Self != nil })!.hash(
-      into: &hasher
-    )
-  }
+  public func hash(into hasher: inout Hasher) {}
 }
 
 /// One direction in the ``Color`` field.
 public protocol SingleColor: AnyObject, NonOpposableSingleColor, Opposable {}
-
-extension Anti: Color & NonOpposableSingleColor
-where Counterpart: AnyObject & NonOpposableSingleColor {
-  /// Combines both ``Color``s into a white ``Mixture``.
-  ///
-  /// - Parameters:
-  ///   - lhs: Anticolor to which `rhs` will be combined.
-  ///   - rhs: ``Color`` to be combined to `lhs`.
-  public static func + (lhs: Self, rhs: Counterpart) -> Mixture {
-    return .white
-  }
-
-  /// Combines both ``Color``s into a white ``Mixture``.
-  ///
-  /// - Parameters:
-  ///   - lhs: ``Color`` to which `rhs` will be combined.
-  ///   - rhs: Anticolor to be combined to `lhs`.
-  public static func + (lhs: Counterpart, rhs: Self) -> Mixture {
-    return .white
-  }
-}
-
-extension Anti: Hashable where Self: NonOpposableSingleColor, Counterpart: NonOpposableSingleColor {
-  public func hash(into hasher: inout Hasher) {
-    let anticolor = colorAnticolorPairs[counterpart]
-    precondition(
-      anticolor != nil,
-      "No equivalent anticolor for \(counterpart) found. This occurs when "
-        + "\((any NonOpposableSingleColor).self) is conformed to outside of the StandardKit "
-        + "module, which is completely discouraged and may lead to inconsistencies such as this "
-        + "one."
-    )
-    anticolor?.hash(into: &hasher)
-  }
-}
 
 extension Anti: Equatable
 where Self: NonOpposableSingleColor, Counterpart: NonOpposableSingleColor {
@@ -234,15 +217,11 @@ public enum Mixture: CaseIterable, Color {
         compositions
         .first(where: { _, composition in
           guard let singleColor = composition.single else { return false }
-          return type(of: singleColor.base) == SingleColorOfMixture.self
+          return singleColor.base is SingleColorOfMixture
         })?
         .key
     else {
-      fatalError(
-        "No single-color mixture found for \(color) because it is not red, green or blue; rather, "
-          + "it appears to be a color unknown by StandardKit. The SingleColor protocol is meant "
-          + "for conformance by StandardKit only."
-      )
+      unknown(color)
     }
     return mixture
   }
@@ -303,4 +282,32 @@ private class Antigreen: SingleColor {
 /// Antiblue (b̄) direction in the ``Color`` field.
 private class Antiblue: SingleColor {
   fileprivate init() {}
+}
+
+/// Obtains the immortal object to which the anticolor of the `color` delegates its implementations.
+///
+/// - Parameter color: Counterpart of the anticolor.
+private func antiDelegate<Counterpart: AnyObject & SingleColor>(
+  of color: Counterpart
+) -> any NonOpposableSingleColor {
+  if color === red {
+    return antired
+  } else if color === green {
+    return antigreen
+  } else if color === blue {
+    return antiblue
+  } else {
+    unknown(color)
+  }
+}
+
+/// Terminates the program due to having found an unknown ``NonOpposableSingleColor`` which is not
+/// one of the predefined three: ``red``, ``green`` and ``blue``. Such behavior restricts
+/// conformance to such protocol to ``StandardKit``, preventing undefined states throughout
+/// simulations.
+private func unknown(_ color: any NonOpposableSingleColor) -> Never {
+  fatalError(
+    "\(color) is not red, green or blue; rather, it appears to be a color unknown by StandardKit. "
+      + "NonOpposableSingleColor is meant for conformance by StandardKit only."
+  )
 }

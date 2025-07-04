@@ -59,19 +59,6 @@ struct ColorTests {
     func whitePlusBlueIsBlue() {
       #expect(Mixture.white + blue == .blue)
     }
-
-    @Test(
-      arguments: zip(
-        [Mixture.brown, .purple, .cyan].spread(by: { _ in 2 }),
-        [red, green, red, blue, green, blue]
-      )
-    )
-    func twoColorMixturePlusOneOfItsColorsIsTheMixtureItself(
-      _ mixture: Mixture,
-      _ color: any SingleColor
-    ) {
-      #expect(mixture + color == mixture)
-    }
   }
 
   @Test

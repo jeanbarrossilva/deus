@@ -106,6 +106,10 @@ struct TopQuark<Color: SingleColor>: Quark {
   }
 }
 
+extension Anti: QuarkLike where Counterpart: Quark, Counterpart.Color: SingleColor {
+  public typealias Color = Anti<Counterpart.Color>
+}
+
 /// A quark (q) is an elementary fermion ``ColoredParticle`` which is confined, bound to at least
 /// another one by gluon ``Particle``s via strong force. It is the only ``Particle`` in the Standard
 /// Model which experiences each of the four fundamental forces: strong, weak, electromagnetic and
@@ -150,17 +154,11 @@ struct TopQuark<Color: SingleColor>: Quark {
 /// - SeeAlso: ``Charge/elementary(_:)``
 /// - SeeAlso: ``Energy/megaelectronvolts(_:)``
 /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
-public protocol Quark: NonOpposableQuark, ColoredParticle where Color: NonOpposableSingleColor {}
+public protocol Quark: QuarkLike, ColoredParticle where Color: SingleColorLike {}
 
-extension Anti: NonOpposableQuark
-where Counterpart: NonOpposableQuark, Counterpart.Color: SingleColor {
-  public typealias Color = Anti<Counterpart.Color>
-}
-
-extension NonOpposableQuark {
+extension QuarkLike {
   public static var spin: Spin { .half }
 }
 
-/// Non-``Opposable``-conformant protocol of a ``Quark``.
-public protocol NonOpposableQuark: NonOpposableColoredParticle
-where Color: NonOpposableSingleColor {}
+/// Base protocol to which ``Quark``s and antiquarks conform.
+public protocol QuarkLike: ColoredParticleLike where Color: SingleColorLike {}

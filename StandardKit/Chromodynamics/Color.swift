@@ -32,26 +32,26 @@ private let compositions: [Mixture: Set<AnyHashable>] = [
   .white: Set(arrayLiteral: red, green, blue)
 ]
 
-/// Delegate of a ``NonOpposableSingleColor``-conformant ``Anti`` of ``red``.
+/// Delegate of a ``SingleColorLike``-conformant ``Anti`` of ``red``.
 private let antired = Antired()
 
-/// Delegate of a ``NonOpposableSingleColor``-conformant ``Anti`` of ``green``.
+/// Delegate of a ``SingleColorLike``-conformant ``Anti`` of ``green``.
 private let antigreen = Antigreen()
 
-/// Delegate of a ``NonOpposableSingleColor``-conformant ``Anti`` of ``blue``.
+/// Delegate of a ``SingleColorLike``-conformant ``Anti`` of ``blue``.
 private let antiblue = Antiblue()
 
-/// Direct (in the case of a gluon ``Particle``) or indirect result of a localized excitation of the
-/// ``Color`` field.
-public protocol ColoredParticle<Color>: NonOpposableColoredParticle, Particle {}
-
-extension Anti: NonOpposableColoredParticle
-where Counterpart: NonOpposableColoredParticle, Counterpart.Color: SingleColor {
+extension Anti: ColoredParticleLike
+where Counterpart: ColoredParticle, Counterpart.Color: SingleColor {
   public var color: Anti<Counterpart.Color> { Anti<Counterpart.Color>(counterpart.color) }
 }
 
+/// Direct (in the case of a gluon ``Particle``) or indirect result of a localized excitation of the
+/// ``Color`` field.
+public protocol ColoredParticle<Color>: ColoredParticleLike, Particle {}
+
 /// Base protocol to which ``ColoredParticle``s and colored antiparticles conform.
-public protocol NonOpposableColoredParticle<Color>: _Particle {
+public protocol ColoredParticleLike<Color>: ParticleLike {
   /// The specific type of ``Color``.
   associatedtype Color: StandardKit.Color
 
@@ -74,7 +74,7 @@ public class Blue: SingleColor {
   fileprivate init() {}
 }
 
-extension Anti: Color & NonOpposableSingleColor where Counterpart: AnyObject & SingleColor {
+extension Anti: Color & SingleColorLike where Counterpart: AnyObject & SingleColor {
   /// Combines both ``Color``s into a white ``Mixture``.
   ///
   /// - Parameters:
@@ -94,7 +94,7 @@ extension Anti: Color & NonOpposableSingleColor where Counterpart: AnyObject & S
   }
 }
 
-extension Anti: Hashable where Self: NonOpposableSingleColor, Counterpart: SingleColor {
+extension Anti: Hashable where Self: SingleColorLike, Counterpart: SingleColor {
   public func hash(into hasher: inout Hasher) {
     antiDelegate(of: counterpart).hash(into: &hasher)
   }
@@ -132,17 +132,16 @@ extension SingleColor where Self: Hashable {
 }
 
 /// One direction in the ``Color`` field.
-public protocol SingleColor: AnyObject, NonOpposableSingleColor, Opposable {}
+public protocol SingleColor: AnyObject, SingleColorLike, Opposable {}
 
-extension Anti: Equatable
-where Self: NonOpposableSingleColor, Counterpart: NonOpposableSingleColor {
+extension Anti: Equatable where Self: SingleColorLike, Counterpart: SingleColorLike {
   public static func == (lhs: Self, rhs: Self) -> Bool {
     true
   }
 }
 
 /// Base protocol to which ``Color``s and anticolors conform.
-public protocol NonOpposableSingleColor: Color, Equatable, Hashable {}
+public protocol SingleColorLike: Color, Equatable, Hashable {}
 
 /// Combination of two ``Color``s.
 public enum Mixture: CaseIterable, Color {
@@ -289,7 +288,7 @@ private class Antiblue: SingleColor {
 /// - Parameter color: Counterpart of the anticolor.
 private func antiDelegate<Counterpart: AnyObject & SingleColor>(
   of color: Counterpart
-) -> any NonOpposableSingleColor {
+) -> any SingleColorLike {
   if color === red {
     return antired
   } else if color === green {
@@ -301,13 +300,12 @@ private func antiDelegate<Counterpart: AnyObject & SingleColor>(
   }
 }
 
-/// Terminates the program due to having found an unknown ``NonOpposableSingleColor`` which is not
-/// one of the predefined three: ``red``, ``green`` and ``blue``. Such behavior restricts
-/// conformance to such protocol to ``StandardKit``, preventing undefined states throughout
-/// simulations.
-private func unknown(_ color: any NonOpposableSingleColor) -> Never {
+/// Terminates the program due to having found an unknown ``SingleColorLike`` which is not one of
+/// the predefined three: ``red``, ``green`` and ``blue``. Such behavior restricts conformance to
+/// such protocol to ``StandardKit``, preventing undefined states throughout simulations.
+private func unknown(_ color: any SingleColorLike) -> Never {
   fatalError(
     "\(color) is not red, green or blue; rather, it appears to be a color unknown by StandardKit. "
-      + "NonOpposableSingleColor is meant for conformance by StandardKit only."
+      + "SingleColorLike is meant for conformance by StandardKit only."
   )
 }

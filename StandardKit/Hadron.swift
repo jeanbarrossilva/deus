@@ -29,7 +29,7 @@
 ///               *m* is the number of components of *V* and *n* is that of *W*.
 public protocol Hadron: ColoredParticle<Mixture> {
   /// `Sequence` of ``Quark``s that compose this ``Hadron``.
-  associatedtype Quarks: Sequence<any NonOpposableQuark>
+  associatedtype Quarks: Sequence<any QuarkLike>
 
   /// ``Quark``s by which this ``Hadron`` is composed, bound by strong force via the gluon
   /// ``Particle``s.
@@ -57,9 +57,9 @@ public struct PositivePion: Equatable, Pion {
   public static let symbol = "π⁺"
 
   public let charge = Charge.elementary(1)
-  public let quarks: InlineArray<2, any NonOpposableQuark>
+  public let quarks: InlineArray<2, any QuarkLike>
 
-  fileprivate init(quarks: InlineArray<2, any NonOpposableQuark>) {
+  fileprivate init(quarks: InlineArray<2, any QuarkLike>) {
     self.quarks = quarks
   }
 

@@ -43,6 +43,12 @@ extension Hadron {
 
 // MARK: - Mesons
 extension UpQuark {
+  /// Combines an down antiquark to this ``UpQuark``.
+  ///
+  /// - Parameters:
+  ///   - lhs: ``UpQuark`` to combine `rhs` to.
+  ///   - rhs: Down antiquark to be combined to `lhs`.
+  /// - Returns: Result of the u + d̄ combination: a ``PositivePion``.
   static func + (lhs: Self, rhs: Anti<DownQuark<Self.Color>>) -> PositivePion {
     return PositivePion(quarks: [lhs, rhs])
   }
@@ -53,7 +59,6 @@ extension UpQuark {
 /// - SeeAlso: ``UpQuark``
 /// - SeeAlso: ``DownQuark``
 public struct PositivePion: Equatable, Pion {
-  public static let spin = Spin.zero
   public static let symbol = "π⁺"
 
   public let charge = Charge.elementary(1)
@@ -62,7 +67,40 @@ public struct PositivePion: Equatable, Pion {
   fileprivate init(quarks: InlineArray<2, any QuarkLike>) {
     self.quarks = quarks
   }
+}
 
+/// ``Pion`` with a negative ``charge`` (π⁻), resulted from d + ū.
+///
+/// - SeeAlso: ``DownQuark``
+/// - SeeAlso: ``UpQuark``
+public struct NegativePion: Equatable, Pion {
+  public static let symbol = "π⁻"
+
+  public let charge: Charge = Charge.elementary(-1)
+  public let quarks: InlineArray<2, any QuarkLike>
+
+  init(quarks: InlineArray<2, any QuarkLike>) {
+    self.quarks = quarks
+  }
+}
+
+extension DownQuark {
+  /// Combines an up antiquark to this ``DownQuark``.
+  ///
+  /// - Parameters:
+  ///   - lhs: ``DownQuark`` to combine `rhs` to.
+  ///   - rhs: Up antiquark to be combined to `lhs`.
+  /// - Returns: Result of the d + ū combination: a ``NegativePion``.
+  static func + (lhs: Self, rhs: Anti<UpQuark<Self.Color>>) -> NegativePion {
+    NegativePion(quarks: [lhs, rhs])
+  }
+}
+
+extension Pion where Self: ParticleLike {
+  public static var spin: Spin { .zero }
+}
+
+extension Pion where Self: Equatable, Quarks == InlineArray<2, any QuarkLike> {
   public static func == (lhs: Self, rhs: Self) -> Bool {
     lhs.charge == rhs.charge
       && lhs.color == rhs.color

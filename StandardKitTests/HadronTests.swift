@@ -15,18 +15,37 @@ struct HadronTests {
   struct PionTests {
     @Suite("π⁺")
     struct PositiveTests {
+      private let upQuark = UpQuark(color: red)
+      private let downAntiquark = Anti(DownQuark(color: red))
+      private lazy var positivePion = upQuark + downAntiquark
+
       @Test("u + d̄ → π⁺")
-      func resultsFromCombiningAnUpQuarkAndADownAntiquark() {
-        let upQuark = UpQuark(color: red)
-        let downAntiquark = Anti(DownQuark(color: red))
-        let positivePion = upQuark + downAntiquark
+      mutating func resultsFromCombiningAnUpQuarkAndADownAntiquark() {
         #expect(positivePion.quarks[0].isPartiallyEqual(to: upQuark))
         #expect(positivePion.quarks[1].isPartiallyEqual(to: downAntiquark))
       }
 
       @Test
-      func chargeIsOneE() {
+      mutating func chargeIsOneE() {
         #expect((UpQuark(color: red) + Anti(DownQuark(color: red))).charge == .elementary(1))
+      }
+    }
+
+    @Suite("π⁻")
+    struct NegativeTests {
+      private let downQuark = DownQuark(color: red)
+      private let upAntiquark = Anti(UpQuark(color: red))
+      private lazy var negativePion = downQuark + upAntiquark
+
+      @Test("d + ū → π⁻")
+      mutating func resultsFromCombiningADownQuarkAndAnUpAntiquark() {
+        #expect(negativePion.quarks[0].isPartiallyEqual(to: downQuark))
+        #expect(negativePion.quarks[1].isPartiallyEqual(to: upAntiquark))
+      }
+
+      @Test
+      mutating func chargeIsNegativeOneE() {
+        #expect(negativePion.charge == .elementary(-1))
       }
     }
   }

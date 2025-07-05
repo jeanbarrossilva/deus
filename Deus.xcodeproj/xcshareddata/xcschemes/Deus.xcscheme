@@ -69,6 +69,27 @@
                ReferencedContainer = "container:Deus.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49EF5D562DE20D36008AFB31"
+               BuildableName = "StandardKitTests.xctest"
+               BlueprintName = "StandardKitTests"
+               ReferencedContainer = "container:Deus.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49EF5D562DE20D36008AFB31"
+               BuildableName = "StandardKitTests.xctest"
+               BlueprintName = "StandardKitTests"
+               ReferencedContainer = "container:Deus.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

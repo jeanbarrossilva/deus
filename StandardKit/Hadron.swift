@@ -1,9 +1,19 @@
+// ===-------------------------------------------------------------------------------------------===
+// Copyright © 2025 Deus
 //
-//  Hadron.swift
-//  Deus
+// This file is part of the Deus open-source project.
 //
-//  Created by Jean Barros Silva on 12/06/25.
+// This program is free software: you can redistribute it and/or modify it under the terms of the
+// GNU General Public License as published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
 //
+// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+// even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with this program. If
+// not, see https://www.gnu.org/licenses.
+// ===-------------------------------------------------------------------------------------------===
 
 /// ``Particle`` composed by two or more ``Quark``s which are bound by strong force. It is the
 /// compositor of nucleons — such as protons and neutrons — and, therefore, the most common

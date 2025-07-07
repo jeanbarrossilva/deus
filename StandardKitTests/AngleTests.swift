@@ -20,7 +20,6 @@ import Testing
 @testable import StandardKit
 
 struct AngleTests {
-  @Test func radiansSymbolIsRad() {
-    #expect(Angle.radians(0).symbol == "rad")
-  }
+  @Test
+  func radiansSymbolIsRad() { #expect(Angle.radians(0).symbol == "rad") }
 }

@@ -26,13 +26,11 @@ private final class ObservationNSView: MTKView {
 
   override init(frame frameRect: CGRect, device: (any MTLDevice)?) {
     super.init(frame: frameRect, device: device)
-    guard let device,
-      let commandQueue = device.makeCommandQueue(),
-      let commandBuffer = commandQueue.makeCommandBuffer(),
-      let currentRenderPassDescriptor,
-      let renderCommandEncoder =
-        commandBuffer.makeRenderCommandEncoder(descriptor: currentRenderPassDescriptor),
-      let currentDrawable
+    guard let device, let commandQueue = device.makeCommandQueue(),
+      let commandBuffer = commandQueue.makeCommandBuffer(), let currentRenderPassDescriptor,
+      let renderCommandEncoder = commandBuffer.makeRenderCommandEncoder(
+        descriptor: currentRenderPassDescriptor
+      ), let currentDrawable
     else { return }
     clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
     renderCommandEncoder.endEncoding()
@@ -46,9 +44,7 @@ private final class ObservationNSView: MTKView {
   /// ``init(coder:)``).
   ///
   /// - Returns: The created default-GPU-based ``MTLDevice`` or `nil` if Metal is unsupported.
-  static func createDevice() -> (any MTLDevice)? {
-    MTLCreateSystemDefaultDevice()
-  }
+  static func createDevice() -> (any MTLDevice)? { MTLCreateSystemDefaultDevice() }
 }
 
 /// ``View`` by which a simulated universe is displayed.
@@ -64,9 +60,7 @@ private struct ObservationView: NSViewRepresentable {
 }
 
 struct ContentView: View {
-  var body: some View {
-    GeometryReader { geometry in ObservationView(geometry: geometry) }
-  }
+  var body: some View { GeometryReader { geometry in ObservationView(geometry: geometry) } }
 }
 
 #Preview { ContentView() }

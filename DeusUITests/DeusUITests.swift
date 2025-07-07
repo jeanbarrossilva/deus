@@ -18,7 +18,8 @@
 import XCTest
 
 final class DeusUITests: XCTestCase {
-  @MainActor func testRenderingOfEmptyUniverse() throws {
+  @MainActor
+  func testRenderingOfEmptyUniverse() throws {
     let app = XCUIApplication()
     app.launch()
     let window = app.windows.firstMatch
@@ -27,12 +28,17 @@ final class DeusUITests: XCTestCase {
     ])
     var frame = window.frame
     guard
-      let screenshot =
-        window.screenshot().image.cgImage(forProposedRect: &frame, context: .current, hints: nil)
+      let screenshot = window.screenshot().image.cgImage(
+        forProposedRect: &frame,
+        context: .current,
+        hints: nil
+      )
     else { fatalError("Window could not be screenshot.") }
     let bytePerPixelCount = 4
-    var channels =
-      [UInt8](repeating: 0, count: screenshot.width * screenshot.height * bytePerPixelCount)
+    var channels = [UInt8](
+      repeating: 0,
+      count: screenshot.width * screenshot.height * bytePerPixelCount
+    )
     guard
       let context = CGContext(
         data: &channels,
@@ -43,9 +49,7 @@ final class DeusUITests: XCTestCase {
         space: CGColorSpaceCreateDeviceRGB(),
         bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
       )
-    else {
-      fatalError("Could not initialize context.")
-    }
+    else { fatalError("Could not initialize context.") }
     context.draw(screenshot, in: frame)
     XCTAssertFalse(channels.isEmpty, "Nothing was rendered.")
     for (index, channel) in stride(

@@ -23,34 +23,22 @@ struct QuarkTests {
   @Suite("Symbol")
   struct SymbolTests {
     @Test
-    func upQuarkSymbolIsU() {
-      #expect(UpQuark<Red>.symbol == "u")
-    }
+    func upQuarkSymbolIsU() { #expect(UpQuark<Red>.symbol == "u") }
 
     @Test
-    func downQuarkSymbolIsD() {
-      #expect(DownQuark<Red>.symbol == "d")
-    }
+    func downQuarkSymbolIsD() { #expect(DownQuark<Red>.symbol == "d") }
 
     @Test
-    func charmQuarkSymbolIsC() {
-      #expect(CharmQuark<Red>.symbol == "c")
-    }
+    func charmQuarkSymbolIsC() { #expect(CharmQuark<Red>.symbol == "c") }
 
     @Test
-    func strangeQuarkSymbolIsS() {
-      #expect(StrangeQuark<Red>.symbol == "s")
-    }
+    func strangeQuarkSymbolIsS() { #expect(StrangeQuark<Red>.symbol == "s") }
 
     @Test
-    func topQuarkSymbolIsT() {
-      #expect(TopQuark<Red>.symbol == "t")
-    }
+    func topQuarkSymbolIsT() { #expect(TopQuark<Red>.symbol == "t") }
 
     @Test
-    func bottomQuarkSymbolIsB() {
-      #expect(BottomQuark<Red>.symbol == "b")
-    }
+    func bottomQuarkSymbolIsB() { #expect(BottomQuark<Red>.symbol == "b") }
   }
 
   @Suite("Charge")

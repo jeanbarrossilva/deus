@@ -21,8 +21,10 @@ import Testing
 @testable import StandardKit
 
 struct SymmetryTests {
-  @Suite("U1") struct U1Tests {
-    @Test func fieldIsUntransformedWhenUnrotated() {
+  @Suite("U1")
+  struct U1Tests {
+    @Test
+    func fieldIsUntransformedWhenUnrotated() {
       #expect(Complex(2, 4).u1(by: .zero) == Complex(2, 4))
     }
 
@@ -31,7 +33,8 @@ struct SymmetryTests {
       #expect(Complex(2, 4).u1(by: angle).isApproximatelyEqual(to: Complex(2, 4)))
     }
 
-    @Test func fieldIsTransformedWhenRotatedByNonGroupIdentity() {
+    @Test
+    func fieldIsTransformedWhenRotatedByNonGroupIdentity() {
       #expect(
         Complex(2, 4).u1(by: .radians(2)).isApproximatelyEqual(
           to: Complex(-4.46, 0.15),

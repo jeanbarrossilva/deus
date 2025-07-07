@@ -28,7 +28,5 @@ extension Complex<Double> {
   /// U(1) = exp(*i* × θ)
   ///
   /// - Parameter theta: ``Angle`` of the rotation.
-  func u1(by theta: Angle) -> Self {
-    self * .exp(.i * theta.value)
-  }
+  func u1(by theta: Angle) -> Self { self * .exp(.i * theta.value) }
 }

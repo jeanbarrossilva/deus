@@ -20,7 +20,6 @@ import Testing
 @testable import StandardKit
 
 struct ChargeTests {
-  @Test func elementaryChargeSymbolIsE() {
-    #expect(Charge.elementary(0).symbol == "e")
-  }
+  @Test
+  func elementaryChargeSymbolIsE() { #expect(Charge.elementary(0).symbol == "e") }
 }

@@ -68,12 +68,9 @@ extension ColoredParticleLike {
   /// - Returns: `true` if the properties shared by these ``ColoredParticleLike`` values are equal;
   ///   otherwise, `false`.
   func _coloredParticleLikeIsPartiallyEqual<Other: ParticleLike>(to other: Other) -> Bool {
-    guard
-      let color = color as? AnyClass,
+    guard let color = color as? AnyClass,
       let otherColor = (other as? any ColoredParticleLike)?.color as? AnyClass
-    else {
-      return _particleLikeIsPartiallyEqual(to: other)
-    }
+    else { return _particleLikeIsPartiallyEqual(to: other) }
     return color === otherColor && _particleLikeIsPartiallyEqual(to: other)
   }
 }
@@ -90,40 +87,28 @@ public protocol ColoredParticleLike<Color>: ParticleLike {
 /// Final state of confined ``ColoredParticleLike``s whose net ``Color`` charge is zero, making them
 /// effectively colorless. Results from the combination of ``Color``-anticolor pairs or of all
 /// ``SingleColor``s (``red`` + ``green`` + ``blue``).
-public class White: Color {
-  fileprivate init() {}
-}
+public class White: Color { fileprivate init() {} }
 
 /// Red (r) direction in the ``Color`` field.
-public class Red: SingleColor {
-  fileprivate init() {}
-}
+public class Red: SingleColor { fileprivate init() {} }
 
 /// Green (g) direction in the ``Color`` field.
-public class Green: SingleColor {
-  fileprivate init() {}
-}
+public class Green: SingleColor { fileprivate init() {} }
 
 /// Blue (b) direction in the ``Color`` field.
-public class Blue: SingleColor {
-  fileprivate init() {}
-}
+public class Blue: SingleColor { fileprivate init() {} }
 
 extension Anti: Color & SingleColorLike where Counterpart: SingleColor {}
 
 extension Anti: Hashable where Self: SingleColorLike, Counterpart: SingleColor {
-  public func hash(into hasher: inout Hasher) {
-    antiDelegate(of: counterpart).hash(into: &hasher)
-  }
+  public func hash(into hasher: inout Hasher) { antiDelegate(of: counterpart).hash(into: &hasher) }
 }
 
 /// One direction in the ``Color`` field.
 public protocol SingleColor: AnyObject, SingleColorLike, Opposable {}
 
 extension Anti: Equatable where Self: SingleColorLike, Counterpart: SingleColorLike {
-  public static func == (lhs: Self, rhs: Self) -> Bool {
-    true
-  }
+  public static func == (lhs: Self, rhs: Self) -> Bool { true }
 }
 
 /// Base protocol to which ``Color``s and anticolors conform.
@@ -139,14 +124,10 @@ extension Collection {
 }
 
 extension Color where Self: AnyObject & Equatable {
-  public static func == (lhs: Self, rhs: Self) -> Bool {
-    lhs === rhs
-  }
+  public static func == (lhs: Self, rhs: Self) -> Bool { lhs === rhs }
 }
 
-extension Color where Self: Hashable {
-  public func hash(into hasher: inout Hasher) {}
-}
+extension Color where Self: Hashable { public func hash(into hasher: inout Hasher) {} }
 
 /// Color charge is a fundamental, confined (unobservable while free) property which determines its
 /// transformation under the SU(3) gauge symmetry whose field, SU(3)₍color₎ or gluon field, is
@@ -174,19 +155,13 @@ extension Color where Self: Hashable {
 public protocol Color: Hashable {}
 
 /// Antired (r̄) direction in the ``Color`` field.
-private class Antired: SingleColor {
-  fileprivate init() {}
-}
+private class Antired: SingleColor { fileprivate init() {} }
 
 /// Antigreen (ḡ) direction in the ``Color`` field.
-private class Antigreen: SingleColor {
-  fileprivate init() {}
-}
+private class Antigreen: SingleColor { fileprivate init() {} }
 
 /// Antiblue (b̄) direction in the ``Color`` field.
-private class Antiblue: SingleColor {
-  fileprivate init() {}
-}
+private class Antiblue: SingleColor { fileprivate init() {} }
 
 /// Obtains the immortal object to which the anticolor of the `color` delegates its implementations.
 ///

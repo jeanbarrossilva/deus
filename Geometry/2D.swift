@@ -38,9 +38,7 @@ extension TwoD {
   ///
   /// - Parameter base: 2D abstraction whose coordinates will be set to those of the initialized
   ///   one.
-  init(from base: any TwoD) {
-    self = .at(x: base.x, y: base.y)
-  }
+  init(from base: any TwoD) { self = .at(x: base.x, y: base.y) }
 
   /// Multiplies each coordinate of the 2D abstraction by the value.
   ///
@@ -67,17 +65,13 @@ extension TwoD {
   ///
   /// - Parameter rhs: 2D abstraction by which this one will be multiplied.
   /// - Returns: The resultant scalar value.
-  public func scalar(_ rhs: Self) -> Double {
-    x * rhs.x + y * rhs.y
-  }
+  public func scalar(_ rhs: Self) -> Double { x * rhs.x + y * rhs.y }
 
   /// Multiplies this 2D abstraction by the other via cross product.
   ///
   /// - Parameter rhs: 2D abstraction by which this one will be multiplied.
   /// - Returns: The resultant cross product.
-  public func cross(_ rhs: Self) -> Double {
-    x * rhs.x - y * rhs.y
-  }
+  public func cross(_ rhs: Self) -> Double { x * rhs.x - y * rhs.y }
 }
 
 extension TwoD where Self: AdditiveArithmetic {
@@ -107,9 +101,7 @@ extension TwoD where Self: Equatable {
   ///   - rhs: 2D abstraction to be compared with `lhs`.
   /// - Returns: `true` when both 2D abstractions are equal; or `false` when their final coordinates
   ///   differ.
-  public static func == (lhs: Self, rhs: Self) -> Bool {
-    lhs.x == rhs.x && lhs.y == rhs.y
-  }
+  public static func == (lhs: Self, rhs: Self) -> Bool { lhs.x == rhs.x && lhs.y == rhs.y }
 
   /// Compares both 2D abstractions approximately, determining whether they end up in approximate
   /// positions. The precision of such approximation is as defined by
@@ -194,11 +186,7 @@ public final class Vector: TwoD {
     self.y = y
   }
 
-  public static func < (lhs: Vector, rhs: Vector) -> Bool {
-    lhs.module < rhs.module
-  }
+  public static func < (lhs: Vector, rhs: Vector) -> Bool { lhs.module < rhs.module }
 
-  public static func > (lhs: Vector, rhs: Vector) -> Bool {
-    lhs.module > rhs.module
-  }
+  public static func > (lhs: Vector, rhs: Vector) -> Bool { lhs.module > rhs.module }
 }

@@ -34,7 +34,7 @@ public actor Clock {
   /// elapse automatically when started; rather, it will do so upon explicit calls to
   /// ``advanceTime(by:spacing:)`` —, and can be changed via ``setMode(_:)``.
   private var mode = Mode.virtual
-  
+
   /// ``Timer`` by which the subticking of this ``Clock`` is scheduled performed periodically when
   /// in wall-clock mode. Will be `nil` in case the mode is virtual or upon an advancement of time,
   /// after which it is initialized and fired again.
@@ -42,32 +42,32 @@ public actor Clock {
   /// - SeeAlso: ``Mode/wall``
   /// - SeeAlso: ``advanceTime(by:spacing:)``
   private var timer: Timer? = nil
-  
+
   /// ``ClockStartListener``s to be notified when this ``Clock`` starts.
   ///
   /// - SeeAlso: ``start()``
   private var startListeners = [ClockStartListener]()
-  
+
   /// ``AnyTimeLapseListener``s to be notified of lapses of time of this ``Clock``.
   private var timeLapseListeners = [AnyTimeLapseListener]()
-  
+
   /// Total amount of time elapsed.
   private(set) var elapsedTime = Duration.zero
-  
+
   /// Last time a subtick was performed upon an advancement of time. Stored for determining whether
-  /// such this ``Clock`` should perform a subtick immediately when advancing its time or only on
-  /// the next advancement.
+  /// this ``Clock`` should perform a subtick immediately when advancing its time or only on the
+  /// next advancement.
   ///
   /// - SeeAlso: ``advanceTime(by:spacing:)``
   private var lastSubtickTime: Duration? = nil
-  
+
   /// Whether this ``Clock`` has been last started without a further reset request. Denotes,
   /// ultimately, that it is active.
   ///
   /// - SeeAlso: ``start()``
   /// - SeeAlso: ``reset()``
   private var isTicking = false
-  
+
   /// Mode based on which a ``Clock`` elapses its time, determines whether its time will be elapsed
   /// automatically until either a mode switch or a reset is performed. Such mode can be defined at
   /// any moment via calls to ``Clock/setMode(_:)``.
@@ -86,12 +86,12 @@ public actor Clock {
     /// This ``Mode`` is especially useful for tests, given that the passage of time can be
     /// precisely controlled and, therefore, is deterministic.
     case virtual
-    
+
     /// Denotes that a ``Clock`` should elapse its time automatically when started or immediately if
     /// it is currently uninterrupted, via the the mechanisms specific to the underlying operating
     /// system.
     case wall
-    
+
     /// Callback called before this ``Mode`` is set to the `clock`.
     ///
     /// Triggers the system-based passage of time in case this is the ``wall`` ``Mode``; otherwise,
@@ -105,7 +105,7 @@ public actor Clock {
       clock.timer = nil
       await willBeSetToAndDidPrepare(clock: clock)
     }
-    
+
     /// Handles setting the ``Mode`` of the `clock` to this one, considering that the previous
     /// state resulted from the current mode has already been reset and, therefore, it is safe to
     /// perform the configuration specific to this ``Mode``.
@@ -118,8 +118,7 @@ public actor Clock {
     /// - Parameter clock: ``Clock`` whose ``Mode`` will be set to this one.
     private func willBeSetToAndDidPrepare(clock: isolated Clock) async {
       switch self {
-      case .virtual:
-        return
+      case .virtual: return
       case .wall:
         clock.addStartListener(listening: .once) {
           let timer = Timer(
@@ -135,7 +134,7 @@ public actor Clock {
       }
     }
   }
-  
+
   /// Factor of advancements of time of a ``Clock`` for progressing from its current time toward
   /// another. Ultimately, determines the meantimes to be iterated through and defined as the
   /// current time of the ``Clock`` while such advancement is ongoing.
@@ -144,14 +143,14 @@ public actor Clock {
   public enum Spacing {
     /// Considers only the current time of the ``Clock`` and the target one.
     case extreme
-    
+
     /// Considers each millisecond between the current time of the ``Clock`` and the target one.
     case linear
-    
+
     /// Time will be elapsed fastly in the beginning and toward the end of the advancement while
     /// slowly in between.
     case eased
-    
+
     /// Spaces the given range of time according to this policy.
     ///
     /// - Parameter timeLapse: `ClosedRange` from the current time of the ``Clock`` to that toward
@@ -161,25 +160,23 @@ public actor Clock {
     /// - SeeAlso: ``Clock/advanceTime(by:spacing:)``
     fileprivate func space(timeLapse: ClosedRange<Duration>) -> [Duration] {
       switch self {
-      case .extreme:
-        return [timeLapse.lowerBound, timeLapse.upperBound]
+      case .extreme: return [timeLapse.lowerBound, timeLapse.upperBound]
       case .linear:
         return stride(
           from: timeLapse.lowerBound,
           through: timeLapse.upperBound,
           by: Duration.subtickFactor
-        )
-        .map { meantime in meantime }
+        ).map { meantime in meantime }
       case .eased:
         return stride(from: 0.0, through: 1, by: 0.05).map { t in
-            .subticks(
-              Int(BezierCurve.eased[t].y * Double(timeLapse.upperBound.comprisableSubtickCount))
-            )
+          .subticks(
+            Int(BezierCurve.eased[t].y * Double(timeLapse.upperBound.comprisableSubtickCount))
+          )
         }
       }
     }
   }
-  
+
   /// Determines how time will be elapsed by this ``Clock``: whether virtually — manually —, with
   /// explicit advancements; or as that of a wall-clock, automatically and through the underlying
   /// operating system.
@@ -190,7 +187,7 @@ public actor Clock {
     await mode.willBeSet(to: self)
     self.mode = mode
   }
-  
+
   /// Initiates the passage of time. From the moment this function is called, this ``Clock`` starts
   /// ticking on a per-millisecond basis and, upon each of its ticks, the added listeners are
   /// notified.
@@ -205,7 +202,7 @@ public actor Clock {
     isTicking = true
     for listener in startListeners { listener.notify(startOf: self, isImmediate: false) }
   }
-  
+
   /// Listens to lapses of time of this ``Clock``.
   ///
   /// - Parameter listener: ``TimeLapseListener`` to be added.
@@ -214,7 +211,7 @@ public actor Clock {
   public func addTimeLapseListener(_ listener: any AnyObject & TimeLapseListener) -> UUID {
     addAnyTimeLapseListener(AnyTimeLapseListener(listener))
   }
-  
+
   /// Listens to lapses of time of this ``Clock``.
   ///
   /// - Parameter timeDidElapse: Callback called whenever the time of this ``Clock`` is elapsed.
@@ -223,14 +220,14 @@ public actor Clock {
   public func addTimeLapseListener(_ timeDidElapse: @escaping TimeDidElapse) -> UUID {
     addAnyTimeLapseListener(AnyTimeLapseListener(timeDidElapse: timeDidElapse))
   }
-  
+
   /// Removes a listener of lapses of time of this ``Clock``.
   ///
   /// - Parameter id: ID of the ``TimeLapseListener`` to be removed.
   public func removeTimeLapseListener(identifiedAs id: UUID) {
     timeLapseListeners.removeFirst(where: { listener in listener.id == id })
   }
-  
+
   /// Requests the time to be advanced in case this ``Clock`` is ticking.
   ///
   /// - Parameters:
@@ -243,13 +240,13 @@ public actor Clock {
   ///     the available computational power, passing in a ``Spacing`` which produces a long range is
   ///     discouraged if the distance between the current time and the target one in microseconds is
   ///     large.
-  
+
   // TODO: Measure and define exactly what a "large" time range means.
   public func advanceTime(by advancement: Duration, spacing: Spacing) async {
     guard isTicking && advancement != .zero else { return }
     await advanceTimeUnconditionally(by: advancement, spacing: spacing)
   }
-  
+
   /// Resets this ``Clock``, stopping the passage of time.
   ///
   /// Calling ``start()`` after having called this function starts the passage of time from the
@@ -263,14 +260,14 @@ public actor Clock {
     lastSubtickTime = nil
     elapsedTime = .zero
   }
-  
+
   /// Removes a listener of starts of this ``Clock``.
   ///
   /// - Parameter id: ID of the ``ClockStartListener`` to be removed.
   fileprivate func removeStartListener(identifiedAs id: UUID) {
     startListeners.removeFirst(where: { listener in listener.id == id })
   }
-  
+
   /// Adds ``advancement`` to the time that has elapsed, notifying each added listener when a tick
   /// is performed. Differs from the public function for advancing time in that this one does not
   /// ensure that this ``Clock`` is ticking or the given ``advancement`` is greater than zero: it is
@@ -301,7 +298,7 @@ public actor Clock {
     }
     lastSubtickTime = elapsedTime
   }
-  
+
   /// Listens to starts of this ``Clock``.
   ///
   /// - Parameters:
@@ -319,7 +316,7 @@ public actor Clock {
     }
     startListeners.append(listener)
   }
-  
+
   /// Base function for ``AnyTimeLapseListener`` adder functions which adds the `listener` and
   /// provides its ID for later removal.
   ///
@@ -367,65 +364,56 @@ public protocol TimeLapseListener: AnyObject {
 /// - SeeAlso: ``Clock/removeTimeLapseListener(identifiedAs:)``
 private final class AnyTimeLapseListener: TimeLapseListener, Identifiable, Hashable {
   let id: UUID
-  
+
   /// Callback to which calls to ``timeDidElapse(from:after:to:toward)`` delegate.
   private(set) var timeDidElapse: TimeDidElapse
-  
+
   init(_ base: any AnyObject & TimeLapseListener) {
     id = (base as? any Identifiable)?.id as? UUID ?? UUID()
     timeDidElapse = base.timeDidElapse
   }
-  
+
   init(timeDidElapse: @escaping TimeDidElapse) {
     id = UUID()
     self.timeDidElapse = timeDidElapse
   }
-  
-  static func == (lhs: AnyTimeLapseListener, rhs: AnyTimeLapseListener) -> Bool {
-    lhs.id == rhs.id
-  }
-  
+
+  static func == (lhs: AnyTimeLapseListener, rhs: AnyTimeLapseListener) -> Bool { lhs.id == rhs.id }
+
   func timeDidElapse(
     from start: Duration,
     after previous: Duration?,
     to current: Duration,
     toward end: Duration
-  ) async {
-    await timeDidElapse(start, previous, current, end)
-  }
-  
-  func hash(into hasher: inout Hasher) {
-    id.hash(into: &hasher)
-  }
+  ) async { await timeDidElapse(start, previous, current, end) }
+
+  func hash(into hasher: inout Hasher) { id.hash(into: &hasher) }
 }
 
 /// Closure whose signature matches that of the
 /// ``TimeLapseListener/timeDidElapse(from:after:to:toward:)`` callback.
 public typealias TimeDidElapse = (
-  _ start: Duration,
-  _ previous: Duration?,
-  _ current: Duration,
-  _ end: Duration
+  _ start: Duration, _ previous: Duration?, _ current: Duration, _ end: Duration
 ) async -> Void
 
 /// `Identifiable` listener which is notified of starts of a ``Clock``.
 private final class ClockStartListener: Identifiable, Hashable {
   /// Callback called whenever the ``Clock`` starts.
   private let clockDidStart: ClockDidStart
-  
+
   /// Denotes whether this ``ClockStartListener`` will continue to be notified after subsequent
   /// ``Clock`` starts.
   private let repetition: Repetition
-  
+
   let id = UUID()
-  
+
   /// Frequency with which a ``ClockStartListener`` should be notified.
   enum Repetition {
     /// Notification will be performed only once: either immediately, in case the ``Clock`` is
     /// already ticking; or by the time it is started. Further calls to ``Clock/start()`` after the
     /// ``ClockStartListener`` has been notified will be ignored.
     case once
-    
+
     /// Callback called after the `listener` gets notified.
     ///
     /// Dereferences the `listener` in case this is ``once``.
@@ -435,25 +423,20 @@ private final class ClockStartListener: Identifiable, Hashable {
     ///   - listener: ``ClockStartListener`` to which a start of the `clock` has been notified.
     func didNotify(startOf clock: isolated Clock, to listener: ClockStartListener) {
       switch self {
-      case .once:
-        clock.removeStartListener(identifiedAs: listener.id)
+      case .once: clock.removeStartListener(identifiedAs: listener.id)
       }
     }
   }
-  
+
   init(listening repetition: Repetition, clockDidStart: @escaping ClockDidStart) {
     self.repetition = repetition
     self.clockDidStart = clockDidStart
   }
-  
-  static func == (lhs: ClockStartListener, rhs: ClockStartListener) -> Bool {
-    lhs.id == rhs.id
-  }
-  
-  func hash(into hasher: inout Hasher) {
-    id.hash(into: &hasher)
-  }
-  
+
+  static func == (lhs: ClockStartListener, rhs: ClockStartListener) -> Bool { lhs.id == rhs.id }
+
+  func hash(into hasher: inout Hasher) { id.hash(into: &hasher) }
+
   /// Notifies this ```ClockStartListener``` of a start of the `clock`, calling its ``clockDidStart``
   /// callback.
   ///
@@ -499,9 +482,7 @@ extension Duration {
   /// times.
   ///
   /// - Parameter count: Quantity of subticks comprised by the ``Duration``.
-  fileprivate static func subticks(_ count: Int) -> Duration {
-    .microseconds(count)
-  }
+  fileprivate static func subticks(_ count: Int) -> Duration { .microseconds(count) }
 }
 
 extension BezierCurve {
@@ -520,7 +501,8 @@ extension Array {
   /// - Complexity: O(*n*), where *n* is the length of this `Array`.
   /// - Parameter predicate: Condition to be satisfied by an element in order for it to be removed.
   /// - Returns: The removed element, or `nil` if none matched the `predicate`.
-  @discardableResult fileprivate mutating func removeFirst(
+  @discardableResult
+  fileprivate mutating func removeFirst(
     where predicate: (Element) throws -> Bool
   ) rethrows -> Element? {
     for (index, element) in enumerated() {

@@ -54,9 +54,7 @@ struct HadronTests {
       }
 
       @Test
-      mutating func chargeIsNegativeOneE() {
-        #expect(negativePion.charge == .elementary(-1))
-      }
+      mutating func chargeIsNegativeOneE() { #expect(negativePion.charge == .elementary(-1)) }
     }
   }
 }

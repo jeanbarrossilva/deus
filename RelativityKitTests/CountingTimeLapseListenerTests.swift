@@ -20,16 +20,14 @@ import Testing
 @testable import RelativityKit
 
 struct CountingTimeLapseListenerTests {
-  @Test func countIsZeroByDefault() throws {
-    #expect(CountingTimeLapseListener().count == 0)
-  }
+  @Test
+  func countIsZeroByDefault() throws { #expect(CountingTimeLapseListener().count == 0) }
 
-  @Test func counts() async throws {
+  @Test
+  func counts() async throws {
     let listener = CountingTimeLapseListener()
-    let lapse =
-      stride(from: Duration.zero, to: .milliseconds(64), by: Duration.millisecondFactor).map {
-        meantime in meantime
-      }
+    let lapse = stride(from: Duration.zero, to: .milliseconds(64), by: Duration.millisecondFactor)
+      .map { meantime in meantime }
     for meantime in lapse {
       await listener.timeDidElapse(
         from: lapse.first!,

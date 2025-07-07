@@ -21,7 +21,6 @@ import Testing
 @testable import StandardKit
 
 struct ComplexPlusRealTypeTests {
-  @Test func multipliesByScalar() {
-    #expect(Complex(2.0, 4) * 2.0 == .init(4, 8))
-  }
+  @Test
+  func multipliesByScalar() { #expect(Complex(2.0, 4) * 2.0 == .init(4, 8)) }
 }

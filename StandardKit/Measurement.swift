@@ -46,17 +46,11 @@ public protocol Measurement: Comparable, CustomStringConvertible, SignedNumeric 
 }
 
 extension Measurement where Self: Comparable {
-  public static func == (lhs: Self, rhs: Self) -> Bool {
-    lhs.value == rhs.value
-  }
+  public static func == (lhs: Self, rhs: Self) -> Bool { lhs.value == rhs.value }
 
-  public static func < (lhs: Self, rhs: Self) -> Bool {
-    lhs.value < rhs.value
-  }
+  public static func < (lhs: Self, rhs: Self) -> Bool { lhs.value < rhs.value }
 
-  public static func > (lhs: Self, rhs: Self) -> Bool {
-    lhs.value > rhs.value
-  }
+  public static func > (lhs: Self, rhs: Self) -> Bool { lhs.value > rhs.value }
 }
 
 extension Measurement where Self: CustomStringConvertible {
@@ -76,9 +70,7 @@ extension Measurement where Self: SignedNumeric {
     self = .init(integerLiteral: Int(source))
   }
 
-  public init(integerLiteral value: Int) {
-    self = value == 0 ? .zero : .make(value: Double(value))
-  }
+  public init(integerLiteral value: Int) { self = value == 0 ? .zero : .make(value: Double(value)) }
 
   public static func + (lhs: Self, rhs: Self) -> Self {
     guard lhs != .zero else { return rhs }
@@ -99,15 +91,9 @@ extension Measurement where Self: SignedNumeric {
     return .make(value: lhs.value * rhs.value)
   }
 
-  public static func *= (lhs: inout Self, rhs: Self) {
-    lhs = lhs * rhs
-  }
+  public static func *= (lhs: inout Self, rhs: Self) { lhs = lhs * rhs }
 
-  public prefix static func - (operand: Self) -> Self {
-    .make(value: -operand.value)
-  }
+  public prefix static func - (operand: Self) -> Self { .make(value: -operand.value) }
 
-  public mutating func negate() {
-    self -= self
-  }
+  public mutating func negate() { self -= self }
 }

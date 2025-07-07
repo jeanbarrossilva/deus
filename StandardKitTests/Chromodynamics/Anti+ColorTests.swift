@@ -21,17 +21,11 @@ import Testing
 
 struct AnticolorTests {
   @Test
-  func redIsCounterpartOfAntired() {
-    #expect(Anti(red).counterpart === red)
-  }
+  func redIsCounterpartOfAntired() { #expect(Anti(red).counterpart === red) }
 
   @Test
-  func greenIsCounterpartOfAntigreen() {
-    #expect(Anti(green).counterpart === green)
-  }
+  func greenIsCounterpartOfAntigreen() { #expect(Anti(green).counterpart === green) }
 
   @Test
-  func blueIsCounterpartOfAntiblue() {
-    #expect(Anti(blue).counterpart === blue)
-  }
+  func blueIsCounterpartOfAntiblue() { #expect(Anti(blue).counterpart === blue) }
 }

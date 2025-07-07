@@ -32,9 +32,7 @@ public struct UpQuark<Color: SingleColor>: Quark {
 
   public let color: Color
 
-  public init(color: Color) {
-    self.color = color
-  }
+  public init(color: Color) { self.color = color }
 }
 
 /// Second lightest ``Quark``, with a Lagrangian mass of 4.8 ± 0.5 ± 0.3 MeV/*c*². Decays to an
@@ -48,9 +46,7 @@ public struct DownQuark<Color: SingleColor>: Quark {
 
   public let color: Color
 
-  public init(color: Color) {
-    self.color = color
-  }
+  public init(color: Color) { self.color = color }
 }
 
 /// Third lightest ``Quark``, with a Lagrangian mass of 95 ± 5 MeV/*c*². Decays to a ``DownQuark``.
@@ -63,9 +59,7 @@ public struct StrangeQuark<Color: SingleColor>: Quark {
 
   public let color: Color
 
-  public init(color: Color) {
-    self.color = color
-  }
+  public init(color: Color) { self.color = color }
 }
 
 /// Third heaviest ``Quark``, with a Lagrangian mass of 1.275 ± 0.025 GeV/*c*². Decays to a
@@ -79,9 +73,7 @@ public struct CharmQuark<Color: SingleColor>: Quark {
 
   public let color: Color
 
-  public init(color: Color) {
-    self.color = color
-  }
+  public init(color: Color) { self.color = color }
 }
 
 /// Second heaviest ``Quark``, with a Lagrangian mass of 4.18 ± 30 GeV/*c*². Decays to a
@@ -95,9 +87,7 @@ public struct BottomQuark<Color: SingleColor>: Quark {
 
   public let color: Color
 
-  public init(color: Color) {
-    self.color = color
-  }
+  public init(color: Color) { self.color = color }
 }
 
 /// Heaviest ``Quark``, with a Lagrangian mass of 173.21 ± 0.51 ± 0.7 GeV/*c*². Decays to a
@@ -111,9 +101,7 @@ struct TopQuark<Color: SingleColor>: Quark {
 
   public let color: Color
 
-  public init(color: Color) {
-    self.color = color
-  }
+  public init(color: Color) { self.color = color }
 }
 
 extension Anti: QuarkLike where Counterpart: Quark, Counterpart.Color: SingleColor {
@@ -166,9 +154,7 @@ extension Anti: QuarkLike where Counterpart: Quark, Counterpart.Color: SingleCol
 /// - SeeAlso: ``Energy/gigaelectronvolts(_:)``
 public protocol Quark: QuarkLike, ColoredParticle where Color: SingleColorLike {}
 
-extension QuarkLike where Self: ParticleLike {
-  public static var spin: Spin { .half }
-}
+extension QuarkLike where Self: ParticleLike { public static var spin: Spin { .half } }
 
 /// Base protocol to which ``Quark``s and antiquarks conform.
 public protocol QuarkLike: ColoredParticleLike where Color: SingleColorLike {}

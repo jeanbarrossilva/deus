@@ -22,15 +22,13 @@ public enum Charge: Measurement {
 
   public var symbol: String {
     switch self {
-    case .elementary(_):
-      Self.backingUnitSymbol
+    case .elementary(_): Self.backingUnitSymbol
     }
   }
 
   public var value: Double {
     switch self {
-    case .elementary(let value):
-      value
+    case .elementary(let value): value
     }
   }
 
@@ -39,7 +37,5 @@ public enum Charge: Measurement {
   /// unconfined in the universe.
   case elementary(Double)
 
-  public static func make(value: Double) -> Charge {
-    .elementary(value)
-  }
+  public static func make(value: Double) -> Charge { .elementary(value) }
 }

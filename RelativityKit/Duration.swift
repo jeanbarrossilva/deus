@@ -31,22 +31,17 @@ public enum Duration: AdditiveArithmetic, Strideable {
   /// Backing, raw value of this ``Duration`` in microseconds.
   var inMicroseconds: Int {
     switch self {
-    case .microseconds(let value):
-      value
-    case .milliseconds(let value):
-      value * Self.millisecondFactor
-    case .seconds(let value):
-      value * Self.secondFactor
+    case .microseconds(let value): value
+    case .milliseconds(let value): value * Self.millisecondFactor
+    case .seconds(let value): value * Self.secondFactor
     }
   }
 
   /// Conversion of this ``Duration`` into milliseconds.
   var inMilliseconds: Double {
     switch self {
-    case .microseconds(let value):
-      Double(value) / Double(Self.millisecondFactor)
-    case .milliseconds(let value):
-      Double(value)
+    case .microseconds(let value): Double(value) / Double(Self.millisecondFactor)
+    case .milliseconds(let value): Double(value)
     case .seconds(let value):
       Double(value) * Double(Self.secondFactor) / Double(Self.millisecondFactor)
     }
@@ -82,9 +77,7 @@ public enum Duration: AdditiveArithmetic, Strideable {
   /// - Parameters:
   ///   - lhs: ``Duration`` to which `rhs` will be summed and the sum will be assigned.
   ///   - rhs: ``Duration`` to sum to `lhs`.
-  public static func += (lhs: inout Self, rhs: Self) {
-    lhs = lhs + rhs
-  }
+  public static func += (lhs: inout Self, rhs: Self) { lhs = lhs + rhs }
 
   /// Subtracts one ``Duration`` from another.
   ///
@@ -102,13 +95,9 @@ public enum Duration: AdditiveArithmetic, Strideable {
   ///   - lhs: ``Duration`` from which `rhs` will be subtracted and to which the difference will be
   ///     assigned.
   ///   - rhs: ``Duration`` to subtract from `lhs`.
-  public static func -= (lhs: inout Self, rhs: Self) {
-    lhs = lhs - rhs
-  }
+  public static func -= (lhs: inout Self, rhs: Self) { lhs = lhs - rhs }
 
-  public func distance(to other: Self) -> Int {
-    inMicroseconds.distance(to: other.inMicroseconds)
-  }
+  public func distance(to other: Self) -> Int { inMicroseconds.distance(to: other.inMicroseconds) }
 
   public func advanced(by n: Int) -> Self {
     guard n != 0 else { return self }

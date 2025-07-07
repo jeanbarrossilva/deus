@@ -37,8 +37,9 @@ private struct CubicBezierCurve: BezierCurveProtocol {
 
   subscript(_ t: Double) -> Point {
     Self.assertIsInRange(t: t)
-    let (p0, p1, p2, p3, y) =
-      (start.controllee, start.controller, end.controller, end.controllee, 1 - t)
+    let (p0, p1, p2, p3, y) = (
+      start.controllee, start.controller, end.controller, end.controllee, 1 - t
+    )
     return (p0 * pow(y, 3)) as Point + p1 * 3 * pow(y, 2) * t + p2 * 3 * y * pow(t, 2) + p3
       * pow(t, 3)
   }

@@ -17,6 +17,5 @@
 
 import SwiftUI
 
-@main struct DeusApp: App {
-  var body: some Scene { WindowGroup { ContentView() } }
-}
+@main
+struct DeusApp: App { var body: some Scene { WindowGroup { ContentView() } } }

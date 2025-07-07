@@ -31,7 +31,5 @@ final class CountingTimeLapseListener: TimeLapseListener {
     after previous: Duration?,
     to current: Duration,
     toward end: Duration
-  ) async {
-    count += 1
-  }
+  ) async { count += 1 }
 }

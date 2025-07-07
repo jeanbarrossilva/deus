@@ -74,9 +74,7 @@ public struct PositivePion: Equatable, Pion {
   public let charge = Charge.elementary(1)
   public let quarks: InlineArray<2, any QuarkLike>
 
-  fileprivate init(quarks: InlineArray<2, any QuarkLike>) {
-    self.quarks = quarks
-  }
+  fileprivate init(quarks: InlineArray<2, any QuarkLike>) { self.quarks = quarks }
 }
 
 /// ``Pion`` with a negative ``charge`` (π⁻), resulted from d + ū.
@@ -89,9 +87,7 @@ public struct NegativePion: Equatable, Pion {
   public let charge: Charge = Charge.elementary(-1)
   public let quarks: InlineArray<2, any QuarkLike>
 
-  init(quarks: InlineArray<2, any QuarkLike>) {
-    self.quarks = quarks
-  }
+  init(quarks: InlineArray<2, any QuarkLike>) { self.quarks = quarks }
 }
 
 extension DownQuark {
@@ -106,14 +102,11 @@ extension DownQuark {
   }
 }
 
-extension Pion where Self: ParticleLike {
-  public static var spin: Spin { .zero }
-}
+extension Pion where Self: ParticleLike { public static var spin: Spin { .zero } }
 
 extension Pion where Self: Equatable, Quarks == InlineArray<2, any QuarkLike> {
   public static func == (lhs: Self, rhs: Self) -> Bool {
-    lhs.charge == rhs.charge
-      && lhs.color == rhs.color
+    lhs.charge == rhs.charge && lhs.color == rhs.color
       && lhs.quarks[0].isPartiallyEqual(to: rhs.quarks[0])
       && lhs.quarks[1].isPartiallyEqual(to: rhs.quarks[1])
   }

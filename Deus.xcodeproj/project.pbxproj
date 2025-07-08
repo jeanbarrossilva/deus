@@ -120,6 +120,7 @@
 		4960AB482DDCE34E00EB1410 /* Geometry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Geometry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4960AB502DDCE34E00EB1410 /* GeometryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GeometryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4960F2542DDF38D3002EF7C0 /* Deus.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Deus.xctestplan; sourceTree = "<group>"; };
+		497A31432E1D1E9500A23A59 /* ObservationKit.metallib */ = {isa = PBXFileReference; explicitFileType = "archive.metal-library"; includeInIndex = 0; path = ObservationKit.metallib; sourceTree = BUILT_PRODUCTS_DIR; };
 		49EF5D4F2DE20D36008AFB31 /* StandardKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StandardKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49EF5D572DE20D36008AFB31 /* StandardKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StandardKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -153,6 +154,11 @@
 		4960AB562DDCE34E00EB1410 /* GeometryTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = GeometryTests;
+			sourceTree = "<group>";
+		};
+		497A31442E1D1E9500A23A59 /* ObservationKit */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ObservationKit;
 			sourceTree = "<group>";
 		};
 		49EF5D502DE20D36008AFB31 /* StandardKit */ = {
@@ -260,11 +266,13 @@
 				494EFC072DDF36B200C66063 /* RelativityKitTests */,
 				49EF5D502DE20D36008AFB31 /* StandardKit */,
 				49EF5D5D2DE20D36008AFB31 /* StandardKitTests */,
+				497A31442E1D1E9500A23A59 /* ObservationKit */,
 				4960AB6D2DDCE45D00EB1410 /* Frameworks */,
 				494EFBF92DDF36B100C66063 /* RelativityKit.framework */,
 				494EFC012DDF36B200C66063 /* RelativityKitTests.xctest */,
 				49EF5D4F2DE20D36008AFB31 /* StandardKit.framework */,
 				49EF5D572DE20D36008AFB31 /* StandardKitTests.xctest */,
+				497A31432E1D1E9500A23A59 /* ObservationKit.metallib */,
 			);
 			sourceTree = "<group>";
 		};
@@ -437,6 +445,26 @@
 			productReference = 4960AB502DDCE34E00EB1410 /* GeometryTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		497A31422E1D1E9500A23A59 /* ObservationKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 497A31492E1D1E9500A23A59 /* Build configuration list for PBXNativeTarget "ObservationKit" */;
+			buildPhases = (
+				497A31412E1D1E9500A23A59 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				497A31442E1D1E9500A23A59 /* ObservationKit */,
+			);
+			name = ObservationKit;
+			packageProductDependencies = (
+			);
+			productName = ObservationKit;
+			productReference = 497A31432E1D1E9500A23A59 /* ObservationKit.metallib */;
+			productType = "com.apple.product-type.metal-library";
+		};
 		49EF5D4E2DE20D36008AFB31 /* StandardKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 49EF5D642DE20D36008AFB31 /* Build configuration list for PBXNativeTarget "StandardKit" */;
@@ -517,6 +545,9 @@
 						CreatedOnToolsVersion = 16.3;
 						TestTargetID = 4927F36B2DD25BC400E368D8;
 					};
+					497A31422E1D1E9500A23A59 = {
+						CreatedOnToolsVersion = 26.0;
+					};
 					49EF5D4E2DE20D36008AFB31 = {
 						CreatedOnToolsVersion = 16.3;
 					};
@@ -552,6 +583,7 @@
 				494EFC002DDF36B200C66063 /* RelativityKitTests */,
 				49EF5D4E2DE20D36008AFB31 /* StandardKit */,
 				49EF5D562DE20D36008AFB31 /* StandardKitTests */,
+				497A31422E1D1E9500A23A59 /* ObservationKit */,
 			);
 		};
 /* End PBXProject section */
@@ -675,6 +707,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4960AB4C2DDCE34E00EB1410 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		497A31412E1D1E9500A23A59 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1028,6 +1067,28 @@
 			};
 			name = Release;
 		};
+		497A31472E1D1E9500A23A59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X5FKTSKM38;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VERSIONING_SYSTEM = "";
+			};
+			name = Debug;
+		};
+		497A31482E1D1E9500A23A59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X5FKTSKM38;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VERSIONING_SYSTEM = "";
+			};
+			name = Release;
+		};
 		49EF5D652DE20D36008AFB31 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1311,6 +1372,15 @@
 			buildConfigurations = (
 				4960AB602DDCE34E00EB1410 /* Debug */,
 				4960AB612DDCE34E00EB1410 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		497A31492E1D1E9500A23A59 /* Build configuration list for PBXNativeTarget "ObservationKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				497A31472E1D1E9500A23A59 /* Debug */,
+				497A31482E1D1E9500A23A59 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

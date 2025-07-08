@@ -15,6 +15,8 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
+import Foundation
+
 /// ``Particle`` composed by two or more ``Quark``s which are bound by strong force. It is the
 /// compositor of nucleons — such as protons and neutrons — and, therefore, the most common
 /// composite ``Particle`` in the universe.
@@ -47,7 +49,9 @@ public protocol Hadron: ColoredParticle<White> {
 }
 
 extension Hadron {
-  public var charge: Charge { quarks.reduce(.zero) { charge, quark in quark.charge + charge } }
+  public var charge: Measurement<UnitElectricCharge> {
+    quarks.reduce(.zero) { charge, quark in quark.charge + charge }
+  }
   public var color: White { white }
 }
 
@@ -71,7 +75,7 @@ extension UpQuark {
 public struct PositivePion: Equatable, Pion {
   public static let symbol = "π⁺"
 
-  public let charge = Charge.elementary(1)
+  public let charge = Measurement(value: 1, unit: UnitElectricCharge.elementary)
   public let quarks: InlineArray<2, any QuarkLike>
 
   fileprivate init(quarks: InlineArray<2, any QuarkLike>) { self.quarks = quarks }
@@ -84,7 +88,7 @@ public struct PositivePion: Equatable, Pion {
 public struct NegativePion: Equatable, Pion {
   public static let symbol = "π⁻"
 
-  public let charge: Charge = Charge.elementary(-1)
+  public let charge = Measurement(value: -1, unit: UnitElectricCharge.elementary)
   public let quarks: InlineArray<2, any QuarkLike>
 
   init(quarks: InlineArray<2, any QuarkLike>) { self.quarks = quarks }

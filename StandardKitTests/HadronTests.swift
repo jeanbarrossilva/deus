@@ -15,6 +15,7 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
+import Foundation
 import Testing
 
 @testable import StandardKit
@@ -37,7 +38,10 @@ struct HadronTests {
 
       @Test
       mutating func chargeIsOneE() {
-        #expect((UpQuark(color: red) + Anti(DownQuark(color: red))).charge == .elementary(1))
+        #expect(
+          (UpQuark(color: red) + Anti(DownQuark(color: red))).charge
+            == Measurement(value: 1, unit: .elementary)
+        )
       }
     }
 
@@ -54,7 +58,9 @@ struct HadronTests {
       }
 
       @Test
-      mutating func chargeIsNegativeOneE() { #expect(negativePion.charge == .elementary(-1)) }
+      mutating func chargeIsNegativeOneE() {
+        #expect(negativePion.charge == Measurement(value: -1, unit: .elementary))
+      }
     }
   }
 }

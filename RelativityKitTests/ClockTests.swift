@@ -15,7 +15,6 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
-import Foundation
 import Testing
 
 @testable import RelativityKit
@@ -24,6 +23,9 @@ struct ClockTests {
   private var clock = Clock()
 
   init() async { await clock.start() }
+
+  @Test
+  func tickDurationIsOneMs() { #expect(Duration.tick == .milliseconds(1)) }
 
   @Test
   func virtualModeIsDefaultOne() async throws {
@@ -51,6 +53,7 @@ struct ClockTests {
   @Test
   func elapsedTimeIncreasesPerSubtick() async throws {
     await clock.advanceTime(by: .microseconds(2), spacing: .linear)
+    print(await clock.elapsedTime)
     #expect(await clock.elapsedTime == .microseconds(2))
     await clock.reset()
   }

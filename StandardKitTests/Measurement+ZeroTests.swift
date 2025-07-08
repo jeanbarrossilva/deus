@@ -15,11 +15,16 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
+import Foundation
 import Testing
 
-@testable import StandardKit
-
-struct ChargeTests {
+@Suite("Measurement+Zero tests")
+struct MeasurementZeroTests {
   @Test
-  func elementaryChargeSymbolIsE() { #expect(Charge.elementary(0).symbol == "e") }
+  func valueOfZeroUnitAngleIsZero() { #expect(Measurement<UnitAngle>.zero.value == 0) }
+
+  @Test
+  func valueOfZeroUnitElectricChargeIsZero() {
+    #expect(Measurement<UnitElectricCharge>.zero.value == 0)
+  }
 }

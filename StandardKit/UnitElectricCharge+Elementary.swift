@@ -15,29 +15,14 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
-import Testing
+import Foundation
 
-@testable import StandardKit
-
-struct MeasurementBackingUnitTests {
-  @Test
-  func angleBackingUnitIsRadians() {
-    #expect(Angle.make(value: 0).symbol == Angle.backingUnitSymbol)
-    #expect(Angle.backingUnitSymbol == Angle.radians(0).symbol)
-    #expect(Angle.radians(2).value == 2)
-  }
-
-  @Test
-  func chargeBackingUnitIsElementary() {
-    #expect(Charge.make(value: 0).symbol == Charge.backingUnitSymbol)
-    #expect(Charge.backingUnitSymbol == Charge.elementary(0).symbol)
-    #expect(Charge.elementary(2).value == 2)
-  }
-
-  @Test
-  func energyBackingUnitIsMegaelectronvolts() {
-    #expect(Energy.make(value: 0).symbol == Energy.backingUnitSymbol)
-    #expect(Energy.backingUnitSymbol == Energy.megaelectronvolts(0).symbol)
-    #expect(Energy.megaelectronvolts(2).value == 2)
-  }
+extension UnitElectricCharge {
+  /// Amount in elementary charge (*e*). *e* is a fundamental constant as per the SI, equating
+  /// 1.602176634 × 10⁻¹⁹ C and representing the least amount of electric charge which can exist
+  /// unconfined in the universe.
+  static let elementary = UnitElectricCharge(
+    symbol: "e",
+    converter: UnitConverterLinear(coefficient: 1.602_176_634 * pow(10, -19))
+  )
 }

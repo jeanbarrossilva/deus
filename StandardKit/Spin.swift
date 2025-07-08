@@ -22,9 +22,8 @@
 ///
 /// It is measured in discrete multiples of the reduced Planck constant (*ħ*), expressible by *ħ*ℚ =
 /// {n × *ħ* | n ∈ ℚ}, with *ħ* = *h* / (2 × π), where *h* is the Planck constant (equal to
-/// 6.62607015 × 10⁻³⁴ J/s) which poses as a separator between the classical scale — in which
-/// ``Energy`` and momentum vary continuosly — and the quantum one — in which they are quantized or
-/// discrete.
+/// 6.62607015 × 10⁻³⁴ J/s) which poses as a separator between the classical scale — in which energy
+/// and momentum vary continuosly — and the quantum one — in which they are quantized or discrete.
 public enum Spin {
   /// 0 *ħ* ``Spin``. The quantum state of ``Particle``s without ``Spin`` remains unchanged across
   /// transformations.

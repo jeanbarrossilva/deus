@@ -26,14 +26,14 @@ struct CountingTimeLapseListenerTests {
   @Test
   func counts() async throws {
     let listener = CountingTimeLapseListener()
-    let lapse = stride(from: Duration.zero, to: .milliseconds(64), by: Duration.millisecondFactor)
-      .map { meantime in meantime }
-    for meantime in lapse {
+    let start = Duration.zero
+    let end = Duration.milliseconds(64)
+    for meantime in stride(from: start, to: end, by: Duration.tick.attoseconds) {
       await listener.timeDidElapse(
-        from: lapse.first!,
+        from: start,
         after: meantime == .zero ? nil : meantime - .milliseconds(1),
         to: meantime,
-        toward: lapse.last!
+        toward: end
       )
     }
     #expect(listener.count == 64)

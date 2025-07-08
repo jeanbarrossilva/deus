@@ -1,5 +1,10 @@
+%{
+  from datetime import date
+
+  unit_classes = ['UnitAngle', 'UnitElectricCharge']
+}%
 // ===-------------------------------------------------------------------------------------------===
-// Copyright © 2025 Deus
+// Copyright © ${date.today().year} Deus
 //
 // This file is part of the Deus open-source project.
 //
@@ -15,27 +20,18 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
-/// Amount of force experienced by matter in an electromagnetic field.
-public enum Charge: Measurement {
-  public static var zero = Charge.make(value: 0)
-  public static let backingUnitSymbol = "e"
+import Foundation
+import Testing
 
-  public var symbol: String {
-    switch self {
-    case .elementary(_): Self.backingUnitSymbol
-    }
+@Suite("Measurement+Zero tests")
+struct MeasurementZeroTests {
+  % for index, unit_class in enumerate(unit_classes):
+  @Test
+  func valueOfZero${unit_class}IsZero() {
+    #expect(Measurement<${unit_class}>.zero.value == 0)
   }
+    % if index < len(unit_classes) - 1:
 
-  public var value: Double {
-    switch self {
-    case .elementary(let value): value
-    }
-  }
-
-  /// Amount in elementary charge (*e*). *e* is a fundamental constant as per the SI, equating
-  /// 1.602176634 × 10⁻¹⁹ C and representing the least amount of ``Charge`` which can exist
-  /// unconfined in the universe.
-  case elementary(Double)
-
-  public static func make(value: Double) -> Charge { .elementary(value) }
+    % end
+  % end
 }

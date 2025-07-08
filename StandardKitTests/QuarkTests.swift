@@ -15,6 +15,7 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
+import Foundation
 import Testing
 
 @testable import StandardKit
@@ -47,14 +48,14 @@ struct QuarkTests {
     func chargeOfUpTypeQuarksIsTwoThirdsOfE() {
       #expect(UpQuark(color: red).charge == CharmQuark(color: red).charge)
       #expect(CharmQuark(color: red).charge == TopQuark(color: red).charge)
-      #expect(TopQuark(color: red).charge == .elementary(2 / 3))
+      #expect(TopQuark(color: red).charge == Measurement(value: 2 / 3, unit: .elementary))
     }
 
     @Test
     func chargeOfDownTypeQuarksIsNegativeOneThirdOfE() {
       #expect(DownQuark(color: red).charge == StrangeQuark(color: red).charge)
       #expect(StrangeQuark(color: red).charge == BottomQuark(color: red).charge)
-      #expect(BottomQuark(color: red).charge == .elementary(-1 / 3))
+      #expect(BottomQuark(color: red).charge == Measurement(value: -1 / 3, unit: .elementary))
     }
   }
 }

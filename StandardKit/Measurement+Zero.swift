@@ -15,14 +15,14 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
-import Testing
+import Foundation
 
-@testable import StandardKit
+extension Measurement where UnitType == UnitAngle {
+  /// An angle of 0º.
+  public static let zero = Measurement(value: 0, unit: UnitType.baseUnit())
+}
 
-struct EnergyTests {
-  @Test
-  func megaelectronvoltSymbolIsMeV() { #expect(Energy.megaelectronvolts(0).symbol == "MeV") }
-
-  @Test
-  func gigaelectronvoltSymbolIsGeV() { #expect(Energy.gigaelectronvolts(0).symbol == "GeV") }
+extension Measurement where UnitType == UnitElectricCharge {
+  /// An electric charge of 0 C.
+  public static let zero = Measurement(value: 0, unit: UnitType.baseUnit())
 }

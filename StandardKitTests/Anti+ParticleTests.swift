@@ -15,13 +15,16 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
+import Foundation
 import Testing
 
 @testable import StandardKit
 
 struct AntiparticleTests {
   @Test
-  func chargeIsOpposite() { #expect(Anti(UpQuark(color: red)).charge == -Charge.elementary(2 / 3)) }
+  func chargeIsOpposite() {
+    #expect(Anti(UpQuark(color: red)).charge == Measurement(value: -2 / 3, unit: .elementary))
+  }
 
   @Test
   func symbolHasOverbar() { #expect(Anti<UpQuark<Red>>.symbol == "u̅") }

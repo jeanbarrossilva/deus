@@ -15,6 +15,7 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
+import Foundation
 import Geometry
 import Numerics
 
@@ -27,6 +28,8 @@ extension Complex<Double> {
   ///
   /// U(1) = exp(*i* × θ)
   ///
-  /// - Parameter theta: ``Angle`` of the rotation.
-  func u1(by theta: Angle) -> Self { self * .exp(.i * theta.value) }
+  /// - Parameter theta: Angle of the rotation.
+  func u1(by theta: Measurement<UnitAngle>) -> Self {
+    self * .exp(.i * theta.converted(to: .radians).value)
+  }
 }

@@ -15,11 +15,15 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
+import Foundation
+
 extension Anti: ParticleLike where Counterpart: Particle {
   public static var spin: Spin { Counterpart.spin }
   public static var symbol: String { Counterpart.symbol + "̅" }
 
-  public var charge: Charge { -counterpart.charge }
+  public var charge: Measurement<UnitElectricCharge> {
+    Measurement(value: -counterpart.charge.value, unit: .elementary)
+  }
 }
 
 /// Subatomic excitation of an underlying field, which exhibits discrete interactions with other
@@ -57,7 +61,7 @@ public protocol ParticleLike {
   static var symbol: String { get }
 
   /// Force experienced by this type of ``ParticleLike``s in an electromagnetic field.
-  var charge: Charge { get }
+  var charge: Measurement<UnitElectricCharge> { get }
 
   /// Performs a partial equality comparison between this ``ParticleLike`` and the given one by
   /// testing all their properties common to such protocol against each other.

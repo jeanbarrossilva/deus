@@ -158,15 +158,15 @@ public actor Clock {
     /// - Returns: Meantimes (possibly including the original start and end ones) to be set as the
     ///   current time of the ``Clock`` while advancing.
     /// - SeeAlso: ``Clock/advanceTime(by:spacing:)``
-    fileprivate func space(timeLapse: ClosedRange<Duration>) -> [Duration] {
+    fileprivate func space(timeLapse: ClosedRange<Duration>) -> any Sequence<Duration> {
       switch self {
       case .extreme: return [timeLapse.lowerBound, timeLapse.upperBound]
       case .linear:
         return stride(
           from: timeLapse.lowerBound,
           through: timeLapse.upperBound,
-          by: Duration.subtickFactor
-        ).map { meantime in meantime }
+          by: Duration.subtick.attoseconds
+        )
       case .eased:
         return stride(from: 0.0, through: 1, by: 0.05).map { t in
           .subticks(
@@ -461,28 +461,36 @@ private final class ClockStartListener: Identifiable, Hashable {
 typealias ClockDidStart = () -> Void
 
 extension Duration {
-  /// Amount of microseconds — the backing unit of a ``Duration`` — by which a subtick is comprised.
+  /// ``Duration`` by which a tick (1,000 subticks) is comprised: 1 ms.
   ///
-  /// - SeeAlso: ``tickFactor``
-  fileprivate static var subtickFactor = microsecondFactor
+  /// - SeeAlso: ``subtick``
+  static var tick = Duration.milliseconds(1)
 
-  /// Amount of microseconds — the backing unit of a ``Duration`` — by which a tick (1,000 subticks)
-  /// is comprised.
+  /// ``Duration`` by which a subtick is comprised: 1 μs.
   ///
-  /// - SeeAlso: ``subtickFactor``
-  fileprivate static var tickFactor = millisecondFactor
+  /// - SeeAlso: ``tick``
+  fileprivate static var subtick = Duration.microseconds(1)
 
   /// Whether an integer amount of ticks can be performed by a ``Clock`` within this ``Duration``.
-  fileprivate var canOnlyCompriseWholeTicks: Bool { inMicroseconds % Self.tickFactor == 0 }
+  fileprivate var canOnlyCompriseWholeTicks: Bool { attoseconds % Self.tick.attoseconds == 0 }
 
   /// Amount of times a ``Clock`` can perform a subtick within this ``Duration``.
-  fileprivate var comprisableSubtickCount: Int { inMicroseconds }
+  fileprivate var comprisableSubtickCount: Int128 { attoseconds / Self.subtick.attoseconds }
 
   /// Makes a ``Duration`` within which a ``Clock`` can perform subticks the specified amount of
   /// times.
   ///
   /// - Parameter count: Quantity of subticks comprised by the ``Duration``.
   fileprivate static func subticks(_ count: Int) -> Duration { .microseconds(count) }
+}
+
+extension Duration: @retroactive Strideable {
+  public func distance(to other: Duration) -> Int128 { other.attoseconds - attoseconds }
+
+  public func advanced(by n: Int128) -> Duration {
+    guard n != 0 else { return self }
+    return Duration(attoseconds: attoseconds + n)
+  }
 }
 
 extension BezierCurve {

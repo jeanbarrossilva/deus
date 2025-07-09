@@ -18,4 +18,8 @@
 import SwiftUI
 
 @main
-struct DeusApp: App { var body: some Scene { WindowGroup { ContentView() } } }
+struct DeusApp: App {
+  var body: some Scene {
+    WindowGroup { GeometryReader { geometry in ObservationView(framedBy: geometry) } }
+  }
+}

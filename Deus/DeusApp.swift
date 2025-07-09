@@ -17,6 +17,7 @@
 
 import SwiftUI
 
+/// Entrypoint of Deus.
 @main
 struct DeusApp: App {
   var body: some Scene {

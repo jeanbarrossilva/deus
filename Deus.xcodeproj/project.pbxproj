@@ -14,6 +14,7 @@
 		494EFC162DDF36D700C66063 /* Geometry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4960AB482DDCE34E00EB1410 /* Geometry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		496882DC2DECCE4F004CB967 /* Geometry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4960AB482DDCE34E00EB1410 /* Geometry.framework */; };
 		496882DD2DECCE4F004CB967 /* Geometry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4960AB482DDCE34E00EB1410 /* Geometry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		49B51B662E1F0EA2009CEBA7 /* ObservationKit.metallib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 497A31432E1D1E9500A23A59 /* ObservationKit.metallib */; };
 		49EF5D582DE20D36008AFB31 /* StandardKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardKit.framework */; };
 		49EF5D622DE20D36008AFB31 /* StandardKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardKit.framework */; };
 		49EF5D632DE20D36008AFB31 /* StandardKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -21,6 +22,13 @@
 
 /* Begin PBXContainerItemProxy section */
 		4927F3842DD25BC700E368D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49FD311A2DBFC9E2003CEAF9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4927F36B2DD25BC400E368D8;
+			remoteInfo = Deus;
+		};
+		4939ADC82E1FEB700009C002 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49FD311A2DBFC9E2003CEAF9 /* Project object */;
 			proxyType = 1;
@@ -106,6 +114,16 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		49B51B652E1F0E99009CEBA7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				49B51B662E1F0EA2009CEBA7 /* ObservationKit.metallib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -115,6 +133,8 @@
 		4927F3832DD25BC700E368D8 /* DeusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeusUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		492FE57B2DE70CE000BC54F9 /* gyb.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = gyb.py; sourceTree = "<group>"; };
 		492FE57C2DE70D0B00BC54F9 /* gyb.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = gyb.sh; sourceTree = "<group>"; };
+		4939AD402E1FCC460009C002 /* libObservationKitTypes.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libObservationKitTypes.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4939ADC42E1FEB700009C002 /* ObservationKitTypesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObservationKitTypesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		494EFBF92DDF36B100C66063 /* RelativityKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RelativityKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		494EFC012DDF36B200C66063 /* RelativityKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RelativityKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4960AB482DDCE34E00EB1410 /* Geometry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Geometry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,6 +145,20 @@
 		49EF5D572DE20D36008AFB31 /* StandardKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StandardKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4939AD482E1FCD340009C002 /* Exceptions for "ObservationKitTypes" folder in "ObservationKitTypes" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ObservationKitTypes.h,
+				Vertex.h,
+			);
+			publicHeaders = (
+				ObservationKitTypes.h,
+			);
+			target = 4939AD3F2E1FCC460009C002 /* ObservationKitTypes */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4927F36D2DD25BC400E368D8 /* Deus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -134,6 +168,19 @@
 		4927F3862DD25BC700E368D8 /* DeusUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = DeusUITests;
+			sourceTree = "<group>";
+		};
+		4939AD442E1FCC9B0009C002 /* ObservationKitTypes */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4939AD482E1FCD340009C002 /* Exceptions for "ObservationKitTypes" folder in "ObservationKitTypes" target */,
+			);
+			path = ObservationKitTypes;
+			sourceTree = "<group>";
+		};
+		4939ADC52E1FEB700009C002 /* ObservationKitTypesTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ObservationKitTypesTests;
 			sourceTree = "<group>";
 		};
 		494EFBFA2DDF36B100C66063 /* RelativityKit */ = {
@@ -184,6 +231,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4927F3802DD25BC700E368D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4939AD3E2E1FCC460009C002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4939ADC12E1FEB700009C002 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -249,6 +310,7 @@
 		49FD31192DBFC9E2003CEAF9 = {
 			isa = PBXGroup;
 			children = (
+				4939AD442E1FCC9B0009C002 /* ObservationKitTypes */,
 				492FE57C2DE70D0B00BC54F9 /* gyb.sh */,
 				492FE57B2DE70CE000BC54F9 /* gyb.py */,
 				4960F2542DDF38D3002EF7C0 /* Deus.xctestplan */,
@@ -267,18 +329,28 @@
 				49EF5D502DE20D36008AFB31 /* StandardKit */,
 				49EF5D5D2DE20D36008AFB31 /* StandardKitTests */,
 				497A31442E1D1E9500A23A59 /* ObservationKit */,
+				4939ADC52E1FEB700009C002 /* ObservationKitTypesTests */,
 				4960AB6D2DDCE45D00EB1410 /* Frameworks */,
 				494EFBF92DDF36B100C66063 /* RelativityKit.framework */,
 				494EFC012DDF36B200C66063 /* RelativityKitTests.xctest */,
 				49EF5D4F2DE20D36008AFB31 /* StandardKit.framework */,
 				49EF5D572DE20D36008AFB31 /* StandardKitTests.xctest */,
 				497A31432E1D1E9500A23A59 /* ObservationKit.metallib */,
+				4939AD402E1FCC460009C002 /* libObservationKitTypes.a */,
+				4939ADC42E1FEB700009C002 /* ObservationKitTypesTests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		4939AD3C2E1FCC460009C002 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		494EFBF42DDF36B100C66063 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -311,6 +383,7 @@
 				4927F3692DD25BC400E368D8 /* Frameworks */,
 				4927F36A2DD25BC400E368D8 /* Resources */,
 				494EFC0E2DDF36B200C66063 /* Embed Frameworks */,
+				49B51B652E1F0E99009CEBA7 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -350,6 +423,48 @@
 			productName = DeusUITests;
 			productReference = 4927F3832DD25BC700E368D8 /* DeusUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		4939AD3F2E1FCC460009C002 /* ObservationKitTypes */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4939AD412E1FCC460009C002 /* Build configuration list for PBXNativeTarget "ObservationKitTypes" */;
+			buildPhases = (
+				4939AD3C2E1FCC460009C002 /* Headers */,
+				4939AD3D2E1FCC460009C002 /* Sources */,
+				4939AD3E2E1FCC460009C002 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ObservationKitTypes;
+			packageProductDependencies = (
+			);
+			productName = ObservationKitTypes;
+			productReference = 4939AD402E1FCC460009C002 /* libObservationKitTypes.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		4939ADC32E1FEB700009C002 /* ObservationKitTypesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4939ADCC2E1FEB700009C002 /* Build configuration list for PBXNativeTarget "ObservationKitTypesTests" */;
+			buildPhases = (
+				4939ADC02E1FEB700009C002 /* Sources */,
+				4939ADC12E1FEB700009C002 /* Frameworks */,
+				4939ADC22E1FEB700009C002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4939ADC92E1FEB700009C002 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4939ADC52E1FEB700009C002 /* ObservationKitTypesTests */,
+			);
+			name = ObservationKitTypesTests;
+			packageProductDependencies = (
+			);
+			productName = ObservationKitTypesTests;
+			productReference = 4939ADC42E1FEB700009C002 /* ObservationKitTypesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		494EFBF82DDF36B100C66063 /* RelativityKit */ = {
 			isa = PBXNativeTarget;
@@ -521,7 +636,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1630;
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					4927F36B2DD25BC400E368D8 = {
@@ -529,6 +644,14 @@
 					};
 					4927F3822DD25BC700E368D8 = {
 						CreatedOnToolsVersion = 16.3;
+						TestTargetID = 4927F36B2DD25BC400E368D8;
+					};
+					4939AD3F2E1FCC460009C002 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					4939ADC32E1FEB700009C002 = {
+						CreatedOnToolsVersion = 26.0;
+						LastSwiftMigration = 2600;
 						TestTargetID = 4927F36B2DD25BC400E368D8;
 					};
 					494EFBF82DDF36B100C66063 = {
@@ -584,6 +707,8 @@
 				49EF5D4E2DE20D36008AFB31 /* StandardKit */,
 				49EF5D562DE20D36008AFB31 /* StandardKitTests */,
 				497A31422E1D1E9500A23A59 /* ObservationKit */,
+				4939AD3F2E1FCC460009C002 /* ObservationKitTypes */,
+				4939ADC32E1FEB700009C002 /* ObservationKitTypesTests */,
 			);
 		};
 /* End PBXProject section */
@@ -597,6 +722,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4927F3812DD25BC700E368D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4939ADC22E1FEB700009C002 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -685,6 +817,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4939AD3D2E1FCC460009C002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4939ADC02E1FEB700009C002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		494EFBF52DDF36B100C66063 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -741,6 +887,11 @@
 			isa = PBXTargetDependency;
 			target = 4927F36B2DD25BC400E368D8 /* Deus */;
 			targetProxy = 4927F3842DD25BC700E368D8 /* PBXContainerItemProxy */;
+		};
+		4939ADC92E1FEB700009C002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4927F36B2DD25BC400E368D8 /* Deus */;
+			targetProxy = 4939ADC82E1FEB700009C002 /* PBXContainerItemProxy */;
 		};
 		494EFC042DDF36B200C66063 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -799,6 +950,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PRODUCT_NAME)/Deus-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -827,6 +979,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PRODUCT_NAME)/Deus-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -860,6 +1013,75 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = Deus;
+			};
+			name = Release;
+		};
+		4939AD422E1FCC460009C002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X5FKTSKM38;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		4939AD432E1FCC460009C002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X5FKTSKM38;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		4939ADCA2E1FEB700009C002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X5FKTSKM38;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jeanbarrossilva.deus.ObservationKitTypesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PRODUCT_NAME)/ObservationKitTypesTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Deus.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Deus";
+			};
+			name = Debug;
+		};
+		4939ADCB2E1FEB700009C002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X5FKTSKM38;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jeanbarrossilva.deus.ObservationKitTypesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PRODUCT_NAME)/ObservationKitTypesTests-Bridging-Header.h";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Deus.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Deus";
 			};
 			name = Release;
 		};
@@ -1073,6 +1295,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X5FKTSKM38;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/ObservationKitTypes";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "";
 			};
@@ -1084,6 +1307,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X5FKTSKM38;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/ObservationKitTypes";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "";
 			};
@@ -1336,6 +1560,24 @@
 			buildConfigurations = (
 				4927F3922DD25BC700E368D8 /* Debug */,
 				4927F3932DD25BC700E368D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4939AD412E1FCC460009C002 /* Build configuration list for PBXNativeTarget "ObservationKitTypes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4939AD422E1FCC460009C002 /* Debug */,
+				4939AD432E1FCC460009C002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4939ADCC2E1FEB700009C002 /* Build configuration list for PBXNativeTarget "ObservationKitTypesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4939ADCA2E1FEB700009C002 /* Debug */,
+				4939ADCB2E1FEB700009C002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

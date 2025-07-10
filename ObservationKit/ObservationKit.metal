@@ -1,5 +1,5 @@
 // ===-------------------------------------------------------------------------------------------===
-// Copyright © 2025 ObservationKit
+// Copyright © 2025 Deus
 //
 // This file is part of the Deus open-source project.
 //
@@ -16,4 +16,30 @@
 // ===-------------------------------------------------------------------------------------------===
 
 #include <metal_stdlib>
+#include "Vertex.h"
+#include "Uniform.h"
+
 using namespace metal;
+
+struct Rasterization {
+  float4 clipSpacePosition [[position]];
+  float3 color;
+};
+
+vertex Rasterization vertexShader(uint vertexID [[vertex_id]],
+                                  constant Vertex *vertices [[buffer(VERTEX_BUFFER_INDEX)]],
+                                  constant Uniform &display [[buffer(UNIFORM_BUFFER_INDEX)]]) {
+  Rasterization rasterization;
+  float2 pixelSpacePosition = vertices[vertexID].position.xy * display.scale;
+  float2 viewportSize = float2(display.viewportSize);
+  rasterization.clipSpacePosition.xy = pixelSpacePosition / (viewportSize / 2);
+  rasterization.clipSpacePosition.z = 0;
+  rasterization.clipSpacePosition.w = 1;
+  rasterization.color = vertices[vertexID].color;
+  return rasterization;
+}
+
+fragment float4 fragmentShader(Rasterization rasterization [[stage_in]]) {
+  return float4(rasterization.color, 1);
+}
+

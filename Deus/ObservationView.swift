@@ -18,6 +18,8 @@
 import MetalKit
 import SwiftUI
 
+#Preview { GeometryReader { geometry in ObservationView(framedBy: geometry) } }
+
 /// `View` by which a simulated universe is displayed.
 struct ObservationView: NSViewRepresentable {
   /// Proxy by which the frame of the backing `MTKView` is defined.
@@ -37,26 +39,113 @@ struct ObservationView: NSViewRepresentable {
 
 /// Backing `MTKView` by which a simulated universe is displayed.
 private final class ObservationMTKView: MTKView {
+  /// ``VERTEX_BUFFER_INDEX`` converted into an integer whose size is architecture-based.
+  private static let vertexBufferIndex = Int(VERTEX_BUFFER_INDEX)
+
+  /// ``UNIFORM_BUFFER_INDEX`` converted into an integer whose size is architecture-based.
+  private static let uniformBufferIndex = Int(UNIFORM_BUFFER_INDEX)
+
+  /// Vertices to be drawn.
+  private static let vertices = [
+    Vertex(position: vector_float2(x: 250, y: -250), color: vector_float3(0, 0, 0)),
+    Vertex(position: vector_float2(x: -250, y: -250), color: vector_float3(0, 0, 0)),
+    Vertex(position: vector_float2(x: -250, y: 250), color: vector_float3(0, 0, 0)),
+    Vertex(position: vector_float2(x: 250, y: -250), color: vector_float3(0, 0, 0)),
+    Vertex(position: vector_float2(x: -250, y: 250), color: vector_float3(0, 0, 0)),
+    Vertex(position: vector_float2(x: 250, y: 250), color: vector_float3(0, 0, 0))
+  ]
+
+  ///
+  private var renderPipelineState: (any MTLRenderPipelineState)?
+
+  /// Queue of commands of the render pass.
+  private var commandQueue: (any MTLCommandQueue)? = nil
+
+  /// Function of the vertex shader.
+  private var vertexFunction: (any MTLFunction)? = nil
+
+  /// Buffer to which the ``vertices`` are appended.
+  private var vertexBuffer: (any MTLBuffer)? = nil
+
+  /// Buffer to which transformations on the ``vertices`` are appended.
+  private var uniformBuffer: (any MTLBuffer)? = nil
+
+  /// Function of the fragment shader.
+  private var fragmentFunction: (any MTLFunction)? = nil
+
   required convenience init(coder: NSCoder) {
     self.init(frame: CGRectInfinite, device: Self.createDevice())
   }
 
   override init(frame frameRect: CGRect, device: (any MTLDevice)?) {
     super.init(frame: frameRect, device: device)
+    guard let device, let commandQueue = device.makeCommandQueue(),
+      let libraryURL = Bundle.main.url(forResource: "ObservationKit", withExtension: "metallib"),
+      let library = try? device.makeLibrary(URL: libraryURL),
+      let vertexBuffer = device.makeBuffer(
+        bytes: Self.vertices,
+        length: MemoryLayout<Vertex>.stride * Self.vertices.count,
+        options: .storageModeShared
+      ), let vertexFunction = library.makeFunction(name: "vertexShader"),
+      let fragmentFunction = library.makeFunction(name: "fragmentShader"),
+      let pixelFormat = (layer as! CAMetalLayer?)?.pixelFormat
+    else { return }
+    let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
+    renderPipelineDescriptor.label = "Space"
+    renderPipelineDescriptor.vertexFunction = vertexFunction
+    renderPipelineDescriptor.fragmentFunction = fragmentFunction
+    renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
+    guard
+      let renderPipelineState = try? device.makeRenderPipelineState(
+        descriptor: renderPipelineDescriptor
+      )
+    else { return }
+    var uniform = Uniform(
+      scale: 1,
+      viewportSize: vector_uint2(UInt32(frameRect.width), UInt32(frameRect.height))
+    )
+    guard
+      let uniformBuffer = device.makeBuffer(
+        bytes: &uniform,
+        length: MemoryLayout.size(ofValue: uniform),
+        options: .storageModeShared
+      )
+    else { return }
+    self.renderPipelineState = renderPipelineState
+    self.commandQueue = commandQueue
+    self.vertexFunction = vertexFunction
+    self.vertexBuffer = vertexBuffer
+    self.uniformBuffer = uniformBuffer
+    self.fragmentFunction = fragmentFunction
     clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
     enableSetNeedsDisplay = false
   }
 
+  override func makeBackingLayer() -> CAMetalLayer { CAMetalLayer() }
+
+  var c = 0
   override func draw() {
-    guard let device, let commandQueue = device.makeCommandQueue(),
-      let commandBuffer = commandQueue.makeCommandBuffer(), let currentRenderPassDescriptor,
+    guard let commandQueue, let commandBuffer = commandQueue.makeCommandBuffer(),
+      let currentRenderPassDescriptor,
       let renderCommandEncoder = commandBuffer.makeRenderCommandEncoder(
         descriptor: currentRenderPassDescriptor
-      ), let currentDrawable
+      ), let renderPipelineState, let destination = (layer as! CAMetalLayer?)?.nextDrawable()
     else { return }
+    renderCommandEncoder.setRenderPipelineState(renderPipelineState)
+    renderCommandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: Self.vertexBufferIndex)
+    renderCommandEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: Self.uniformBufferIndex)
+    renderCommandEncoder.drawPrimitives(
+      type: .triangle,
+      vertexStart: 0,
+      vertexCount: Self.vertices.count
+    )
     renderCommandEncoder.endEncoding()
-    commandBuffer.present(currentDrawable)
+    commandBuffer.present(destination)
     commandBuffer.commit()
+    destination.addPresentedHandler({ [self] drawable in
+      c += 1
+      print(c)
+    })
   }
 
   /// Creates a default device corresponding to one of the GPUs in macOS, returning `nil` in case
@@ -67,5 +156,3 @@ private final class ObservationMTKView: MTKView {
   /// - Returns: The created default-GPU-based `MTLDevice` or `nil` if Metal is unsupported.
   fileprivate static func createDevice() -> (any MTLDevice)? { MTLCreateSystemDefaultDevice() }
 }
-
-#Preview { GeometryReader { geometry in ObservationView(framedBy: geometry) } }

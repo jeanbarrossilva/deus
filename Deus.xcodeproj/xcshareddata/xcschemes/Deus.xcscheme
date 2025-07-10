@@ -91,6 +91,17 @@
                ReferencedContainer = "container:Deus.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4939ADC32E1FEB700009C002"
+               BuildableName = "ObservationKitTypesTests.xctest"
+               BlueprintName = "ObservationKitTypesTests"
+               ReferencedContainer = "container:Deus.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

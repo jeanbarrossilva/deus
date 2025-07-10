@@ -123,7 +123,6 @@ private final class ObservationMTKView: MTKView {
 
   override func makeBackingLayer() -> CAMetalLayer { CAMetalLayer() }
 
-  var c = 0
   override func draw() {
     guard let commandQueue, let commandBuffer = commandQueue.makeCommandBuffer(),
       let currentRenderPassDescriptor,
@@ -142,10 +141,6 @@ private final class ObservationMTKView: MTKView {
     renderCommandEncoder.endEncoding()
     commandBuffer.present(destination)
     commandBuffer.commit()
-    destination.addPresentedHandler({ [self] drawable in
-      c += 1
-      print(c)
-    })
   }
 
   /// Creates a default device corresponding to one of the GPUs in macOS, returning `nil` in case

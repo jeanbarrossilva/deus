@@ -102,7 +102,7 @@ private final class ObservationMTKView: MTKView {
     else { return }
     var uniform = Uniform(
       scale: 1,
-      viewportSize: vector_uint2(UInt32(frameRect.width), UInt32(frameRect.height))
+      viewportSize: vector_uint2(UInt32(bounds.width), UInt32(bounds.height))
     )
     guard
       let uniformBuffer = device.makeBuffer(

@@ -21,25 +21,32 @@
 
 using namespace metal;
 
-struct Rasterization {
-  float4 clipSpacePosition [[position]];
+/** Rasterized form of a vertex. */
+struct Pixel {
+  /** X, Y, Z and W coordinates in clip space. */
+  float4 position [[position]];
+
+  /** Red, green and blue channels. */
   float3 color;
 };
 
-vertex Rasterization vertexShader(uint vertexID [[vertex_id]],
-                                  constant Vertex *vertices [[buffer(VERTEX_BUFFER_INDEX)]],
-                                  constant Uniform &display [[buffer(UNIFORM_BUFFER_INDEX)]]) {
-  Rasterization rasterization;
-  float2 pixelSpacePosition = vertices[vertexID].position.xy * display.scale;
-  float2 viewportSize = float2(display.viewportSize);
-  rasterization.clipSpacePosition.xy = pixelSpacePosition / (viewportSize / 2);
-  rasterization.clipSpacePosition.z = 0;
-  rasterization.clipSpacePosition.w = 1;
-  rasterization.color = vertices[vertexID].color;
-  return rasterization;
+/**
+ Vertex shader which transforms a mathematical vertex into a pixel to be displayed on the screen.
+ */
+vertex Pixel rasterize(uint vertexID [[vertex_id]],
+                       constant Vertex *vertices [[buffer(VERTEX_BUFFER_INDEX)]],
+                       constant Uniform &uniform [[buffer(UNIFORM_BUFFER_INDEX)]]) {
+  Pixel pixel;
+  float2 pixelSpacePosition = vertices[vertexID].position.xy * uniform.scale;
+  float2 viewportSize = float2(uniform.viewportSize);
+  pixel.position.xy = pixelSpacePosition / (viewportSize / 2);
+  pixel.position.z = 0;
+  pixel.position.w = 1;
+  pixel.color = vertices[vertexID].color;
+  return pixel;
 }
 
-fragment float4 fragmentShader(Rasterization rasterization [[stage_in]]) {
-  return float4(rasterization.color, 1);
+/** Colors the given pixel. */
+fragment float4 color(Pixel pixel [[stage_in]]) {
+  return float4(pixel.color, 1);
 }
-

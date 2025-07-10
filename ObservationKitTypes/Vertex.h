@@ -23,12 +23,16 @@
 /** Index at which the vertices are located in the buffer passed into the vertex shader. */
 #define VERTEX_BUFFER_INDEX 0
 
-/** Point at which two lines intersect and form an angle. */
+/**
+ Mathematical definition of a point at which two lines intersect, forming an angle. Meant to be
+ passed in as input to a vertex shader, responsible for transforming a series of vertices into
+ pixels to be displayed on a screen through a process called rasterization.
+*/
 typedef struct {
-  /** X and Y coordinates at which this vertex is rendered. */
+  /** X and Y coordinates in pixel space. */
   vector_float2 position;
-  
-  /** Red, green and blue channels by which this vertex is colored. */
+
+  /** Red, green and blue color channels. */
   vector_float3 color;
 } Vertex;
 

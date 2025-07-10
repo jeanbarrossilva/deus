@@ -86,8 +86,8 @@ private final class ObservationMTKView: MTKView {
         bytes: Self.vertices,
         length: MemoryLayout<Vertex>.stride * Self.vertices.count,
         options: .storageModeShared
-      ), let vertexFunction = library.makeFunction(name: "vertexShader"),
-      let fragmentFunction = library.makeFunction(name: "fragmentShader"),
+      ), let vertexFunction = library.makeFunction(name: "rasterize"),
+      let fragmentFunction = library.makeFunction(name: "color"),
       let pixelFormat = (layer as! CAMetalLayer?)?.pixelFormat
     else { return }
     let renderPipelineDescriptor = MTLRenderPipelineDescriptor()

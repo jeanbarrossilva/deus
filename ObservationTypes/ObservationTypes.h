@@ -15,10 +15,10 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
-#ifndef ObservationKitTypes_h
-#define ObservationKitTypes_h
+#ifndef ObservationTypes_h
+#define ObservationTypes_h
 
 #include "Uniform.h"
 #include "Vertex.h"
 
-#endif /* ObservationKitTypes_h */
+#endif /* ObservationTypes_h */

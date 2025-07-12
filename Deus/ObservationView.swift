@@ -80,7 +80,7 @@ private final class ObservationMTKView: MTKView {
   override init(frame frameRect: CGRect, device: (any MTLDevice)?) {
     super.init(frame: frameRect, device: device)
     guard let device, let commandQueue = device.makeCommandQueue(),
-      let libraryURL = Bundle.main.url(forResource: "ObservationKit", withExtension: "metallib"),
+      let libraryURL = Bundle.main.url(forResource: "Observation", withExtension: "metallib"),
       let library = try? device.makeLibrary(URL: libraryURL),
       let vertexBuffer = device.makeBuffer(
         bytes: Self.vertices,

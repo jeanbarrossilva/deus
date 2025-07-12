@@ -18,6 +18,6 @@
 #ifndef Deus_Bridging_Header_h
 #define Deus_Bridging_Header_h
 
-#import <ObservationKitTypes/ObservationKitTypes.h>
+#import <ObservationTypes/ObservationTypes.h>
 
 #endif /* Deus_Bridging_Header_h */

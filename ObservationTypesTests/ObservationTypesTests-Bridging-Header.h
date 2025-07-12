@@ -15,9 +15,9 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
-#ifndef ObservationKitTypesTests_Bridging_Header_h
-#define ObservationKitTypesTests_Bridging_Header_h
+#ifndef ObservationTypesTests_Bridging_Header_h
+#define ObservationTypesTests_Bridging_Header_h
 
-#import <ObservationKitTypes/ObservationKitTypes.h>
+#import <ObservationTypes/ObservationTypes.h>
 
-#endif /* ObservationKitTypesTests_Bridging_Header_h */
+#endif /* ObservationTypesTests_Bridging_Header_h */

@@ -22,7 +22,7 @@
 using namespace metal;
 
 /** Rasterized form of a vertex. */
-struct Pixel {
+struct Rasterization {
   /** X, Y, Z and W coordinates in clip space. */
   float4 position [[position]];
 
@@ -33,20 +33,20 @@ struct Pixel {
 /**
  Vertex shader which transforms a mathematical vertex into a pixel to be displayed on the screen.
  */
-vertex Pixel rasterize(uint vertexID [[vertex_id]],
+vertex Rasterization rasterize(uint vertexID [[vertex_id]],
                        constant Vertex *vertices [[buffer(VERTEX_BUFFER_INDEX)]],
                        constant Uniform &uniform [[buffer(UNIFORM_BUFFER_INDEX)]]) {
-  Pixel pixel;
+  Rasterization rasterization;
   float2 pixelSpacePosition = vertices[vertexID].position.xy * uniform.scale;
   float2 viewportSize = float2(uniform.viewportSize);
-  pixel.position.xy = pixelSpacePosition / (viewportSize / 2);
-  pixel.position.z = 0;
-  pixel.position.w = 1;
-  pixel.color = vertices[vertexID].color;
-  return pixel;
+  rasterization.position.xy = pixelSpacePosition / (viewportSize / 2);
+  rasterization.position.z = 0;
+  rasterization.position.w = 1;
+  rasterization.color = vertices[vertexID].color;
+  return rasterization;
 }
 
 /** Colors the given pixel. */
-fragment float4 color(Pixel pixel [[stage_in]]) {
-  return float4(pixel.color, 1);
+fragment float4 color(Rasterization rasterization [[stage_in]]) {
+  return float4(rasterization.color, 1);
 }

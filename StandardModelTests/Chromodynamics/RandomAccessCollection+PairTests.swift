@@ -17,7 +17,7 @@
 
 import Testing
 
-@testable import StandardKit
+@testable import StandardModel
 
 @Suite("RandomAccessCollection+Pair tests")
 struct RandomAccessCollectionPairTests {

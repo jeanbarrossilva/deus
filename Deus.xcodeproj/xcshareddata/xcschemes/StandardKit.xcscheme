@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "49EF5D4E2DE20D36008AFB31"
-               BuildableName = "StandardKit.framework"
-               BlueprintName = "StandardKit"
+               BuildableName = "StandardModel.framework"
+               BlueprintName = "StandardModel"
                ReferencedContainer = "container:Deus.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -51,8 +51,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "49EF5D4E2DE20D36008AFB31"
-            BuildableName = "StandardKit.framework"
-            BlueprintName = "StandardKit"
+            BuildableName = "StandardModel.framework"
+            BlueprintName = "StandardModel"
             ReferencedContainer = "container:Deus.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

@@ -78,7 +78,7 @@ extension ColoredParticleLike {
 /// Base protocol to which ``ColoredParticle``s and colored antiparticles conform.
 public protocol ColoredParticleLike<Color>: ParticleLike {
   /// The specific type of ``Color``.
-  associatedtype Color: StandardKit.Color
+  associatedtype Color: StandardModel.Color
 
   /// Measured transformation under the SU(3) symmetry.
   var color: Color { get }
@@ -182,10 +182,10 @@ private func antiDelegate<Counterpart: AnyObject & SingleColor>(
 
 /// Terminates the program due to having found an unknown ``SingleColorLike`` which is not one of
 /// the predefined three: ``red``, ``green`` and ``blue``. Such behavior restricts conformance to
-/// such protocol to ``StandardKit``, preventing undefined states throughout simulations.
+/// such protocol to ``StandardModel``, preventing undefined states throughout simulations.
 private func unknown(_ color: any SingleColorLike) -> Never {
   fatalError(
-    "\(color) is not red, green or blue; rather, it appears to be a color unknown by StandardKit. "
-      + "SingleColorLike is meant for conformance by StandardKit only."
+    "\(color) is not red, green or blue; rather, it appears to be a color unknown by StandardModel. "
+      + "SingleColorLike is meant for conformance by StandardModel only."
   )
 }

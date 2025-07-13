@@ -17,17 +17,15 @@
 
 import Testing
 
-@testable import StandardKit
+@testable import StandardModel
 
-@Suite("Particle tests")
-struct ParticleTests {
+struct AnticolorTests {
   @Test
-  func arePartiallyEqual() {
-    #expect(UpQuark(color: red).isPartiallyEqual(to: UpQuark(color: green)))
-  }
+  func redIsCounterpartOfAntired() { #expect(Anti(red).counterpart === red) }
 
   @Test
-  func areNotPartiallyEqual() {
-    #expect(!UpQuark(color: red).isPartiallyEqual(to: DownQuark(color: red)))
-  }
+  func greenIsCounterpartOfAntigreen() { #expect(Anti(green).counterpart === green) }
+
+  @Test
+  func blueIsCounterpartOfAntiblue() { #expect(Anti(blue).counterpart === blue) }
 }

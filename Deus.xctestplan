@@ -44,7 +44,7 @@
       "target" : {
         "containerPath" : "container:Deus.xcodeproj",
         "identifier" : "49EF5D562DE20D36008AFB31",
-        "name" : "StandardKitTests"
+        "name" : "StandardModelTests"
       }
     }
   ],

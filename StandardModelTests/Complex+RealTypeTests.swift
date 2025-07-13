@@ -18,7 +18,7 @@
 import Numerics
 import Testing
 
-@testable import StandardKit
+@testable import StandardModel
 
 struct ComplexPlusRealTypeTests {
   @Test

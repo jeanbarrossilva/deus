@@ -76,8 +76,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "49EF5D562DE20D36008AFB31"
-               BuildableName = "StandardKitTests.xctest"
-               BlueprintName = "StandardKitTests"
+               BuildableName = "StandardModelTests.xctest"
+               BlueprintName = "StandardModelTests"
                ReferencedContainer = "container:Deus.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -86,8 +86,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "49EF5D562DE20D36008AFB31"
-               BuildableName = "StandardKitTests.xctest"
-               BlueprintName = "StandardKitTests"
+               BuildableName = "StandardModelTests.xctest"
+               BlueprintName = "StandardModelTests"
                ReferencedContainer = "container:Deus.xcodeproj">
             </BuildableReference>
          </TestableReference>

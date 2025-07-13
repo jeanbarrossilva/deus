@@ -18,7 +18,7 @@
 import Foundation
 import Testing
 
-@testable import StandardKit
+@testable import StandardModel
 
 struct AntiparticleTests {
   @Test

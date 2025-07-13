@@ -16,8 +16,7 @@
 // ===-------------------------------------------------------------------------------------------===
 
 #include <metal_stdlib>
-#include "Vertex.h"
-#include "Uniform.h"
+#include "ObservationTypes.h"
 
 using namespace metal;
 
@@ -34,8 +33,8 @@ struct Rasterization {
  Vertex shader which transforms a mathematical vertex into a pixel to be displayed on the screen.
  */
 vertex Rasterization rasterize(uint vertexID [[vertex_id]],
-                       constant Vertex *vertices [[buffer(VERTEX_BUFFER_INDEX)]],
-                       constant Uniform &uniform [[buffer(UNIFORM_BUFFER_INDEX)]]) {
+                               constant Vertex *vertices [[buffer(VERTEX_BUFFER_INDEX)]],
+                               constant Uniform &uniform [[buffer(UNIFORM_BUFFER_INDEX)]]) {
   Rasterization rasterization;
   float2 pixelSpacePosition = vertices[vertexID].position.xy * uniform.scale;
   float2 viewportSize = float2(uniform.viewportSize);
@@ -48,5 +47,5 @@ vertex Rasterization rasterize(uint vertexID [[vertex_id]],
 
 /** Colors the given pixel. */
 fragment float4 color(Rasterization rasterization [[stage_in]]) {
-  return float4(rasterization.color, 1);
+  return float4(0, 0, 0 / 0, 1);
 }

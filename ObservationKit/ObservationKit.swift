@@ -1,5 +1,5 @@
 // ===-------------------------------------------------------------------------------------------===
-// Copyright © 2025 Deus
+// Copyright © 2025 ObservationKit
 //
 // This file is part of the Deus open-source project.
 //
@@ -14,26 +14,3 @@
 // You should have received a copy of the GNU General Public License along with this program. If
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
-
-#ifndef Vertex_h
-#define Vertex_h
-
-#include <simd/simd.h>
-
-/** Index at which the vertices are located in the buffer passed into the vertex shader. */
-#define VERTEX_BUFFER_INDEX 0
-
-/**
- Mathematical definition of a point at which two lines intersect, forming an angle. Meant to be
- passed in as input to a vertex shader, responsible for transforming a series of vertices into
- pixels to be displayed on a screen through a process called rasterization.
-*/
-typedef struct {
-  /** X and Y coordinates in pixel space. */
-  vector_float2 position;
-
-  /** Red, green and blue color channels. */
-  vector_float3 color;
-} Vertex;
-
-#endif /* Vertex_h */

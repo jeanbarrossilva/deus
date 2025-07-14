@@ -15,12 +15,9 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
+import ObservationKit
 import SwiftUI
 
 /// Entrypoint of Deus.
 @main
-struct DeusApp: App {
-  var body: some Scene {
-    WindowGroup { GeometryReader { geometry in ObservationView(framedBy: geometry) } }
-  }
-}
+struct DeusApp: App { var body: some Scene { WindowGroup { ObservationView() } } }

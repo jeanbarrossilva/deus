@@ -16,6 +16,8 @@
 		496882DD2DECCE4F004CB967 /* Geometry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4960AB482DDCE34E00EB1410 /* Geometry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		498FA27E2E2459DE0058A9C8 /* ObservationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 498FA26B2E2459DE0058A9C8 /* ObservationKit.framework */; };
 		498FA27F2E2459DE0058A9C8 /* ObservationKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 498FA26B2E2459DE0058A9C8 /* ObservationKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		498FA2F52E2591E80058A9C8 /* StandardModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardModel.framework */; };
+		498FA2F62E2591E80058A9C8 /* StandardModel.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardModel.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		49EF5D582DE20D36008AFB31 /* StandardModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardModel.framework */; };
 		49EF5D622DE20D36008AFB31 /* StandardModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardModel.framework */; };
 		49EF5D632DE20D36008AFB31 /* StandardModel.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardModel.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -71,6 +73,13 @@
 			remoteGlobalIDString = 498FA26A2E2459DE0058A9C8;
 			remoteInfo = ObservationKit;
 		};
+		498FA2F72E2591E80058A9C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49FD311A2DBFC9E2003CEAF9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49EF5D4E2DE20D36008AFB31;
+			remoteInfo = StandardModel;
+		};
 		49EF5D602DE20D36008AFB31 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49FD311A2DBFC9E2003CEAF9 /* Project object */;
@@ -112,6 +121,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				496882DD2DECCE4F004CB967 /* Geometry.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		498FA2F92E2591E80058A9C8 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				498FA2F62E2591E80058A9C8 /* StandardModel.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,6 +254,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				498FA2F52E2591E80058A9C8 /* StandardModel.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,10 +500,12 @@
 				498FA2672E2459DE0058A9C8 /* Sources */,
 				498FA2682E2459DE0058A9C8 /* Frameworks */,
 				498FA2692E2459DE0058A9C8 /* Resources */,
+				498FA2F92E2591E80058A9C8 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				498FA2F82E2591E80058A9C8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				498FA26C2E2459DE0058A9C8 /* ObservationKit */,
@@ -807,6 +830,11 @@
 			isa = PBXTargetDependency;
 			target = 498FA26A2E2459DE0058A9C8 /* ObservationKit */;
 			targetProxy = 498FA27C2E2459DE0058A9C8 /* PBXContainerItemProxy */;
+		};
+		498FA2F82E2591E80058A9C8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49EF5D4E2DE20D36008AFB31 /* StandardModel */;
+			targetProxy = 498FA2F72E2591E80058A9C8 /* PBXContainerItemProxy */;
 		};
 		49EF5D612DE20D36008AFB31 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1187,7 +1215,7 @@
 		49EF5D652DE20D36008AFB31 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1223,7 +1251,7 @@
 		49EF5D662DE20D36008AFB31 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;

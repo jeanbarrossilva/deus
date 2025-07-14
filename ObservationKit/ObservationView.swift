@@ -16,6 +16,7 @@
 // ===-------------------------------------------------------------------------------------------===
 
 import RealityKit
+import StandardModel
 import SwiftUI
 
 /// `View` by which a simulation of particle physics is displayed.
@@ -38,13 +39,14 @@ private struct ObservationARView: NSViewRepresentable {
   func makeNSView(context: Context) -> ARView {
     let nsView = ARView(frame: geometry.frame(in: .local))
     nsView.environment.background = .color(.windowBackgroundColor)
-    let sphere = MeshResource.generateSphere(radius: 0.2)
-    let metal = SimpleMaterial(color: .red, roughness: 0.8, isMetallic: true)
-    let component = ModelComponent(mesh: sphere, materials: [metal])
-    let quarkEntity = AnchorEntity(world: [0, 0, 0])
-    quarkEntity.name = "Quark"
-    quarkEntity.components.set(component)
-    nsView.scene.addAnchor(quarkEntity)
+    let anchor = AnchorEntity()
+    let entity = Entity(Anti(UpQuark(color: red)))
+    precondition(
+      entity != nil,
+      "Conversion of an antired up antiquark into an entity should never fail."
+    )
+    anchor.addChild(entity!)
+    nsView.scene.addAnchor(anchor)
     return nsView
   }
 

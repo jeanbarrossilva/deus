@@ -21,9 +21,7 @@ import Testing
 @Suite("Measurement+Zero tests")
 struct MeasurementZeroTests {
   @Test
-  func valueOfZeroUnitAngleIsZero() {
-    #expect(Measurement<UnitAngle>.zero.value == 0)
-  }
+  func valueOfZeroUnitAngleIsZero() { #expect(Measurement<UnitAngle>.zero.value == 0) }
 
   @Test
   func valueOfZeroUnitElectricChargeIsZero() {

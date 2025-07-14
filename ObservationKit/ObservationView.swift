@@ -37,6 +37,7 @@ private struct ObservationARView: NSViewRepresentable {
 
   func makeNSView(context: Context) -> ARView {
     let nsView = ARView(frame: geometry.frame(in: .local))
+    nsView.environment.background = .color(.windowBackgroundColor)
     let sphere = MeshResource.generateSphere(radius: 0.2)
     let metal = SimpleMaterial(color: .red, roughness: 0.8, isMetallic: true)
     let component = ModelComponent(mesh: sphere, materials: [metal])

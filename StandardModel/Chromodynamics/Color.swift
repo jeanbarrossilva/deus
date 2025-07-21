@@ -17,9 +17,6 @@
 
 import Foundation
 
-/// ``Color``s whose cumulative combination result in ``white``.
-public let colors: InlineArray<3, any SingleColor> = [red, green, blue]
-
 /// Final state of confined ``ColoredParticle``s whose net ``Color`` charge is zero, making them
 /// effectively colorless. Results from the combination of ``Color``-anticolor pairs or of all
 /// ``SingleColor``s (``red`` + ``green`` + ``blue``).
@@ -98,21 +95,13 @@ public class Green: SingleColor { fileprivate init() {} }
 /// Blue (b) direction in the ``Color`` field.
 public class Blue: SingleColor { fileprivate init() {} }
 
-extension Anti: Color & SingleColorLike where Counterpart: SingleColor {}
-
-extension Anti: Hashable where Self: SingleColorLike, Counterpart: SingleColor {
-  public func hash(into hasher: inout Hasher) { antiDelegate(of: counterpart).hash(into: &hasher) }
-}
+extension Anti: Color, SingleColorLike where Counterpart: SingleColor {}
 
 /// One direction in the ``Color`` field.
 public protocol SingleColor: AnyObject, SingleColorLike, Opposable {}
 
-extension Anti: Equatable where Self: SingleColorLike, Counterpart: SingleColorLike {
-  public static func == (lhs: Self, rhs: Self) -> Bool { true }
-}
-
-/// Base protocol to which ``Color``s and anticolors conform.
-public protocol SingleColorLike: Color, Equatable, Hashable {}
+/// Base protocol to which single ``Color``s and anticolors conform.
+public protocol SingleColorLike: Color {}
 
 extension Collection {
   /// The only element in this `Collection`; or `nil` if the `Collection` contains none or more than
@@ -122,12 +111,6 @@ extension Collection {
     return self.first!
   }
 }
-
-extension Color where Self: AnyObject & Equatable {
-  public static func == (lhs: Self, rhs: Self) -> Bool { lhs === rhs }
-}
-
-extension Color where Self: Hashable { public func hash(into hasher: inout Hasher) {} }
 
 /// Color charge is a fundamental, confined (unobservable while free) property which determines its
 /// transformation under the SU(3) gauge symmetry whose field, SU(3)₍color₎ or gluon field, is
@@ -152,7 +135,7 @@ extension Color where Self: Hashable { public func hash(into hasher: inout Hashe
 /// description (respectively, a visual perception of the electromagnetic spectrum and a projection
 /// of physical movement from one point toward another). These are uniquely-quantum properties of a
 /// ``ColoredParticle``.
-public protocol Color: Hashable {}
+public protocol Color {}
 
 /// Antired (r̄) direction in the ``Color`` field.
 private class Antired: SingleColor { fileprivate init() {} }
@@ -185,7 +168,7 @@ private func antiDelegate<Counterpart: AnyObject & SingleColor>(
 /// such protocol to ``StandardModel``, preventing undefined states throughout simulations.
 private func unknown(_ color: any SingleColorLike) -> Never {
   fatalError(
-    "\(color) is not red, green or blue; rather, it appears to be a color unknown by StandardModel. "
-      + "SingleColorLike is meant for conformance by StandardModel only."
+    "\(color) is not red, green or blue; rather, it appears to be a color unknown by "
+      + "StandardModel. SingleColorLike is meant for conformance by StandardModel only."
   )
 }

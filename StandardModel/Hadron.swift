@@ -110,7 +110,7 @@ extension Pion where Self: ParticleLike { public static var spin: Spin { .zero }
 
 extension Pion where Self: Equatable, Quarks == InlineArray<2, any QuarkLike> {
   public static func == (lhs: Self, rhs: Self) -> Bool {
-    lhs.charge == rhs.charge && lhs.color == rhs.color
+    lhs.charge == rhs.charge && lhs.color === rhs.color
       && lhs.quarks[0].isPartiallyEqual(to: rhs.quarks[0])
       && lhs.quarks[1].isPartiallyEqual(to: rhs.quarks[1])
   }

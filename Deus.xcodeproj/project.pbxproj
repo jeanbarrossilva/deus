@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4936BB7F2DEBC3B600F3FC28 /* Numerics in Frameworks */ = {isa = PBXBuildFile; productRef = 4936BB7E2DEBC3B600F3FC28 /* Numerics */; };
-		494EFC0C2DDF36B200C66063 /* RelativityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 494EFBF92DDF36B100C66063 /* RelativityKit.framework */; };
-		494EFC0D2DDF36B200C66063 /* RelativityKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 494EFBF92DDF36B100C66063 /* RelativityKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		494EFC152DDF36D700C66063 /* Geometry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4960AB482DDCE34E00EB1410 /* Geometry.framework */; };
 		494EFC162DDF36D700C66063 /* Geometry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4960AB482DDCE34E00EB1410 /* Geometry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		496882DC2DECCE4F004CB967 /* Geometry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4960AB482DDCE34E00EB1410 /* Geometry.framework */; };
@@ -19,8 +17,6 @@
 		498FA2F52E2591E80058A9C8 /* StandardModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardModel.framework */; };
 		498FA2F62E2591E80058A9C8 /* StandardModel.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardModel.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		49EF5D582DE20D36008AFB31 /* StandardModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardModel.framework */; };
-		49EF5D622DE20D36008AFB31 /* StandardModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardModel.framework */; };
-		49EF5D632DE20D36008AFB31 /* StandardModel.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49EF5D4F2DE20D36008AFB31 /* StandardModel.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,13 +40,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4927F36B2DD25BC400E368D8;
 			remoteInfo = Deus;
-		};
-		494EFC0A2DDF36B200C66063 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49FD311A2DBFC9E2003CEAF9 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 494EFBF82DDF36B100C66063;
-			remoteInfo = RelativityKit;
 		};
 		494EFC172DDF36D700C66063 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -80,13 +69,6 @@
 			remoteGlobalIDString = 49EF5D4E2DE20D36008AFB31;
 			remoteInfo = StandardModel;
 		};
-		49EF5D602DE20D36008AFB31 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49FD311A2DBFC9E2003CEAF9 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 49EF5D4E2DE20D36008AFB31;
-			remoteInfo = StandardKit;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -96,9 +78,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				49EF5D632DE20D36008AFB31 /* StandardModel.framework in Embed Frameworks */,
 				498FA27F2E2459DE0058A9C8 /* ObservationKit.framework in Embed Frameworks */,
-				494EFC0D2DDF36B200C66063 /* RelativityKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -208,9 +188,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49EF5D622DE20D36008AFB31 /* StandardModel.framework in Frameworks */,
 				498FA27E2E2459DE0058A9C8 /* ObservationKit.framework in Frameworks */,
-				494EFC0C2DDF36B200C66063 /* RelativityKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,8 +339,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				494EFC0B2DDF36B200C66063 /* PBXTargetDependency */,
-				49EF5D612DE20D36008AFB31 /* PBXTargetDependency */,
 				498FA27D2E2459DE0058A9C8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
@@ -811,11 +787,6 @@
 			target = 4927F36B2DD25BC400E368D8 /* Deus */;
 			targetProxy = 494EFC052DDF36B200C66063 /* PBXContainerItemProxy */;
 		};
-		494EFC0B2DDF36B200C66063 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 494EFBF82DDF36B100C66063 /* RelativityKit */;
-			targetProxy = 494EFC0A2DDF36B200C66063 /* PBXContainerItemProxy */;
-		};
 		494EFC182DDF36D700C66063 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4960AB472DDCE34E00EB1410 /* Geometry */;
@@ -835,11 +806,6 @@
 			isa = PBXTargetDependency;
 			target = 49EF5D4E2DE20D36008AFB31 /* StandardModel */;
 			targetProxy = 498FA2F72E2591E80058A9C8 /* PBXContainerItemProxy */;
-		};
-		49EF5D612DE20D36008AFB31 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 49EF5D4E2DE20D36008AFB31 /* StandardModel */;
-			targetProxy = 49EF5D602DE20D36008AFB31 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

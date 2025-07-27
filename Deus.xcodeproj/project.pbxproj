@@ -131,6 +131,7 @@
 		4960AB502DDCE34E00EB1410 /* GeometryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GeometryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4960F2542DDF38D3002EF7C0 /* Deus.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Deus.xctestplan; sourceTree = "<group>"; };
 		498FA26B2E2459DE0058A9C8 /* ObservationKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObservationKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		49E6A1702E2A731000C2BDD1 /* StandardModelKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = StandardModelKit; sourceTree = "<group>"; };
 		49EF5D4F2DE20D36008AFB31 /* StandardModel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StandardModel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49EF5D572DE20D36008AFB31 /* StandardModelTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StandardModelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -266,6 +267,7 @@
 		49FD31192DBFC9E2003CEAF9 = {
 			isa = PBXGroup;
 			children = (
+				49E6A1702E2A731000C2BDD1 /* StandardModelKit */,
 				492FE57C2DE70D0B00BC54F9 /* gyb.sh */,
 				492FE57B2DE70CE000BC54F9 /* gyb.py */,
 				4960F2542DDF38D3002EF7C0 /* Deus.xctestplan */,
@@ -597,6 +599,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				4936BB7D2DEBC3B600F3FC28 /* XCRemoteSwiftPackageReference "swift-numerics" */,
+				49E6A1DC2E2ABEFE00C2BDD1 /* XCLocalSwiftPackageReference "StandardModelKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 49FD31192DBFC9E2003CEAF9;
@@ -1502,6 +1505,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		49E6A1DC2E2ABEFE00C2BDD1 /* XCLocalSwiftPackageReference "StandardModelKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = StandardModelKit;
+		};
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		4936BB7D2DEBC3B600F3FC28 /* XCRemoteSwiftPackageReference "swift-numerics" */ = {

@@ -20,8 +20,22 @@
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:Deus.xcodeproj",
-        "identifier" : "4960AB4F2DDCE34E00EB1410",
-        "name" : "GeometryTests"
+        "identifier" : "494EFC002DDF36B200C66063",
+        "name" : "RelativityKitTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Deus.xcodeproj",
+        "identifier" : "49EF5D562DE20D36008AFB31",
+        "name" : "StandardModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:StandardModelKit",
+        "identifier" : "StandardModelKitTests",
+        "name" : "StandardModelKitTests"
       }
     },
     {
@@ -36,15 +50,8 @@
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:Deus.xcodeproj",
-        "identifier" : "494EFC002DDF36B200C66063",
-        "name" : "RelativityKitTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:Deus.xcodeproj",
-        "identifier" : "49EF5D562DE20D36008AFB31",
-        "name" : "StandardModelTests"
+        "identifier" : "4960AB4F2DDCE34E00EB1410",
+        "name" : "GeometryTests"
       }
     }
   ],

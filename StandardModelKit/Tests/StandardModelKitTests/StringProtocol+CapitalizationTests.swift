@@ -21,7 +21,7 @@ import XCTest
 final class ReplacementWithCapitalizationTests: XCTestCase {
   func testReturnOfSelfWhenMaxReplacementCountIsZeroOrLess() throws {
     let unreplaced = "Hello, world!"
-    for maxReplacementCount in -1...0 {
+    for maxReplacementCount in Int(-1)...0 {
       let replaced = try unreplaced.replacingWithCapitalization(
         #/Hello/#,
         by: "Goodbye",

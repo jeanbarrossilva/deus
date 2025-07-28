@@ -119,7 +119,7 @@ public struct DiscreteQuarkTesterMacro: MemberMacro {
         toBeOfType: ArrayExprSyntax.self,
         defaultingTo: _allTypesExpression
       ).elements,
-      containing: SafeCallableArgument<SafeIndirectArrayArgument<SafePropertyArgument>>.self
+      containing: SafeCallArgument<SafeIndirectArrayArgument<SafePropertyArgument>>.self
     )
     let colors = try safe(
       expect(

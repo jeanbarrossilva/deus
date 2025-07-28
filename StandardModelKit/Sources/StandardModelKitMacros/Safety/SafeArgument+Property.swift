@@ -18,22 +18,31 @@
 import SwiftSyntax
 
 /// ``SafeArgument`` of an access to the property of a struct or class or to the case of an enum.
-public struct SafePropertyArgument: ExpressibleByStringLiteral, Identifiable, SafeArgument {
-  public var description: String { id.description }
+public struct SafePropertyArgument: Identifiable, SafeArgument {
   public private(set) var syntax: MemberAccessExprSyntax?
   public let id: String
 
-  public init(stringLiteral value: String) { self.id = value }
-
   public static func _make(from syntax: MemberAccessExprSyntax) throws -> SafePropertyArgument {
-    var argument = Self.init(stringLiteral: _extractValue(from: syntax))
+    var argument = Self.init(stringLiteral: _extractID(from: syntax))
     argument.syntax = syntax
     return argument
   }
 }
 
+extension SafePropertyArgument: CustomDebugStringConvertible {
+  public var debugDescription: String { description }
+}
+
+extension SafePropertyArgument: CustomStringConvertible {
+  public var description: String { id.description }
+}
+
 extension SafePropertyArgument: Equatable {
   public static func == (lhs: Self, rhs: Self) -> Bool { lhs.id == rhs.id }
+}
+
+extension SafePropertyArgument: ExpressibleByStringLiteral {
+  public init(stringLiteral value: String) { self.id = value }
 }
 
 /// Makes a callable argument from a `MemberAccessExprSyntax`.

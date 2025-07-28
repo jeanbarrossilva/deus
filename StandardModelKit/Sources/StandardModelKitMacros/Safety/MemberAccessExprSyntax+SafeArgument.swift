@@ -17,8 +17,8 @@
 
 import SwiftSyntax
 
-/// Extracts the value of a ``SafeArgument`` from a member access syntax.
+/// Extracts the ID of a ``SafeArgument`` from a member access syntax.
 ///
-/// - Parameter syntax: Syntax from which the name of the argument will be extracted.
-/// - Returns: The name to be set as that of the ``SafeArgument`` of an enum.
-func _extractValue(from syntax: MemberAccessExprSyntax) -> String { syntax.declName.baseName.text }
+/// - Parameter syntax: Syntax from which the ID of the argument will be extracted.
+/// - Returns: The ID to be set as that of the ``SafeArgument``.
+func _extractID(from syntax: MemberAccessExprSyntax) -> String { syntax.declName.baseName.text }

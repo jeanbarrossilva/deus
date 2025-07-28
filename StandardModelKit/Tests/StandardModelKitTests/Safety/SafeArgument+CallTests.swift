@@ -20,7 +20,7 @@ import SwiftDiagnostics
 import SwiftSyntax
 import XCTest
 
-final class SafeArgumentCallableTests: XCTestCase {
+final class SafeArgumentCallTests: XCTestCase {
   func testThrowingWhenCalledExpressionIsNotAMemberAccess() {
     XCTAssertThrowsError(
       try safe(
@@ -70,7 +70,7 @@ final class SafeArgumentCallableTests: XCTestCase {
         ),
         parameterizedWith: SafeStringArgument.self
       ),
-      SafeCallableArgument<SafeStringArgument>(id: "hello", parameters: ["world"])
+      SafeCallArgument<SafeStringArgument>(id: "hello", parameters: ["world"])
     )
   }
 }

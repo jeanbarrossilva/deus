@@ -15,10 +15,30 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
+import MacroToolkit
+import StandardModelKitMacros
+import SwiftDiagnostics
 import SwiftSyntax
+import XCTest
 
-/// Extracts the ID of a ``SafeArgument`` from a member access syntax.
-///
-/// - Parameter syntax: Syntax from which the ID of the argument will be extracted.
-/// - Returns: The ID to be set as that of the ``SafeArgument``.
-func _extractID(from syntax: MemberAccessExprSyntax) -> String { syntax.declName.baseName.text }
+final class SafeSyntaxIntTests: XCTestCase {
+  func testThrowingWhenSyntaxContainsNonIntegerLiteral() {
+    XCTAssertThrowsError(try safe(IntegerLiteralExprSyntax(literal: "Hello, world!"))) {
+      (error: DiagnosticsError) in
+      let diagnosticCount = error.diagnostics.count
+      XCTAssertEqual(diagnosticCount, 1, "Expected a single diagnostic; got \(diagnosticCount).")
+      let diagnostic = error.diagnostics[0]
+      XCTAssertEqual(diagnostic.diagnosticID, SafeInt._nonIntegerLiteralDiagnosticID)
+      XCTAssertEqual(diagnostic.message, "identifier(\"Hello, world!\") is not an integer")
+    }
+  }
+
+  func testInitializationFromSyntax() {
+    XCTAssertEqual(
+      try safe(
+        IntegerLiteralExprSyntax(literal: TokenSyntax(.integerLiteral("2"), presence: .present))
+      ),
+      2
+    )
+  }
+}

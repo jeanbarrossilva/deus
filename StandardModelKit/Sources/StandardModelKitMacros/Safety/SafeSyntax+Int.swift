@@ -19,24 +19,24 @@ import MacroToolkit
 import SwiftDiagnostics
 import SwiftSyntax
 
-/// ``SafeArgument`` of an integer.
-public struct SafeIntArgument: SafeArgument {
+/// ``SafeSyntax`` of an integer.
+public struct SafeInt: SafeSyntax {
   public static let _nonIntegerLiteralDiagnosticID = MessageID(
     domain: "StandardModelKitMacros",
     id: "NonIntegerLiteral"
   )
 
-  public private(set) var syntax: IntegerLiteralExprSyntax?
+  public private(set) var node: IntegerLiteralExprSyntax?
 
   private let _delegate: Int
 
-  public static func _make(from syntax: IntegerLiteralExprSyntax) throws -> Self {
-    guard let delegate = Int(syntax.literal.text) else {
+  public static func _make(from node: IntegerLiteralExprSyntax) throws -> Self {
+    guard let delegate = Int(node.literal.text) else {
       throw DiagnosticsError(diagnostics: [
         Diagnostic(
-          node: syntax,
+          node: node,
           message: SimpleDiagnosticMessage(
-            message: "\((try? safe(syntax.literal))?.debugDescription ?? syntax.description) is "
+            message: "\((try? safe(node.literal))?.debugDescription ?? node.description) is "
               + "not an integer",
             diagnosticID: _nonIntegerLiteralDiagnosticID,
             severity: .error
@@ -44,29 +44,29 @@ public struct SafeIntArgument: SafeArgument {
         )
       ])
     }
-    var argument = Self.init(integerLiteral: delegate)
-    argument.syntax = syntax
-    return argument
+    var safe = Self.init(integerLiteral: delegate)
+    safe.node = node
+    return safe
   }
 }
 
-extension SafeIntArgument: CustomDebugStringConvertible {
+extension SafeInt: CustomDebugStringConvertible {
   public var debugDescription: String { description }
 }
 
-extension SafeIntArgument: CustomStringConvertible {
+extension SafeInt: CustomStringConvertible {
   public var description: String { _delegate.description }
 }
 
-extension SafeIntArgument: Equatable {
+extension SafeInt: Equatable {
   public static func == (lhs: Self, rhs: Self) -> Bool { lhs._delegate == rhs._delegate }
 }
 
-extension SafeIntArgument: ExpressibleByIntegerLiteral {
+extension SafeInt: ExpressibleByIntegerLiteral {
   public init(integerLiteral value: Int) { self._delegate = value }
 }
 
-extension SafeIntArgument: SignedInteger {
+extension SafeInt: SignedInteger {
   public static var zero: Self { .init(integerLiteral: 0) }
   public static var isSigned: Bool { Int.isSigned }
   public static var max: Self { .init(integerLiteral: .max) }
@@ -109,15 +109,13 @@ extension SafeIntArgument: SignedInteger {
     self = .init(integerLiteral: .init(truncatingIfNeeded: bits))
   }
 
-  public init(bigEndian value: SafeIntArgument) {
-    self = .init(integerLiteral: value._delegate.bigEndian)
-  }
+  public init(bigEndian value: SafeInt) { self = .init(integerLiteral: value._delegate.bigEndian) }
 
-  public init(littleEndian value: SafeIntArgument) {
+  public init(littleEndian value: SafeInt) {
     self = .init(integerLiteral: value._delegate.littleEndian)
   }
 
-  public init(byteSwapped value: SafeIntArgument) {
+  public init(byteSwapped value: SafeInt) {
     self = .init(integerLiteral: value._delegate.byteSwapped)
   }
 
@@ -206,10 +204,8 @@ extension SafeIntArgument: SignedInteger {
   public func hash(into hasher: inout Hasher) { _delegate.hash(into: &hasher) }
 }
 
-/// Makes an int argument from an `IntegerLiteralExprSyntax`.
+/// Makes a ``SafeInt`` from an `IntegerLiteralExprSyntax`.
 ///
-/// - Parameter syntax: Syntax from which a ``SafeIntArgument`` will be initialized.
+/// - Parameter node: Node from which a ``SafeInt`` will be initialized.
 /// - Throws: If the literal is not an integer.
-public func safe(_ syntax: IntegerLiteralExprSyntax) throws -> SafeIntArgument {
-  try ._make(from: syntax)
-}
+public func safe(_ node: IntegerLiteralExprSyntax) throws -> SafeInt { try ._make(from: node) }

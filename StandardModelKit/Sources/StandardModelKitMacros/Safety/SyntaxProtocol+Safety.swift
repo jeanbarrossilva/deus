@@ -20,29 +20,29 @@ import SwiftDiagnostics
 import SwiftSyntax
 
 /// Identifier of a diagnostic about a missing syntax.
-public let _missingSyntaxInCollectionDiagnosticID = MessageID(
+public let _missingNodeInCollectionDiagnosticID = MessageID(
   domain: "StandardModelKitMacros",
   id: "MissingSyntax"
 )
 
 /// Identifier of a diagnostic about a mismatch between the expected type of an element and that of
 /// an actual one.
-public let _syntaxTypeMismatchDiagnosticID = MessageID(
+public let _nodeTypeMismatchDiagnosticID = MessageID(
   domain: "StandardModelKitMacros",
   id: "ElementTypeMismatch"
 )
 
-/// Alternative to the casting functions provided by ``SwiftSyntax`` which differs from them in that
-/// it throws a detailed error in case the given syntax, part of another one, is not of the expected
-/// type. Alongside ``SafeArgument``s, reduces the boilerplate required for writing a macro.
+/// Alternative to the casting functions provided by `SwiftSyntax` which differs from them in that
+/// it throws a detailed error in case the given node, part of another one, is not of the expected
+/// type. Alongside ``SafeSyntax``s, reduces the boilerplate required for writing a macro.
 ///
 /// - Parameters:
-///   - actual: Syntax to be cast to the `expectedType`.
-///   - parent: Syntax in which the `actual` one is contained.
-///   - expectedType: Type which is expected to be that of the `actual` syntax.
-/// - Returns: The `actual` syntax cast to the expected type or the `default` one in case it is
+///   - actual: Node to be cast to the `expectedType`.
+///   - parent: Node in which the `actual` one is contained.
+///   - expectedType: Type which is expected to be that of the `actual` node.
+/// - Returns: The `actual` node cast to the expected type or the `default` one in case it is
 ///   missing.
-/// - Throws: If both `actual` and `default` syntaxes are missing or the type of the `actual` one is
+/// - Throws: If both `actual` and `default` nodes are missing or the type of the `actual` one is
 ///   not the expected one.
 public func expect<Expected: SyntaxProtocol>(
   _ actual: (any SyntaxProtocol)?,
@@ -50,25 +50,25 @@ public func expect<Expected: SyntaxProtocol>(
   toBeOfType expectedType: Expected.Type,
   defaultingTo default: Expected? = nil
 ) throws(DiagnosticsError) -> Expected {
-  guard let syntax = actual ?? `default` else {
+  guard let node = actual ?? `default` else {
     throw DiagnosticsError(diagnostics: [
       Diagnostic(
         node: parent,
         message: SimpleDiagnosticMessage(
           message: "Expected a(n) \(expectedType) in \(parent)",
-          diagnosticID: _missingSyntaxInCollectionDiagnosticID,
+          diagnosticID: _missingNodeInCollectionDiagnosticID,
           severity: .error
         )
       )
     ])
   }
-  guard let expected = syntax.as(expectedType) else {
+  guard let expected = node.as(expectedType) else {
     throw DiagnosticsError(diagnostics: [
       Diagnostic(
-        node: syntax,
+        node: node,
         message: SimpleDiagnosticMessage(
-          message: "Expected \(syntax.syntaxNodeType) `\(syntax)` to be of type \(expectedType)",
-          diagnosticID: _syntaxTypeMismatchDiagnosticID,
+          message: "Expected \(node.syntaxNodeType) `\(node)` to be of type \(expectedType)",
+          diagnosticID: _nodeTypeMismatchDiagnosticID,
           severity: .error
         )
       )
@@ -77,15 +77,15 @@ public func expect<Expected: SyntaxProtocol>(
   return expected
 }
 
-/// Alternative to the casting functions provided by ``SwiftSyntax`` which differs from them in that
-/// it throws a detailed error in case the given syntax is not of the expected type. Alongside
-/// ``SafeArgument``s, reduces the boilerplate required for writing a macro.
+/// Alternative to the casting functions provided by `SwiftSyntax` which differs from them in that
+/// it throws a detailed error in case the given node is not of the expected type. Alongside
+/// ``SafeSyntax``s, reduces the boilerplate required for writing a macro.
 ///
 /// - Parameters:
-///   - actual: Syntax to be cast to the `expectedType`.
-///   - expectedType: Type which is expected to be that of the given syntax.
-/// - Returns: The syntax cast to the expected type.
-/// - Throws: If the type of the syntax is not the expected one.
+///   - actual: Node to be cast to the `expectedType`.
+///   - expectedType: Type which is expected to be that of the given node.
+/// - Returns: The node cast to the expected type.
+/// - Throws: If the type of the node is not the expected one.
 public func expect<Expected: SyntaxProtocol>(
   _ actual: any SyntaxProtocol,
   toBeOfType expectedType: Expected.Type
@@ -96,7 +96,7 @@ public func expect<Expected: SyntaxProtocol>(
         node: actual,
         message: SimpleDiagnosticMessage(
           message: "Expected \(actual.syntaxNodeType) \(actual) to be of type \(expectedType)",
-          diagnosticID: _syntaxTypeMismatchDiagnosticID,
+          diagnosticID: _nodeTypeMismatchDiagnosticID,
           severity: .error
         )
       )

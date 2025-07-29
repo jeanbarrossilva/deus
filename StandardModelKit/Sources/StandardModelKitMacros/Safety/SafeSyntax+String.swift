@@ -21,53 +21,51 @@ import SwiftSyntax
 
 /// ID of the diagnostic of a string which cannot be evaluted.
 ///
-/// - SeeAlso: ``safe(_:)->SafeStringArgument``
-public let _safeStringArgumentUnevaluableLiteralDiagnosticID = MessageID(
+/// - SeeAlso: ``safe(_:)->SafeString``
+public let _safeStringUnevaluableLiteralDiagnosticID = MessageID(
   domain: "StandardModelKitMacros",
   id: "StringLiteralUnevaluability"
 )
 
-/// ``SafeArgument`` of a string.
-public struct SafeStringArgument: SafeArgument {
+/// ``SafeSyntax`` of a string.
+public struct SafeString: SafeSyntax {
   /// `String` to which `CustomStringConvertible` and `StringProtocol` conformances are delegated.
   private var delegate: String
 
-  public private(set) var syntax: StringLiteralExprSyntax?
+  public private(set) var node: StringLiteralExprSyntax?
 
-  public static func _make(
-    from syntax: StringLiteralExprSyntax
-  ) throws(DiagnosticsError) -> SafeStringArgument {
-    guard let value = StringLiteral(syntax).value else {
+  public static func _make(from node: StringLiteralExprSyntax) throws(DiagnosticsError) -> Self {
+    guard let value = StringLiteral(node).value else {
       throw DiagnosticsError(diagnostics: [
         Diagnostic(
-          node: syntax,
+          node: node,
           message: SimpleDiagnosticMessage(
-            message: "\"\(syntax)\" could not be evaluated",
-            diagnosticID: _safeStringArgumentUnevaluableLiteralDiagnosticID,
+            message: "\"\(node)\" could not be evaluated",
+            diagnosticID: _safeStringUnevaluableLiteralDiagnosticID,
             severity: .error
           )
         )
       ])
     }
-    var argument = Self.init(stringLiteral: value)
-    argument.syntax = syntax
-    return argument
+    var safe = Self.init(stringLiteral: value)
+    safe.node = node
+    return safe
   }
 }
 
-extension SafeStringArgument: CustomDebugStringConvertible {
+extension SafeString: CustomDebugStringConvertible {
   public var debugDescription: String { "\"\(description)\"" }
 }
 
-extension SafeStringArgument: CustomStringConvertible {
+extension SafeString: CustomStringConvertible {
   public var description: String { delegate.description }
 }
 
-extension SafeStringArgument: Equatable {
+extension SafeString: Equatable {
   public static func == (lhs: Self, rhs: Self) -> Bool { lhs.delegate == rhs.delegate }
 }
 
-extension SafeStringArgument: StringProtocol {
+extension SafeString: StringProtocol {
   public var startIndex: String.Index { delegate.startIndex }
   public var endIndex: String.Index { delegate.endIndex }
   public var utf8: String.UTF8View { delegate.utf8 }
@@ -138,13 +136,11 @@ extension SafeStringArgument: StringProtocol {
   public func uppercased() -> String { delegate.uppercased() }
 }
 
-/// Makes a string argument from a ``StringLiteralExprSyntax``.
+/// Makes a ``SafeString`` from a ``StringLiteralExprSyntax``.
 ///
-/// - Parameter syntax: Syntax from which a ``SafeStringArgument`` will be initialized.
+/// - Parameter node: Node from which a ``SafeString`` will be initialized.
 /// - Throws: If the string cannot be evaluated. The limitations on such evaluation themselves are
 ///   unclear and stem from `MacroToolkit`, in which is stated that it is unevaluable when it
 ///   contains interpolation — despite the fact that, even when it does, evaluation occurs
 ///   successfully.
-public func safe(_ syntax: StringLiteralExprSyntax) throws -> SafeStringArgument {
-  try ._make(from: syntax)
-}
+public func safe(_ node: StringLiteralExprSyntax) throws -> SafeString { try ._make(from: node) }

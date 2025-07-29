@@ -17,38 +17,36 @@
 
 import SwiftSyntax
 
-/// ``SafeArgument`` of an access to the property of a struct or class or to the case of an enum.
-public struct SafePropertyArgument: Identifiable, SafeArgument {
-  public private(set) var syntax: MemberAccessExprSyntax?
+/// ``SafeSyntax`` of an access to the property of a struct or class or to the case of an enum.
+public struct SafeProperty: Identifiable, SafeSyntax {
+  public private(set) var node: MemberAccessExprSyntax?
   public let id: String
 
-  public static func _make(from syntax: MemberAccessExprSyntax) throws -> SafePropertyArgument {
-    var argument = Self.init(stringLiteral: _extractID(from: syntax))
-    argument.syntax = syntax
-    return argument
+  public static func _make(from node: MemberAccessExprSyntax) throws -> Self {
+    var safe = Self.init(stringLiteral: _extractID(from: node))
+    safe.node = node
+    return safe
   }
 }
 
-extension SafePropertyArgument: CustomDebugStringConvertible {
+extension SafeProperty: CustomDebugStringConvertible {
   public var debugDescription: String { description }
 }
 
-extension SafePropertyArgument: CustomStringConvertible {
+extension SafeProperty: CustomStringConvertible {
   public var description: String { id.description }
 }
 
-extension SafePropertyArgument: Equatable {
+extension SafeProperty: Equatable {
   public static func == (lhs: Self, rhs: Self) -> Bool { lhs.id == rhs.id }
 }
 
-extension SafePropertyArgument: ExpressibleByStringLiteral {
+extension SafeProperty: ExpressibleByStringLiteral {
   public init(stringLiteral value: String) { self.id = value }
 }
 
-/// Makes a callable argument from a `MemberAccessExprSyntax`.
+/// Makes a ``SafeProperty`` from a `MemberAccessExprSyntax`.
 ///
-/// - Parameter syntax: Syntax from which a ``SafePropertyArgument`` will be initialized.
+/// - Parameter node: Node from which a ``SafeProperty`` will be initialized.
 /// - Throws: Never.
-public func safe(_ syntax: MemberAccessExprSyntax) throws -> SafePropertyArgument {
-  try ._make(from: syntax)
-}
+public func safe(_ node: MemberAccessExprSyntax) throws -> SafeProperty { try ._make(from: node) }

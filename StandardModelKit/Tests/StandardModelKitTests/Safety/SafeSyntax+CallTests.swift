@@ -20,7 +20,7 @@ import SwiftDiagnostics
 import SwiftSyntax
 import XCTest
 
-final class SafeArgumentCallTests: XCTestCase {
+final class SafeSyntaxCallTests: XCTestCase {
   func testThrowingWhenCalledExpressionIsNotAMemberAccess() {
     XCTAssertThrowsError(
       try safe(
@@ -28,13 +28,13 @@ final class SafeArgumentCallTests: XCTestCase {
           calledExpression: StringLiteralExprSyntax(content: "Hello, world!"),
           arguments: LabeledExprListSyntax([])
         ),
-        parameterizedWith: SafeStringArgument.self
+        parameterizedWith: SafeString.self
       )
     ) { (error: DiagnosticsError) in
       let diagnosticCount = error.diagnostics.count
       XCTAssertEqual(diagnosticCount, 1, "Expected a single diagnostic; got \(diagnosticCount).")
       let diagnostic = error.diagnostics[0]
-      XCTAssertEqual(diagnostic.diagnosticID, _syntaxTypeMismatchDiagnosticID)
+      XCTAssertEqual(diagnostic.diagnosticID, _nodeTypeMismatchDiagnosticID)
       XCTAssertEqual(
         diagnostic.message,
         "Expected StringLiteralExprSyntax \"Hello, world!\" to be of type MemberAccessExprSyntax"
@@ -51,7 +51,7 @@ final class SafeArgumentCallTests: XCTestCase {
           ),
           arguments: LabeledExprListSyntax([])
         ),
-        parameterizedWith: SafeStringArgument.self
+        parameterizedWith: SafeString.self
       ),
       "hello"
     )
@@ -68,9 +68,9 @@ final class SafeArgumentCallTests: XCTestCase {
             LabeledExprSyntax(expression: StringLiteralExprSyntax(content: "world"))
           ])
         ),
-        parameterizedWith: SafeStringArgument.self
+        parameterizedWith: SafeString.self
       ),
-      SafeCallArgument<SafeStringArgument>(id: "hello", parameters: ["world"])
+      SafeCall<SafeString>(id: "hello", parameters: ["world"])
     )
   }
 }

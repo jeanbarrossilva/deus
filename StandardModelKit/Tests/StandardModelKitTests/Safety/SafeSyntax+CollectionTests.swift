@@ -21,7 +21,7 @@ import SwiftDiagnostics
 import SwiftSyntax
 import XCTest
 
-final class SafeIndirectArrayArgumentTests: XCTestCase {
+final class SafeIndirectArraySyntaxTests: XCTestCase {
   func
     testThrowingWhenInitializingFromSyntaxWithCollectionWhoseElementsAreInequivalentToTheSpecifiedType()
   {
@@ -33,13 +33,13 @@ final class SafeIndirectArrayArgumentTests: XCTestCase {
             ExprSyntax(IntegerLiteralExprSyntax(integerLiteral: 4))
           ])
         ),
-        containing: SafeStringArgument.self
+        containing: SafeString.self
       )
     ) { (error: DiagnosticsError) in
       let diagnosticCount = error.diagnostics.count
       XCTAssertEqual(diagnosticCount, 1, "Expected a single diagnostic; got \(diagnosticCount).")
       let diagnostic = error.diagnostics[0]
-      XCTAssertEqual(diagnostic.diagnosticID, _syntaxTypeMismatchDiagnosticID)
+      XCTAssertEqual(diagnostic.diagnosticID, _nodeTypeMismatchDiagnosticID)
       XCTAssertEqual(
         diagnostic.message,
         "Expected IntegerLiteralExprSyntax `2` to be of type StringLiteralExprSyntax"
@@ -56,14 +56,14 @@ final class SafeIndirectArrayArgumentTests: XCTestCase {
             ExprSyntax(StringLiteralExprSyntax(content: "world!"))
           ])
         ),
-        containing: SafeStringArgument.self
+        containing: SafeString.self
       ),
       ["Hello, ", "world!"]
     )
   }
 }
 
-final class SafeDirectCollectionArgumentTests: XCTestCase {
+final class SafeDirectCollectionSyntaxTests: XCTestCase {
   func testThrowingWhenInitializingFromSyntaxWhoseElementsAreInequevalentToTheSpecifiedType() {
     XCTAssertThrowsError(
       try safe(
@@ -71,13 +71,13 @@ final class SafeDirectCollectionArgumentTests: XCTestCase {
           ExprSyntax(IntegerLiteralExprSyntax(integerLiteral: 2)),
           ExprSyntax(IntegerLiteralExprSyntax(integerLiteral: 4))
         ]),
-        containing: SafeStringArgument.self
+        containing: SafeString.self
       )
     ) { (error: DiagnosticsError) in
       let diagnosticCount = error.diagnostics.count
       XCTAssertEqual(diagnosticCount, 1, "Expected a single diagnostic; got \(diagnosticCount).")
       let diagnostic = error.diagnostics[0]
-      XCTAssertEqual(diagnostic.diagnosticID, _syntaxTypeMismatchDiagnosticID)
+      XCTAssertEqual(diagnostic.diagnosticID, _nodeTypeMismatchDiagnosticID)
       XCTAssertEqual(
         diagnostic.message,
         "Expected IntegerLiteralExprSyntax `2` to be of type StringLiteralExprSyntax"
@@ -92,7 +92,7 @@ final class SafeDirectCollectionArgumentTests: XCTestCase {
           ExprSyntax(StringLiteralExprSyntax(content: "Hello, ")),
           ExprSyntax(StringLiteralExprSyntax(content: "world!"))
         ]),
-        containing: SafeStringArgument.self
+        containing: SafeString.self
       ),
       ["Hello, ", "world!"]
     )

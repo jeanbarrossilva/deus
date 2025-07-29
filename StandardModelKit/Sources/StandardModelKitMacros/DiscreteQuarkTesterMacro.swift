@@ -119,7 +119,7 @@ public struct DiscreteQuarkTesterMacro: MemberMacro {
         toBeOfType: ArrayExprSyntax.self,
         defaultingTo: _allTypesExpression
       ).elements,
-      containing: SafeCallArgument<SafeIndirectArrayArgument<SafePropertyArgument>>.self
+      containing: SafeCall<SafeIndirectArray<SafeProperty>>.self
     )
     let colors = try safe(
       expect(
@@ -128,7 +128,7 @@ public struct DiscreteQuarkTesterMacro: MemberMacro {
         toBeOfType: ArrayExprSyntax.self,
         defaultingTo: _allColorsExpression
       ).elements,
-      containing: SafePropertyArgument.self,
+      containing: SafeProperty.self,
     )
     let body = try safe(expect(next, in: arguments, toBeOfType: StringLiteralExprSyntax.self))
     return try types.flatMap { type in
@@ -170,7 +170,7 @@ public struct DiscreteQuarkTesterMacro: MemberMacro {
   ///   - context: Context to which the diagnostic will be reported if there are zero or
   ///     insufficient mentions of "quark".
   private static func requireSingleMentionOfWordQuark(
-    within baseName: SafeStringArgument,
+    within baseName: SafeString,
     in context: any MacroExpansionContext
   ) {
     let count = baseName.matches(of: #/quark/#.ignoresCase()).count
@@ -180,7 +180,7 @@ public struct DiscreteQuarkTesterMacro: MemberMacro {
     message += " once"
     context.diagnose(
       Diagnostic(
-        node: baseName.syntax!,
+        node: baseName.node!,
         message: SimpleDiagnosticMessage(
           message: message,
           diagnosticID: _unallowedQuarkWordMentionCountDiagnosticID,

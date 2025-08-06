@@ -29,7 +29,7 @@ extension StringProtocol where SubSequence == Substring {
   ///     capitalization is disregarded, given that it will be changed to match that of the
   ///     substring it replaces.
   ///   - maxReplacementCount: Maximum amount of replacements. If this many replacements have been
-  ///     performed and there still are remaining matches in this `String`, these will be left
+  ///     performed and there still are remaining matches in this string, these will be left
   ///     unchanged.
   /// - Returns: A `String` with the substrings matching the `pattern` replaced by the given
   ///   `replacement` with the same capitalization as that of the substring which was replaced by

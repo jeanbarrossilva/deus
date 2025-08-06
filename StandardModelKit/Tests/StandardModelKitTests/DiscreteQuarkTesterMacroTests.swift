@@ -32,7 +32,7 @@ final class DiscreteQuarkTesterMacroTests: XCTestCase {
         derivingNameFrom: "quarkIsAParticle",
         ofTypes: [.up([.charm, .top]), .down([.strange, .bottom])],
         colored: [.green, .blue],
-        as: "#expect($quark is Particle)"
+        as: "#expect(quark is Particle)"
       )
       struct QuarkTests {}
       """,
@@ -41,20 +41,60 @@ final class DiscreteQuarkTesterMacroTests: XCTestCase {
         import Testing
         struct QuarkTests {
 
-            @Test func greenUpQuarkIsAParticle() {
-                #expect(UpQuark(green) is Particle)
+            @Test
+            func greenCharmQuarkIsAParticle() {
+              let color = green
+              let quark = CharmQuark(color: color)
+              #expect(quark is Particle)
             }
 
-            @Test func blueUpQuarkIsAParticle() {
-                #expect(UpQuark(blue) is Particle)
+            @Test
+            func blueCharmQuarkIsAParticle() {
+              let color = blue
+              let quark = CharmQuark(color: color)
+              #expect(quark is Particle)
             }
 
-            @Test func greenDownQuarkIsAParticle() {
-                #expect(DownQuark(green) is Particle)
+            @Test
+            func greenTopQuarkIsAParticle() {
+              let color = green
+              let quark = TopQuark(color: color)
+              #expect(quark is Particle)
             }
 
-            @Test func blueDownQuarkIsAParticle() {
-                #expect(DownQuark(blue) is Particle)
+            @Test
+            func blueTopQuarkIsAParticle() {
+              let color = blue
+              let quark = TopQuark(color: color)
+              #expect(quark is Particle)
+            }
+
+            @Test
+            func greenStrangeQuarkIsAParticle() {
+              let color = green
+              let quark = StrangeQuark(color: color)
+              #expect(quark is Particle)
+            }
+
+            @Test
+            func blueStrangeQuarkIsAParticle() {
+              let color = blue
+              let quark = StrangeQuark(color: color)
+              #expect(quark is Particle)
+            }
+
+            @Test
+            func greenBottomQuarkIsAParticle() {
+              let color = green
+              let quark = BottomQuark(color: color)
+              #expect(quark is Particle)
+            }
+
+            @Test
+            func blueBottomQuarkIsAParticle() {
+              let color = blue
+              let quark = BottomQuark(color: color)
+              #expect(quark is Particle)
             }
         }
         """,

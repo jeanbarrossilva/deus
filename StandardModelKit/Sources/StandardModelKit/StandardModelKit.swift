@@ -15,36 +15,106 @@
 // not, see https://www.gnu.org/licenses.
 // ===-------------------------------------------------------------------------------------------===
 
-import Foundation
+// ===-------------------------------------------------------------------------------------------===
+// Written entirely or modified partially by Anthropic Claude Sonnet 4.
+// ===-------------------------------------------------------------------------------------------===
 
+/// Represents quark types that can be tested by the `DiscreteQuarkTester` macro.
+///
+/// This enumeration allows specification of which quark types and flavors should be
+/// included in macro-generated test cases. Each case contains an array of flavors
+/// for that quark type.
+///
+/// ## Usage with DiscreteQuarkTester
+///
+/// When using the `@DiscreteQuarkTester` macro, specify quark types in the `ofTypes` parameter:
+///
+/// ```swift
+/// @DiscreteQuarkTester(
+///   derivingNameFrom: "quarkIsAParticle",
+///   ofTypes: [.up([.charm, .top]), .down([.strange, .bottom])],
+///   colored: [.red, .green],
+///   as: "#expect($quark is Particle)"
+/// )
+/// ```
 public enum QuarkType: CaseIterable, Sendable {
+  /// All possible quark type configurations with their respective flavors.
+  ///
+  /// Contains up-type quarks with all up-type flavors and down-type quarks
+  /// with all down-type flavors.
   public static let allCases = [up(UpTypeQuarkFlavor.allCases), down(DownTypeQuarkFlavor.allCases)]
 
+  /// Up-type quarks with specified flavors for testing.
+  ///
+  /// - Parameter flavors: Array of up-type quark flavors to include in generated tests
   case up(_ flavors: [UpTypeQuarkFlavor])
+
+  /// Down-type quarks with specified flavors for testing.
+  ///
+  /// - Parameter flavors: Array of down-type quark flavors to include in generated tests
   case down(_ flavors: [DownTypeQuarkFlavor])
 }
 
+/// Up-type quark flavors available for macro testing.
+///
+/// This enumeration represents the three up-type quark flavors that can be
+/// specified when configuring the `DiscreteQuarkTester` macro.
 public enum UpTypeQuarkFlavor: CaseIterable, QuarkFlavor {
+  /// The up quark flavor.
   case up
+
+  /// The charm quark flavor.
   case charm
+
+  /// The top quark flavor.
   case top
 }
 
+/// Down-type quark flavors available for macro testing.
+///
+/// This enumeration represents the three down-type quark flavors that can be
+/// specified when configuring the `DiscreteQuarkTester` macro.
 public enum DownTypeQuarkFlavor: CaseIterable, QuarkFlavor {
+  /// The down quark flavor.
   case down
+
+  /// The strange quark flavor.
   case strange
+
+  /// The bottom quark flavor.
   case bottom
 }
 
-extension QuarkFlavor where Self: CustomStringConvertible {
-  var description: String { "\(self)".capitalized(with: .current) + "Quark" }
-}
-
+/// Common interface for all quark flavor types.
+///
+/// This protocol ensures quark flavors conform to `Sendable` for safe concurrent access
+/// and serves as a type constraint for generic operations on quark flavors.
 protocol QuarkFlavor: Sendable {}
 
-public enum Color: CaseIterable {
+/// Color charges available for quark testing with the `DiscreteQuarkTester` macro.
+///
+/// This enumeration specifies which color charges should be applied to quarks
+/// in generated test cases.
+///
+/// ## Usage with DiscreteQuarkTester
+///
+/// Specify colors in the macro's `colored` parameter:
+///
+/// ```swift
+/// @DiscreteQuarkTester(
+///   // ... other parameters ...
+///   colored: [.red, .green, .blue],
+///   // ... other parameters ...
+/// )
+/// ```
+public enum Color: CaseIterable, Sendable {
+  /// Red color charge for quark testing.
   case red
+
+  /// Green color charge for quark testing.
   case green
+
+  /// Blue color charge for quark testing.
   case blue
 }
 
@@ -65,7 +135,7 @@ public enum Color: CaseIterable {
 ///   derivingNameFrom: "quarkIsAParticle",
 ///   ofTypes: [.up([.charm, .top])],
 ///   colored: [.green, .blue],
-///   as: "#expect($quark is Particle)"
+///   withBody: "#expect($quark is Particle)"
 /// )
 /// ```
 ///
@@ -98,12 +168,12 @@ public enum Color: CaseIterable {
 ///   - types: Types and flavors of quarks to be tested.
 ///   - colors: Colors with which each of the quarks is colored.
 ///   - body: Code inserted in the body of the test case, from which the non-type-erased quark being
-///     tested and its color are accessible, respectively, via the `$quark` and `$color`
-///     placeholders.
+///     tested and its color are accessible, respectively, via the predeclared `quark` and `color`
+///     local variables.
 @attached(member, names: arbitrary)
 public macro DiscreteQuarkTester(
   derivingNameFrom baseName: String,
-  ofTypes types: [QuarkType] = QuarkType.allCases,
-  colored colors: [Color] = Color.allCases,
+  ofTypes types: [QuarkType],
+  colored colors: [Color],
   as body: String
 ) = #externalMacro(module: "StandardModelKitMacros", type: "DiscreteQuarkTesterMacro")

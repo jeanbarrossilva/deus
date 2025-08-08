@@ -18,9 +18,8 @@
 import Foundation
 
 extension Anti: ParticleLike where Counterpart: Particle {
-  public static var spin: Spin { Counterpart.spin }
-  public static var symbol: String { Counterpart.symbol + "̅" }
-
+  public var spin: Spin { counterpart.spin }
+  public var symbol: String { counterpart.symbol + "̅" }
   public var charge: Measurement<UnitElectricCharge> {
     Measurement(value: -counterpart.charge.value, unit: .elementary)
   }
@@ -54,14 +53,14 @@ extension ParticleLike where Self: Equatable {
 /// Base protocol to which ``Particle``s and antiparticles conform.
 public protocol ParticleLike {
   /// Intrinsic angular momentum of this type of ``ParticleLike``.
-  static var spin: Spin { get }
-
-  /// Character which identifies this type of ``ParticleLike`` as per the International System of
-  /// Units (SI).
-  static var symbol: String { get }
+  var spin: Spin { get }
 
   /// Force experienced by this type of ``ParticleLike``s in an electromagnetic field.
   var charge: Measurement<UnitElectricCharge> { get }
+
+  /// Character which identifies this type of ``ParticleLike`` as per the International System of
+  /// Units (SI).
+  var symbol: String { get }
 
   /// Performs a partial equality comparison between this ``ParticleLike`` and the given one by
   /// testing all their properties common to such protocol against each other.
@@ -106,6 +105,6 @@ extension ParticleLike {
   /// - Returns: `true` if the properties shared by these ``ParticleLike`` values are equal;
   ///   otherwise, `false`.
   func _particleLikeIsPartiallyEqual<Other: ParticleLike>(to other: Other) -> Bool {
-    return Self.spin == Other.spin && Self.symbol == Other.symbol && charge == other.charge
+    return spin == other.spin && symbol == other.symbol && charge == other.charge
   }
 }

@@ -17,6 +17,8 @@
 
 import Foundation
 
+// MARK: - Colors
+
 /// Final state of confined ``ColoredParticle``s whose net ``Color`` charge is zero, making them
 /// effectively colorless. Results from the combination of ``Color``-anticolor pairs or of all
 /// ``SingleColor``s (``red`` + ``green`` + ``blue``).
@@ -39,6 +41,45 @@ private let antigreen = Antigreen()
 
 /// Delegate of a ``SingleColorLike``-conformant ``Anti`` of ``blue``.
 private let antiblue = Antiblue()
+
+/// Final state of confined ``ColoredParticleLike``s whose net ``Color`` charge is zero, making them
+/// effectively colorless. Results from the combination of ``Color``-anticolor pairs or of all
+/// ``SingleColor``s (``red`` + ``green`` + ``blue``).
+public class White: Color { fileprivate init() {} }
+
+/// Red (r) direction in the ``Color`` field.
+public class Red: SingleColor { fileprivate init() {} }
+
+/// Green (g) direction in the ``Color`` field.
+public class Green: SingleColor { fileprivate init() {} }
+
+/// Blue (b) direction in the ``Color`` field.
+public class Blue: SingleColor { fileprivate init() {} }
+
+/// Antired (r̄) direction in the ``Color`` field.
+private class Antired: SingleColor { fileprivate init() {} }
+
+/// Antigreen (ḡ) direction in the ``Color`` field.
+private class Antigreen: SingleColor { fileprivate init() {} }
+
+/// Antiblue (b̄) direction in the ``Color`` field.
+private class Antiblue: SingleColor { fileprivate init() {} }
+
+// MARK: - Type erasure
+
+/// Type-erased ``SingleColorLike``. Might be ``red``, antired, ``green``, antigreen, ``blue`` or
+/// antiblue.
+public struct AnySingleColorLike: SingleColorLike {
+  /// ``SingleColorLike`` whose type has been erased. Casting it to the original type is a safe
+  /// operation.
+  public let base: any AnyObject & SingleColorLike
+
+  init(_ base: some AnyObject & SingleColorLike) { self.base = base }
+
+  public func `is`(_ other: (some Color).Type) -> Bool { type(of: base) == other }
+}
+
+// MARK: - Particle
 
 extension Anti: ColoredParticleLike
 where Counterpart: ColoredParticle, Counterpart.Color: SingleColor {
@@ -81,36 +122,15 @@ public protocol ColoredParticleLike<Color>: ParticleLike {
   var color: Color { get }
 }
 
-/// Final state of confined ``ColoredParticleLike``s whose net ``Color`` charge is zero, making them
-/// effectively colorless. Results from the combination of ``Color``-anticolor pairs or of all
-/// ``SingleColor``s (``red`` + ``green`` + ``blue``).
-public class White: Color { fileprivate init() {} }
-
-/// Red (r) direction in the ``Color`` field.
-public class Red: SingleColor { fileprivate init() {} }
-
-/// Green (g) direction in the ``Color`` field.
-public class Green: SingleColor { fileprivate init() {} }
-
-/// Blue (b) direction in the ``Color`` field.
-public class Blue: SingleColor { fileprivate init() {} }
+// MARK: Color and single-color-like declarations
 
 extension Anti: Color, SingleColorLike where Counterpart: SingleColor {}
 
 /// One direction in the ``Color`` field.
-public protocol SingleColor: AnyObject, SingleColorLike, Opposable {}
+public protocol SingleColor: SingleColorLike, Opposable {}
 
 /// Base protocol to which single ``Color``s and anticolors conform.
 public protocol SingleColorLike: Color {}
-
-extension Collection {
-  /// The only element in this `Collection`; or `nil` if the `Collection` contains none or more than
-  /// one element.
-  fileprivate var single: Element? {
-    guard count == 1 else { return nil }
-    return self.first!
-  }
-}
 
 /// Color charge is a fundamental, confined (unobservable while free) property which determines its
 /// transformation under the SU(3) gauge symmetry whose field, SU(3)₍color₎ or gluon field, is
@@ -135,40 +155,15 @@ extension Collection {
 /// description (respectively, a visual perception of the electromagnetic spectrum and a projection
 /// of physical movement from one point toward another). These are uniquely-quantum properties of a
 /// ``ColoredParticle``.
-public protocol Color {}
-
-/// Antired (r̄) direction in the ``Color`` field.
-private class Antired: SingleColor { fileprivate init() {} }
-
-/// Antigreen (ḡ) direction in the ``Color`` field.
-private class Antigreen: SingleColor { fileprivate init() {} }
-
-/// Antiblue (b̄) direction in the ``Color`` field.
-private class Antiblue: SingleColor { fileprivate init() {} }
-
-/// Obtains the immortal object to which the anticolor of the `color` delegates its implementations.
-///
-/// - Parameter color: Counterpart of the anticolor.
-private func antiDelegate<Counterpart: AnyObject & SingleColor>(
-  of color: Counterpart
-) -> any SingleColorLike {
-  if color === red {
-    return antired
-  } else if color === green {
-    return antigreen
-  } else if color === blue {
-    return antiblue
-  } else {
-    unknown(color)
-  }
+public protocol Color: Equatable {
+  /// Returns whether the type of this ``Color`` and the given one match.
+  ///
+  /// - Parameter other: Type of ``Color`` to compare that of this one with.
+  func `is`(_ other: (some Color).Type) -> Bool
 }
 
-/// Terminates the program due to having found an unknown ``SingleColorLike`` which is not one of
-/// the predefined three: ``red``, ``green`` and ``blue``. Such behavior restricts conformance to
-/// such protocol to ``StandardModel``, preventing undefined states throughout simulations.
-private func unknown(_ color: any SingleColorLike) -> Never {
-  fatalError(
-    "\(color) is not red, green or blue; rather, it appears to be a color unknown by "
-      + "StandardModel. SingleColorLike is meant for conformance by StandardModel only."
-  )
+extension Color { public func `is`(_ other: (some Color).Type) -> Bool { Self.self == other } }
+
+extension Color where Self: Equatable {
+  public static func == (lhs: Self, rhs: Self) -> Bool { true }
 }

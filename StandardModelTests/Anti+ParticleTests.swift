@@ -27,5 +27,5 @@ struct AntiparticleTests {
   }
 
   @Test
-  func symbolHasOverbar() { #expect(Anti<UpQuark<Red>>.symbol == "u̅") }
+  func symbolHasOverbar() { #expect(Anti(UpQuark(color: red)).symbol == "u̅") }
 }

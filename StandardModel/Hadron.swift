@@ -73,8 +73,7 @@ extension UpQuark {
 /// - SeeAlso: ``UpQuark``
 /// - SeeAlso: ``DownQuark``
 public struct PositivePion: Equatable, Pion {
-  public static let symbol = "π⁺"
-
+  public let symbol = "π⁺"
   public let charge = Measurement(value: 1, unit: UnitElectricCharge.elementary)
   public let quarks: InlineArray<2, any QuarkLike>
 
@@ -86,8 +85,7 @@ public struct PositivePion: Equatable, Pion {
 /// - SeeAlso: ``DownQuark``
 /// - SeeAlso: ``UpQuark``
 public struct NegativePion: Equatable, Pion {
-  public static let symbol = "π⁻"
-
+  public let symbol = "π⁻"
   public let charge = Measurement(value: -1, unit: UnitElectricCharge.elementary)
   public let quarks: InlineArray<2, any QuarkLike>
 
@@ -106,7 +104,7 @@ extension DownQuark {
   }
 }
 
-extension Pion where Self: ParticleLike { public static var spin: Spin { .zero } }
+extension Pion where Self: ParticleLike { public var spin: Spin { .zero } }
 
 extension Pion where Self: Equatable, Quarks == InlineArray<2, any QuarkLike> {
   public static func == (lhs: Self, rhs: Self) -> Bool {

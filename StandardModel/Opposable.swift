@@ -31,3 +31,7 @@ public struct Anti<Counterpart: Opposable> {
 
   public init(_ counterpart: consuming Counterpart) { self.counterpart = counterpart }
 }
+
+extension Anti: Equatable where Counterpart: Equatable {
+  public static func == (lhs: Self, rhs: Self) -> Bool { lhs.counterpart == rhs.counterpart }
+}

@@ -23,13 +23,26 @@ private let twoThirdsOfE = Measurement(value: 2 / 3, unit: UnitElectricCharge.el
 /// Charge of down-type quarks.
 private let negativeOneThirdOfE = Measurement(value: -1 / 3, unit: UnitElectricCharge.elementary)
 
+/// ``Quark`` whose information about its flavor has been erased.
+public struct AnyQuark: Quark {
+  public let spin: Spin
+  public let charge: Measurement<UnitElectricCharge>
+  public let symbol: String
+  public let color: AnySingleColorLike
+
+  init<Base: Quark>(_ base: Base) where Base.Color: AnyObject {
+    spin = base.spin
+    charge = base.charge
+    symbol = base.symbol
+    color = AnySingleColorLike(base.color)
+  }
+}
+
 /// Lightest ``Quark``, with a Lagrangian mass of 2.3 ± 0.7 ± 0.5 MeV/*c*². As per the Standard
 /// Model, cannot decay.
 public struct UpQuark<Color: SingleColor>: Quark {
-  public static var symbol: String { "u" }
-
+  public let symbol = "u"
   public let charge = twoThirdsOfE
-
   public let color: Color
 
   public init(color: Color) { self.color = color }
@@ -38,10 +51,8 @@ public struct UpQuark<Color: SingleColor>: Quark {
 /// Second lightest ``Quark``, with a Lagrangian mass of 4.8 ± 0.5 ± 0.3 MeV/*c*². Decays to an
 /// ``UpQuark``.
 public struct DownQuark<Color: SingleColor>: Quark {
-  public static var symbol: String { "d" }
-
+  public let symbol = "d"
   public let charge = negativeOneThirdOfE
-
   public let color: Color
 
   public init(color: Color) { self.color = color }
@@ -49,10 +60,8 @@ public struct DownQuark<Color: SingleColor>: Quark {
 
 /// Third lightest ``Quark``, with a Lagrangian mass of 95 ± 5 MeV/*c*². Decays to a ``DownQuark``.
 public struct StrangeQuark<Color: SingleColor>: Quark {
-  public static var symbol: String { "s" }
-
+  public let symbol = "s"
   public let charge = negativeOneThirdOfE
-
   public let color: Color
 
   public init(color: Color) { self.color = color }
@@ -61,10 +70,8 @@ public struct StrangeQuark<Color: SingleColor>: Quark {
 /// Third heaviest ``Quark``, with a Lagrangian mass of 1.275 ± 0.025 GeV/*c*². Decays to a
 /// ``StrangeQuark``.
 public struct CharmQuark<Color: SingleColor>: Quark {
-  public static var symbol: String { "c" }
-
+  public let symbol = "c"
   public let charge = twoThirdsOfE
-
   public let color: Color
 
   public init(color: Color) { self.color = color }
@@ -73,10 +80,8 @@ public struct CharmQuark<Color: SingleColor>: Quark {
 /// Second heaviest ``Quark``, with a Lagrangian mass of 4.18 ± 30 GeV/*c*². Decays to a
 /// ``CharmQuark``.
 public struct BottomQuark<Color: SingleColor>: Quark {
-  public static var symbol: String { "b" }
-
+  public let symbol = "b"
   public let charge = negativeOneThirdOfE
-
   public let color: Color
 
   public init(color: Color) { self.color = color }
@@ -85,17 +90,11 @@ public struct BottomQuark<Color: SingleColor>: Quark {
 /// Heaviest ``Quark``, with a Lagrangian mass of 173.21 ± 0.51 ± 0.7 GeV/*c*². Decays to a
 /// ``BottomQuark``.
 struct TopQuark<Color: SingleColor>: Quark {
-  public static var symbol: String { "t" }
-
+  public let symbol = "t"
   public let charge = twoThirdsOfE
-
   public let color: Color
 
   public init(color: Color) { self.color = color }
-}
-
-extension Anti: QuarkLike where Counterpart: Quark, Counterpart.Color: SingleColor {
-  public typealias Color = Anti<Counterpart.Color>
 }
 
 /// A quark (q) is an elementary fermion ``ColoredParticle`` which is confined, bound to at least
@@ -142,7 +141,11 @@ extension Anti: QuarkLike where Counterpart: Quark, Counterpart.Color: SingleCol
 /// - SeeAlso: ``Spin/half``
 public protocol Quark: QuarkLike, ColoredParticle where Color: SingleColorLike {}
 
-extension QuarkLike where Self: ParticleLike { public static var spin: Spin { .half } }
+extension QuarkLike where Self: ParticleLike { public var spin: Spin { .half } }
 
 /// Base protocol to which ``Quark``s and antiquarks conform.
 public protocol QuarkLike: ColoredParticleLike where Color: SingleColorLike {}
+
+extension Anti: QuarkLike where Counterpart: Quark, Counterpart.Color: SingleColor {
+  public typealias Color = Anti<Counterpart.Color>
+}

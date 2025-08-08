@@ -25,13 +25,13 @@ extension Entity {
   /// Converts a quark-like from the Standard Model into an `Entity`.
   ///
   /// - Parameters:
-  ///   - quarkLike: Quark-like from which an `AnchorEntity` is to be initialized.
-  convenience init?<StandardModelQuarkLike: QuarkLike>(_ quarkLike: StandardModelQuarkLike) {
+  ///   - quarkLike: Quark-like from which an `Entity` is to be initialized.
+  convenience init?(_ quarkLike: some QuarkLike) {
     self.init()
     guard let materialColor = NSColor(quarkLike.color) else { return nil }
     let metal = SimpleMaterial(color: materialColor, roughness: 0.8, isMetallic: true)
     let component = ModelComponent(mesh: mesh, materials: [metal])
-    name = StandardModelQuarkLike.symbol
+    name = quarkLike.symbol
     components.set(component)
   }
 }
@@ -43,17 +43,17 @@ extension NSColor {
   fileprivate convenience init?<StandardModelColorLike: SingleColorLike>(
     _ colorLike: StandardModelColorLike
   ) {
-    if colorLike is Red {
+    if colorLike.is(Red.self) {
       self.init(cgColor: Self.systemRed.cgColor)
-    } else if colorLike is Anti<Red> {
+    } else if colorLike.is(Anti<Red>.self) {
       self.init(cgColor: Self.red.cgColor)
-    } else if colorLike is Green {
+    } else if colorLike.is(Green.self) {
       self.init(cgColor: Self.systemGreen.cgColor)
-    } else if colorLike is Anti<Green> {
+    } else if colorLike.is(Anti<Green>.self) {
       self.init(cgColor: Self.green.cgColor)
-    } else if colorLike is Blue {
+    } else if colorLike.is(Blue.self) {
       self.init(cgColor: Self.systemBlue.cgColor)
-    } else if colorLike is Anti<Blue> {
+    } else if colorLike.is(Anti<Blue>.self) {
       self.init(cgColor: Self.blue.cgColor)
     } else {
       self.init(named: "\(StandardModelColorLike.self)")
